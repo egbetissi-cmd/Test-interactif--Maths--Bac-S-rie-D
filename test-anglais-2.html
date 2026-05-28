@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇬🇧 Master English — Test Interactif</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root { --bg1:#FFF8DC; --bg2:#4B0082; --card:#FFFACD; --accent:#6A0DAD; --text:#2d0060; --btn-hover:#e8d5ff; --badge:#ffd700; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Baloo 2',cursive;background:linear-gradient(135deg,var(--bg1) 0%,#fff3e0 100%);min-height:100vh;transition:background 0.8s ease;overflow-x:hidden;}
+
+body.theme-0{--bg1:#FFF8DC;--bg2:#4B0082;--card:#FFFACD;--accent:#6A0DAD;--text:#2d0060;--btn-hover:#e8d5ff;--badge:#ffd700;}
+body.theme-1{--bg1:#E3F4FF;--bg2:#001F5B;--card:#f0f8ff;--accent:#003899;--text:#001a4d;--btn-hover:#c5e3ff;--badge:#4a90d9;}
+body.theme-2{--bg1:#E8F8F0;--bg2:#1a4a2e;--card:#f0fff4;--accent:#2e7d52;--text:#0d3320;--btn-hover:#c3f0d5;--badge:#27ae60;}
+body.theme-3{--bg1:#FFF0F5;--bg2:#8B0040;--card:#fff5f8;--accent:#c0185e;--text:#5a0028;--btn-hover:#ffd6e8;--badge:#ff69b4;}
+
+#splash{position:fixed;inset:0;z-index:1000;background:linear-gradient(135deg,#001F5B 0%,#003899 50%,#4a90d9 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;text-align:center;padding:2rem;}
+#splash .flags{font-size:4rem;margin-bottom:0.8rem;animation:bounce 1s infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+#splash h1{font-family:'Nunito',sans-serif;font-size:clamp(2rem,6vw,4.5rem);font-weight:900;text-shadow:3px 3px 0 rgba(0,0,0,0.3);line-height:1.1;margin-bottom:0.5rem;}
+#splash .sub{font-size:clamp(1.1rem,3vw,1.6rem);opacity:0.9;margin-bottom:1.5rem;max-width:600px;}
+#splash .stats{display:flex;gap:1.5rem;margin-bottom:2rem;flex-wrap:wrap;justify-content:center;}
+#splash .stat{background:rgba(255,255,255,0.15);border-radius:16px;padding:0.8rem 1.3rem;font-size:1rem;font-weight:700;}
+#splash .stat span{display:block;font-size:1.9rem;font-weight:900;}
+#startBtn{background:#ffd700;color:#001F5B;border:none;border-radius:50px;padding:1.2rem 3.5rem;font-size:clamp(1.3rem,3vw,1.8rem);font-family:'Nunito',sans-serif;font-weight:900;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.3);transition:all 0.3s;text-transform:uppercase;letter-spacing:2px;}
+#startBtn:hover{transform:translateY(-4px) scale(1.05);box-shadow:0 10px 30px rgba(0,0,0,0.4);}
+
+#header{background:var(--bg2);color:white;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,0.3);flex-wrap:wrap;gap:0.5rem;}
+#header .logo{font-family:'Nunito',sans-serif;font-size:clamp(1.1rem,2.8vw,1.5rem);font-weight:900;display:flex;align-items:center;gap:0.5rem;}
+#header .meta{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;}
+.badge-pill{background:var(--badge,#ffd700);color:#001a4d;border-radius:30px;padding:0.4rem 1.2rem;font-size:1.1rem;font-weight:800;}
+#progressBar{width:100%;height:10px;background:rgba(255,255,255,0.2);border-radius:10px;margin-top:0.5rem;overflow:hidden;}
+#progressFill{height:100%;background:linear-gradient(90deg,#ffd700,#ff6b9d);border-radius:10px;transition:width 0.5s ease;width:0%;}
+
+#mainContent{display:none;padding:1.5rem;max-width:920px;margin:0 auto;}
+
+.section-banner{background:linear-gradient(135deg,var(--bg2),var(--accent));color:white;border-radius:24px;padding:2rem;text-align:center;margin-bottom:2rem;animation:slideIn 0.5s ease;box-shadow:0 8px 30px rgba(0,0,0,0.2);}
+.section-banner .icon{font-size:3.5rem;margin-bottom:0.5rem;}
+.section-banner h2{font-family:'Nunito',sans-serif;font-size:clamp(1.5rem,4vw,2.3rem);font-weight:900;}
+.section-banner p{font-size:clamp(1rem,2.5vw,1.3rem);opacity:0.85;margin-top:0.5rem;}
+@keyframes slideIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+.question-card{background:var(--card);border-radius:24px;padding:2rem;box-shadow:0 8px 30px rgba(0,0,0,0.1);margin-bottom:1.5rem;animation:slideIn 0.4s ease;border:3px solid var(--accent);}
+.q-number{font-size:1rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:0.6rem;}
+.q-category{display:inline-block;background:var(--accent);color:white;border-radius:20px;padding:0.3rem 1rem;font-size:0.95rem;font-weight:700;margin-bottom:1rem;}
+.q-text{font-size:clamp(1.3rem,3.5vw,1.75rem);font-weight:700;color:var(--text);line-height:1.4;margin-bottom:0.5rem;}
+.q-error{background:#ffe0e0;border-left:5px solid #e74c3c;padding:0.8rem 1.2rem;border-radius:0 12px 12px 0;margin-bottom:1.2rem;font-size:clamp(1rem,2.5vw,1.25rem);color:#8b0000;font-weight:600;}
+.q-hint{font-size:clamp(1rem,2.5vw,1.2rem);color:#555;font-style:italic;margin-bottom:1.2rem;}
+
+.options{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:540px){.options{grid-template-columns:1fr;}}
+.opt-btn{background:white;border:3px solid var(--accent);border-radius:18px;padding:1rem 1.2rem;font-size:clamp(1.1rem,2.8vw,1.4rem);font-family:'Baloo 2',cursive;font-weight:700;color:var(--text);cursor:pointer;transition:all 0.25s;text-align:left;display:flex;align-items:center;gap:0.8rem;line-height:1.3;}
+.opt-btn:hover:not(:disabled){background:var(--btn-hover,#f0e6ff);transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,0.15);}
+.opt-btn .letter{background:var(--accent);color:white;border-radius:50%;width:2rem;height:2rem;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:900;flex-shrink:0;}
+.opt-btn.correct{background:#d4edda;border-color:#27ae60;color:#1a5c2e;animation:pulse 0.4s ease;}
+.opt-btn.correct .letter{background:#27ae60;}
+.opt-btn.wrong{background:#fde8e8;border-color:#e74c3c;color:#7a1a1a;}
+.opt-btn.wrong .letter{background:#e74c3c;}
+.opt-btn:disabled{cursor:default;}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+
+.feedback{display:none;border-radius:18px;padding:1.2rem 1.5rem;margin-top:1.2rem;font-size:clamp(1.05rem,2.5vw,1.3rem);font-weight:700;animation:slideIn 0.3s ease;line-height:1.5;}
+.feedback.correct-fb{background:linear-gradient(135deg,#d4edda,#a8d8b4);border:3px solid #27ae60;color:#1a5c2e;}
+.feedback.wrong-fb{background:linear-gradient(135deg,#fde8e8,#f5b8b8);border:3px solid #e74c3c;color:#7a1a1a;}
+.feedback .fb-explain{font-size:clamp(0.95rem,2.2vw,1.15rem);font-weight:600;opacity:0.9;margin-top:0.5rem;font-style:italic;}
+
+#nextBtn{display:none;width:100%;background:linear-gradient(135deg,var(--bg2),var(--accent));color:white;border:none;border-radius:18px;padding:1.2rem;font-size:clamp(1.2rem,3vw,1.6rem);font-family:'Nunito',sans-serif;font-weight:900;cursor:pointer;margin-top:1.2rem;transition:all 0.3s;box-shadow:0 4px 15px rgba(0,0,0,0.2);text-transform:uppercase;letter-spacing:2px;}
+#nextBtn:hover{transform:translateY(-3px);box-shadow:0 8px 25px rgba(0,0,0,0.3);}
+
+#scorePanel{background:var(--card);border-radius:20px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;border:3px solid var(--accent);}
+.score-item{text-align:center;}
+.score-item .val{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:900;color:var(--accent);font-family:'Nunito',sans-serif;}
+.score-item .lbl{font-size:0.9rem;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;}
+
+#results{display:none;text-align:center;padding:2rem;animation:slideIn 0.5s ease;}
+.results-card{background:var(--card);border-radius:28px;padding:3rem 2rem;box-shadow:0 10px 40px rgba(0,0,0,0.15);border:4px solid var(--accent);}
+.results-trophy{font-size:6rem;animation:bounce 1s infinite;}
+.results-card h2{font-family:'Nunito',sans-serif;font-size:clamp(2rem,5vw,3rem);font-weight:900;color:var(--text);margin:1rem 0 0.5rem;}
+.results-score{font-size:clamp(2.5rem,7vw,5rem);font-weight:900;color:var(--accent);font-family:'Nunito',sans-serif;}
+.results-msg{font-size:clamp(1.1rem,3vw,1.5rem);color:#555;margin:1rem auto 2rem;max-width:520px;}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:2rem 0;}
+.result-stat{background:white;border-radius:16px;padding:1.2rem;border:3px solid var(--accent);}
+.result-stat .rv{font-size:2rem;font-weight:900;color:var(--accent);font-family:'Nunito',sans-serif;}
+.result-stat .rl{font-size:0.9rem;font-weight:700;color:#888;text-transform:uppercase;}
+#restartBtn{background:linear-gradient(135deg,var(--bg2),var(--accent));color:white;border:none;border-radius:50px;padding:1.2rem 3rem;font-size:clamp(1.2rem,3vw,1.6rem);font-family:'Nunito',sans-serif;font-weight:900;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.25);transition:all 0.3s;}
+#restartBtn:hover{transform:translateY(-4px);}
+.stars{position:fixed;pointer-events:none;z-index:9999;}
+.star{position:absolute;font-size:1.5rem;animation:starFly 1.2s ease forwards;}
+@keyframes starFly{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-120px) scale(0.3)}}
+</style>
+</head>
+<body class="theme-0">
+
+<div id="splash">
+  <div class="flags">🇬🇧🇺🇸</div>
+  <h1>Master English !</h1>
+  <p class="sub">Le test interactif pour maîtriser l'anglais comme un natif — pour enfants et adultes !</p>
+  <div class="stats">
+    <div class="stat"><span>150+</span>Questions</div>
+    <div class="stat"><span>6</span>Rubriques</div>
+    <div class="stat"><span>⚡</span>Réponse immédiate</div>
+    <div class="stat"><span>🏆</span>Score en direct</div>
+  </div>
+  <button id="startBtn" onclick="startTest()">▶ Start the Test !</button>
+</div>
+
+<div id="header" style="display:none">
+  <div class="logo">🇬🇧 Master English</div>
+  <div class="meta">
+    <div id="questionCounter" class="badge-pill">Q 1 / 150</div>
+    <div id="scoreHeader" style="font-size:1.1rem;font-weight:800;">Score : 0</div>
+  </div>
+  <div id="progressBar" style="width:100%"><div id="progressFill"></div></div>
+</div>
+
+<div id="mainContent">
+  <div id="scorePanel">
+    <div class="score-item"><div class="val" id="sc-total">0</div><div class="lbl">Score</div></div>
+    <div class="score-item"><div class="val" id="sc-correct">0</div><div class="lbl">✅ Bonnes</div></div>
+    <div class="score-item"><div class="val" id="sc-wrong">0</div><div class="lbl">❌ Erreurs</div></div>
+    <div class="score-item"><div class="val" id="sc-streak">0</div><div class="lbl">🔥 Série</div></div>
+  </div>
+  <div id="sectionBanner" class="section-banner" style="display:none"></div>
+  <div id="questionCard" class="question-card">
+    <div class="q-number" id="qNumber"></div>
+    <span class="q-category" id="qCategory"></span>
+    <div class="q-text" id="qText"></div>
+    <div class="q-error" id="qError" style="display:none"></div>
+    <div class="q-hint" id="qHint" style="display:none"></div>
+    <div class="options" id="optionsGrid"></div>
+    <div class="feedback" id="feedback"></div>
+    <button id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+  </div>
+</div>
+
+<div id="results">
+  <div class="results-card">
+    <div class="results-trophy" id="resultTrophy">🏆</div>
+    <h2 id="resultTitle">Congratulations!</h2>
+    <div class="results-score" id="resultScore">0 pts</div>
+    <div class="results-msg" id="resultMsg"></div>
+    <div class="results-grid">
+      <div class="result-stat"><div class="rv" id="r-correct">0</div><div class="rl">✅ Bonnes</div></div>
+      <div class="result-stat"><div class="rv" id="r-wrong">0</div><div class="rl">❌ Erreurs</div></div>
+      <div class="result-stat"><div class="rv" id="r-pct">0%</div><div class="rl">📊 Réussite</div></div>
+      <div class="result-stat"><div class="rv" id="r-best">0</div><div class="rl">🔥 Best streak</div></div>
+    </div>
+    <button id="restartBtn" onclick="restartTest()">🔄 Recommencer</button>
+  </div>
+</div>
+
+<script>
+const SECTIONS = [
+  {id:0, name:"Common Mistakes", icon:"🚫", desc:"Les erreurs les plus fréquentes des francophones — saurez-vous les éviter ?", theme:0},
+  {id:1, name:"Faux Amis", icon:"🎭", desc:"Ces mots qui ressemblent au français… mais qui veulent dire autre chose !", theme:1},
+  {id:2, name:"Tenses & Grammar", icon:"⏰", desc:"Maîtrise les temps et la grammaire anglaise comme un pro !", theme:2},
+  {id:3, name:"Formal English", icon:"💼", desc:"Les expressions des grands discours et des emails professionnels !", theme:3},
+  {id:4, name:"Avoid & Replace", icon:"⚠️", desc:"Remplace les formules maladroites par des expressions naturelles !", theme:0},
+  {id:5, name:"Pro Power Phrases", icon:"🌟", desc:"Impressionne tout le monde avec un anglais d'expert et de leader !", theme:1},
+];
+
+const Q = [
+// ══════════════════════════════════════════════════════
+// SECTION 0 — Common Mistakes (30 questions)
+// ══════════════════════════════════════════════════════
+{s:0,q:"❌ Erreur : « He go to school every day. »",err:"Le verbe manque le 's' de la 3ème personne du singulier.",hint:"With 'he / she / it', add -s or -es to the verb in present simple.",opts:["He goes to school every day.","He go to school every day.","He is go to school every day.","He going to school every day."],ans:0,exp:"3rd person singular → always add -s: 'he goes, she works, it rains'."},
+{s:0,q:"❌ Erreur : « I have 25 years. »",err:"Traduction directe du français 'J'ai 25 ans'.",hint:"In English, you 'are' an age, not 'have' it.",opts:["I am 25 years old.","I have 25 years.","I got 25 years.","I own 25 years."],ans:0,exp:"'I am 25 years old' — use the verb TO BE for age, never 'have'."},
+{s:0,q:"❌ Erreur : « I watch TV now. » (en ce moment précis)",err:"Mauvais temps pour une action en cours.",hint:"An action happening RIGHT NOW needs the continuous form.",opts:["I am watching TV now.","I watch TV now.","I do watch TV now.","I watches TV now."],ans:0,exp:"Action in progress → present continuous: 'I am watching TV'."},
+{s:0,q:"❌ Erreur : « She is more beautiful than her sister, no? »",err:"'No?' n'est pas une question-tag naturelle en anglais.",hint:"English uses specific question tags matching the verb and subject.",opts:["She is more beautiful than her sister, isn't she?","She is more beautiful than her sister, no?","She is more beautiful than her sister, isn't it?","She is more beautiful than her sister, right no?"],ans:0,exp:"Question tag with 'is': 'isn't she?' — always match the auxiliary verb."},
+{s:0,q:"❌ Erreur : « I am agree with you. »",err:"'Agree' ne se conjugue pas avec 'am / is / are'.",hint:"'Agree' is a standard verb, not an adjective.",opts:["I agree with you.","I am agree with you.","I am agreed with you.","I do agree you."],ans:0,exp:"'Agree' is a verb: 'I agree, you agree, he agrees' — never 'I am agree'."},
+{s:0,q:"❌ Erreur : « She don't like coffee. »",err:"Mauvaise forme de l'auxiliaire avec 'she'.",hint:"3rd person singular uses 'doesn't', not 'don't'.",opts:["She doesn't like coffee.","She don't like coffee.","She isn't like coffee.","She not like coffee."],ans:0,exp:"'She doesn't like' — 3rd person negative uses 'doesn't'."},
+{s:0,q:"❌ Erreur : « I have been here since 3 hours. »",err:"Mauvaise préposition avec une durée.",hint:"Duration (not a point in time) uses 'for', not 'since'.",opts:["I have been here for 3 hours.","I have been here since 3 hours.","I have been here during 3 hours.","I have been here from 3 hours."],ans:0,exp:"'For' = duration (3 hours). 'Since' = starting point (since 3 o'clock)."},
+{s:0,q:"❌ Erreur : « Can you explain me this word? »",err:"Construction incorrecte avec 'explain'.",hint:"'Explain' needs a full phrase: explain something TO someone.",opts:["Can you explain this word to me?","Can you explain me this word?","Can you explain me to this word?","Can you explain for me this word?"],ans:0,exp:"'Explain something TO someone': 'explain it to me', not 'explain me it'."},
+{s:0,q:"❌ Erreur : « I am very bored. » (voulant dire 'Je suis très ennuyeux')",err:"Confusion entre 'bored' (s'ennuie) et 'boring' (ennuyeux).",hint:"'Bored' = feeling bored. 'Boring' = causing boredom.",opts:["I am very boring.","I am very bored.","I am very boredom.","I am very borer."],ans:0,exp:"'I am boring' means you cause boredom in others. 'I am bored' means you feel bored."},
+{s:0,q:"❌ Erreur : « I didn't went to school yesterday. »",err:"Double marquage du passé avec 'didn't' et 'went'.",hint:"After 'didn't', always use the base form of the verb.",opts:["I didn't go to school yesterday.","I didn't went to school yesterday.","I don't go to school yesterday.","I wasn't go to school yesterday."],ans:0,exp:"'Didn't' already marks the past — use base verb: 'I didn't go'."},
+{s:0,q:"❌ Erreur : « Since how long have you lived here? »",err:"Traduction directe de 'Depuis combien de temps'.",hint:"English uses 'How long' without 'since' in the question.",opts:["How long have you lived here?","Since how long have you lived here?","How long since have you lived here?","Since how much time have you lived here?"],ans:0,exp:"'How long have you...?' — never 'since how long'."},
+{s:0,q:"❌ Erreur : « It is raining since this morning. »",err:"Mauvais temps avec une durée qui continue.",hint:"An action that started in the past and continues → perfect continuous.",opts:["It has been raining since this morning.","It is raining since this morning.","It rains since this morning.","It was raining since this morning."],ans:0,exp:"Present perfect continuous: 'It has been raining since this morning'."},
+{s:0,q:"❌ Erreur : « I am interesting in music. »",err:"Confusion entre 'interested' et 'interesting'.",hint:"A person 'is interested IN' something. A thing 'is interesting'.",opts:["I am interested in music.","I am interesting in music.","I am intereste in music.","I interest in music."],ans:0,exp:"'Interested in' = you have interest. 'Interesting' = something that creates interest."},
+{s:0,q:"❌ Erreur : « My English is not very good, I make a lot of faults. »",err:"'Fault' n'est pas le bon mot pour 'erreur' en anglais courant.",hint:"In English, you 'make mistakes', not 'faults'.",opts:["I make a lot of mistakes.","I make a lot of faults.","I make a lot of errors of speech.","I make a lot of fails."],ans:0,exp:"'Make mistakes' is the natural expression. 'Fault' means culpabilité or panne."},
+{s:0,q:"❌ Erreur : « I look forward to meet you. »",err:"Construction incorrecte après 'look forward to'.",hint:"'Look forward to' is followed by a noun or a GERUND (-ing).",opts:["I look forward to meeting you.","I look forward to meet you.","I look forward to to meet you.","I look forward of meeting you."],ans:0,exp:"'Look forward to + gerund': 'I look forward to MEETING you'."},
+{s:0,q:"❌ Erreur : « He told me that he will come. »",err:"Concordance des temps incorrecte dans le discours indirect.",hint:"In reported speech, future 'will' becomes 'would'.",opts:["He told me that he would come.","He told me that he will come.","He told me that he shall come.","He said me that he would come."],ans:0,exp:"Reported speech: 'will' → 'would'. 'He told me he WOULD come.'"},
+{s:0,q:"❌ Erreur : « She suggested me to leave early. »",err:"'Suggest' ne se construit pas avec un objet direct + infinitif.",hint:"'Suggest' is followed by 'that + clause' or 'suggest + gerund'.",opts:["She suggested that I leave early.","She suggested me to leave early.","She suggest me leaving early.","She suggested me leave early."],ans:0,exp:"'Suggest that I leave' or 'suggest leaving' — never 'suggest someone to do'."},
+{s:0,q:"❌ Erreur : « I am very boring at this party. »",err:"Confusion entre 'bored' et 'boring'.",hint:"You FEEL bored. A party IS boring.",opts:["I am very bored at this party.","I am very boring at this party.","I feel very boring here.","I am bore at this party."],ans:0,exp:"'I am bored' = je m'ennuie. 'The party is boring' = la fête est ennuyeuse."},
+{s:0,q:"❌ Erreur : « We discussed about the project. »",err:"'Discuss' est transitif direct — pas besoin de 'about'.",hint:"'Discuss' takes a direct object without a preposition.",opts:["We discussed the project.","We discussed about the project.","We discussed of the project.","We talked discuss the project."],ans:0,exp:"'Discuss something' (no preposition): 'we discussed the project'."},
+{s:0,q:"❌ Erreur : « I am knowing the answer. »",err:"'Know' est un verbe d'état — pas de forme continue.",hint:"Stative verbs (know, love, believe, understand) don't use -ing.",opts:["I know the answer.","I am knowing the answer.","I am know the answer.","I do knowing the answer."],ans:0,exp:"Stative verbs don't take continuous: 'I know, I love, I believe' — never 'I am knowing'."},
+{s:0,q:"❌ Erreur : « I prefer the tea than the coffee. »",err:"Mauvaise préposition avec 'prefer'.",hint:"In English, 'prefer... to...' is the correct structure.",opts:["I prefer tea to coffee.","I prefer tea than coffee.","I prefer the tea than the coffee.","I more prefer tea than coffee."],ans:0,exp:"'Prefer X to Y' — never 'prefer... than'. Articles also dropped with general nouns."},
+{s:0,q:"❌ Erreur : « Make your homework before dinner. »",err:"Mauvais verbe avec 'homework'.",hint:"You always 'do' homework, never 'make' it.",opts:["Do your homework before dinner.","Make your homework before dinner.","Have your homework before dinner.","Work your homework before dinner."],ans:0,exp:"'Do homework, do the dishes, do a test' — 'make' is for creating: 'make a cake'."},
+{s:0,q:"❌ Erreur : « I am very bored of your excuses. »",err:"Mauvaise préposition avec 'bored'.",hint:"When fed up or tired of something: 'bored WITH' or commonly 'tired of'.",opts:["I am very tired of your excuses.","I am very bored of your excuses.","I am very boring of your excuses.","I am very bored from your excuses."],ans:0,exp:"'Bored with' or 'tired of' — 'bored of' is informal and debated; 'tired of' is always correct."},
+{s:0,q:"❌ Erreur : « He is a very sympathetic person. » (voulant dire 'il est sympa')",err:"'Sympathetic' ne signifie pas 'sympathique'.",hint:"'Sympathetic' = compatissant. 'Nice / likeable' = sympathique.",opts:["He is a very nice / likeable person.","He is a very sympathetic person.","He is a very sympathy person.","He is a very symphatique person."],ans:0,exp:"'Sympathetic' = showing compassion (après un malheur). 'Nice, friendly, likeable' = sympathique."},
+{s:0,q:"❌ Erreur : « I will call you when I will arrive. »",err:"Double futur incorrect dans une proposition de temps.",hint:"After 'when' in a time clause, use present simple, not future.",opts:["I will call you when I arrive.","I will call you when I will arrive.","I call you when I will arrive.","I would call you when I arrive."],ans:0,exp:"After 'when / as soon as / before / after' (time clauses), use present simple for future events."},
+{s:0,q:"❌ Erreur : « I am born in 1990. »",err:"Mauvais temps pour un fait passé fixe.",hint:"A completed past event uses simple past, not present continuous.",opts:["I was born in 1990.","I am born in 1990.","I have been born in 1990.","I born in 1990."],ans:0,exp:"'I was born' — birth is a completed past event, always simple past."},
+{s:0,q:"❌ Erreur : « I did a mistake in my report. »",err:"Mauvais collocateur pour 'mistake'.",hint:"In English you always 'MAKE' a mistake.",opts:["I made a mistake in my report.","I did a mistake in my report.","I have done a mistake.","I committed a mistake in my report."],ans:0,exp:"'Make a mistake' is fixed. Similarly: 'make an effort, make a decision'."},
+{s:0,q:"❌ Erreur : « She is married with a doctor. »",err:"Mauvaise préposition avec 'married'.",hint:"In English: 'married TO' someone.",opts:["She is married to a doctor.","She is married with a doctor.","She is married by a doctor.","She married with a doctor."],ans:0,exp:"'Married to' — never 'married with'. 'She is married TO a doctor.'"},
+{s:0,q:"❌ Erreur : « I am waiting since one hour. »",err:"Mauvaise construction avec 'wait' et 'since'.",hint:"A duration (not a point in time) needs 'for', and use present perfect.",opts:["I have been waiting for one hour.","I am waiting since one hour.","I wait since one hour.","I am waiting for one hour."],ans:0,exp:"'I have been waiting FOR one hour' — duration needs 'for' + present perfect continuous."},
+{s:0,q:"❌ Erreur : « The news are bad today. »",err:"'News' est toujours singulier en anglais.",hint:"'News' is an uncountable noun — use singular verb.",opts:["The news is bad today.","The news are bad today.","The news were bad today.","The news have been bad today."],ans:0,exp:"'News' is uncountable and singular: 'the news IS bad'. Same for 'information'."},
+
+// ══════════════════════════════════════════════════════
+// SECTION 1 — Faux Amis (35 questions)
+// ══════════════════════════════════════════════════════
+{s:1,q:"🎭 FAUX AMI — Le mot français « Actuellement » se traduit par :",err:"",hint:"'Actually' en anglais signifie 'en fait / en réalité'.",opts:["Currently / At the moment","Actually","Actual","Actualy"],ans:0,exp:"'Actually' = 'en fait'. 'Actuellement' = 'currently' or 'at the moment / nowadays'."},
+{s:1,q:"🎭 FAUX AMI — Une « Librairie » en français, c'est :",err:"",hint:"'Library' en anglais est un lieu où on emprunte des livres gratuitement.",opts:["A bookshop / bookstore","A library","A book library","A book shop library"],ans:0,exp:"'Library' = bibliothèque (free borrowing). 'Bookshop/bookstore' = librairie (where you buy books)."},
+{s:1,q:"🎭 FAUX AMI — « Assister à une réunion » se dit en anglais :",err:"",hint:"'Assist' en anglais signifie 'aider'.",opts:["To attend a meeting","To assist a meeting","To assist at a meeting","To be at helping a meeting"],ans:0,exp:"'Attend' = assister à. 'Assist' = aider, seconder. 'He assisted the manager' = il a aidé le directeur."},
+{s:1,q:"🎭 FAUX AMI — « Elle est très sensible. » → She is very...",err:"",hint:"'Sensible' en anglais veut dire raisonnable, prudent.",opts:["She is very sensitive.","She is very sensible.","She is very sensed.","She is very feeling."],ans:0,exp:"'Sensitive' = sensible (emotionally). 'Sensible' = raisonnable / sensé."},
+{s:1,q:"🎭 FAUX AMI — « Ce voyage était une vraie aventure. » C'est un bon exemple de :",err:"",hint:"'Adventure' existe en anglais mais 'venture' signifie entreprise risquée.",opts:["It was a real adventure. (correct !)","It was a real venture.","It was a real event.","It was a real advent."],ans:0,exp:"'Adventure' is a true cognate here! But beware: 'venture' = entreprise risquée / hasardeuse."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Embarrassed » veut dire :",err:"",hint:"'Embarrassé' en français = gêné dans ses mouvements. En anglais, c'est différent.",opts:["Ashamed / Ill at ease","Pregnant","In difficulty","Bothered by luggage"],ans:0,exp:"'Embarrassed' = gêné / honteux. En espagnol 'embarazada' = enceinte — faux ami célèbre !"},
+{s:1,q:"🎭 FAUX AMI — « Une conférence » (exposé/présentation) en anglais :",err:"",hint:"'Conference' en anglais suggère plutôt une grande réunion.",opts:["A lecture / a talk","A conference","A speech conference","A confer"],ans:0,exp:"'Lecture' = cours magistral / conférence académique. 'Conference' = grande réunion de travail."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Deception » veut dire :",err:"",hint:"'Déception' en français = disappointment.",opts:["A trick / a lie (tromperie)","A disappointment","A sadness","A strong feeling"],ans:0,exp:"'Deception' = tromperie / duperie. 'Disappointment' = déception."},
+{s:1,q:"🎭 FAUX AMI — « Il est très gentle. » Que veut vraiment dire 'gentle' ?",err:"",hint:"'Gentil' en français = nice/kind. 'Gentle' en anglais a un autre sens.",opts:["Calm, soft, delicate (doux/délicat)","Nice / kind","Polite","Generous"],ans:0,exp:"'Gentle' = doux, délicat, calme. 'Gentil' = nice, kind. 'A gentle voice' = une voix douce."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Pretend » signifie :",err:"",hint:"'Prétendre' en français = to claim. 'Pretend' in English is different.",opts:["To fake / to make believe (faire semblant)","To claim (prétendre)","To show off","To promise"],ans:0,exp:"'Pretend' = faire semblant. 'Prétendre' (fr) = 'to claim' in English."},
+{s:1,q:"🎭 FAUX AMI — « Elle est enceinte. » On dit en anglais :",err:"",hint:"'Enceinte' ressemble à 'encircled' — mais le mot anglais est totalement différent.",opts:["She is pregnant.","She is encircled.","She is enceinte.","She is expectant only."],ans:0,exp:"'Pregnant' = enceinte. 'Enceinte' doesn't exist in English for this meaning."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Rude » signifie :",err:"",hint:"'Rude' en français = rough/crude. En anglais, le sens est plus social.",opts:["Impolite / discourteous (impoli)","Rough","Naked","Vulgar"],ans:0,exp:"'Rude' = impoli. 'Rude' in French = rudimentaire / brut. 'Don't be rude!' = ne sois pas impoli !"},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Chance » veut dire :",err:"",hint:"'Chance' en français = luck. En anglais, le sens est plus neutre.",opts:["Opportunity / probability","Luck only","A good omen","Destiny"],ans:0,exp:"'Chance' = occasion / probabilité. 'Luck' = chance (fr). 'Good luck!' not 'Good chance!'"},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Résumé » (CV) est différent du français « résumer ». 'To summarize' signifie :",err:"",hint:"'Résumé' en anglais = CV. 'To summarize' = ?",opts:["To make a summary (résumer)","To write a CV","To read again","To condense data"],ans:0,exp:"'Résumé' (noun) = CV en anglais américain. 'To summarize' = résumer."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Eventually » veut dire :",err:"",hint:"'Éventuellement' en français = possibly. 'Eventually' en anglais = ?",opts:["In the end / ultimately (finalement)","Possibly","Sometimes","Occasionally"],ans:0,exp:"'Eventually' = finalement / à la fin. 'Éventuellement' (fr) = possibly = 'possibly' in English."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Lecture » veut dire :",err:"",hint:"'Lecture' en français = reading. En anglais, c'est lié à l'enseignement.",opts:["A talk / lesson / conference talk","A reading session","A book","A lesson in school"],ans:0,exp:"'Lecture' = conférence / cours magistral. 'Reading' = lecture (fr)."},
+{s:1,q:"🎭 FAUX AMI — « Je suis bien préservé ! » On NE dit PAS « I am well preserved. » On dit :",err:"",hint:"'Preserved' in English sounds strange applied to a person.",opts:["I am in great shape! / I look young for my age!","I am well preserved.","I am well conserved.","I am preserved well."],ans:0,exp:"'Well preserved' = bien conservé (aliments). For a person: 'I look young for my age' or 'I'm in great shape.'"},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Proper » veut dire :",err:"",hint:"'Propre' en français = clean. 'Proper' en anglais = ?",opts:["Correct / appropriate / formal","Clean","Tidy","One's own"],ans:0,exp:"'Proper' = approprié, correct. 'Clean' = propre. 'Proper behaviour' = comportement approprié."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Agenda » veut dire :",err:"",hint:"'Agenda' en français = diary/planner. En anglais, le sens diffère légèrement.",opts:["A list of items to be discussed (ordre du jour)","A personal diary","A schedule book","A planner only"],ans:0,exp:"'Agenda' in English = ordre du jour (d'une réunion). 'Diary/planner' = agenda (fr)."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Sympathetic » veut dire :",err:"",hint:"'Sympathique' en français = nice / likeable.",opts:["Compassionate / understanding (compatissant)","Nice / likeable","Funny","Friendly"],ans:0,exp:"'Sympathetic' = compassionate (after a tragedy). 'Sympathique' = nice = 'nice, friendly, likeable'."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Large » veut dire :",err:"",hint:"'Large' en français = wide. En anglais, le sens est différent.",opts:["Big / great in size (grand / gros)","Wide","Broad","Spacious"],ans:0,exp:"'Large' = grand/gros. 'Wide' = large (fr). 'A large room' = une grande pièce."},
+{s:1,q:"🎭 FAUX AMI — « Passer un examen » se dit en anglais :",err:"",hint:"'To pass an exam' signifie autre chose en anglais !",opts:["To take / sit an exam","To pass an exam","To do an exam","To give an exam"],ans:0,exp:"'Pass an exam' = réussir un examen (succeed). 'Take / sit an exam' = passer un examen."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Miserable » veut dire :",err:"",hint:"'Misérable' en français = poor, wretched. En anglais, l'accent est sur l'état émotionnel.",opts:["Extremely unhappy / very sad (très malheureux)","Poor","Pitiful","Bad"],ans:0,exp:"'Miserable' = extrêmement malheureux. 'Wretched/pitiful' couvre mieux le sens de 'misérable' (fr)."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Terrible » veut dire :",err:"",hint:"En français populaire, 'terrible' peut signifier 'formidable'. En anglais ?",opts:["Awful / very bad (affreux)","Amazing","Great","Very strong"],ans:0,exp:"'Terrible' in English always means very bad / awful. In informal French, 'c'est terrible!' can mean it's great — never in English!"},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Opportunity » vs. le français « Opportunité » :",err:"",hint:"'Opportunité' en français = appropriateness. 'Opportunity' en anglais = ?",opts:["A chance / a favourable occasion","Appropriateness","A good timing","A coincidence"],ans:0,exp:"'Opportunity' = une occasion favorable. 'Opportunité' (fr) = caractère opportun d'une chose."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Physician » veut dire :",err:"",hint:"'Physicien' en français = scientist in physics. 'Physician' en anglais = ?",opts:["A medical doctor (médecin)","A physics scientist","A physiotherapist","A philosopher"],ans:0,exp:"'Physician' = médecin. 'Physicist' = physicien. 'Physician' and 'physicien' are false friends!"},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Fabric » veut dire :",err:"",hint:"'Fabrique' en français = factory. 'Fabric' en anglais = ?",opts:["Cloth / textile material (tissu)","A factory","A manufacturing plant","A design"],ans:0,exp:"'Fabric' = tissu / étoffe. 'Factory' = usine/fabrique. 'Fabric of society' = tissu social."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Pathetic » veut dire :",err:"",hint:"'Pathétique' en français peut signifier émouvant. En anglais ?",opts:["Pitifully inadequate / laughably weak (pitoyable)","Touching / moving","Emotional","Dramatic"],ans:0,exp:"'Pathetic' in English = pitoyable / lamentable. 'Pathétique' (fr) can mean moving/poignant."},
+{s:1,q:"🎭 FAUX AMI — « Actuellement, il travaille à Paris. » La traduction correcte :",err:"",hint:"'Actually' ≠ 'actuellement'. Attention au faux ami classique !",opts:["He is currently working in Paris.","He is actually working in Paris.","He actually is in Paris nowadays.","Currently, he works actually in Paris."],ans:0,exp:"'Currently / at the moment' = actuellement. 'Actually' = en fait / en réalité."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Sensible » veut dire :",err:"",hint:"'Sensible' en français = sensitive / susceptible. En anglais = ?",opts:["Reasonable / practical (raisonnable)","Sensitive","Emotional","Touchy"],ans:0,exp:"'Sensible' = raisonnable, plein de bon sens. 'Sensible' (fr) = 'sensitive' in English."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Grave » veut dire :",err:"",hint:"'Grave' en français = serious. En anglais, 'grave' a un sens courant et un sens littéral.",opts:["A tomb / a burial place (une tombe)","Serious","Solemn","Deep"],ans:0,exp:"'Grave' (noun) = tombe. 'Grave' (adj) = solemn / serious. 'Grave' (fr) = serious = 'serious/grave' in English."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Brilliant » peut vouloir dire :",err:"",hint:"En anglais britannique, 'brilliant' est souvent utilisé comme :",opts:["Excellent / fantastic (in British English)","Very bright (light only)","Intelligent only","Glowing"],ans:0,exp:"'Brilliant' in British English = excellent / fantastic! Also means very intelligent or very bright (light)."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Eventually » vs. « Finalement » :",err:"",hint:"'Eventually' = after a long time. 'Finally' = ?",opts:["Finally = finalement (last in a sequence), Eventually = à la fin (after delays)","They mean exactly the same thing","Eventually = possibly, Finally = at last","Finally is formal, Eventually is informal"],ans:0,exp:"'Finally' = finalement (last step). 'Eventually' = finalement (après un long temps/délais). Both translate to 'finalement' but in different contexts!"},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Commodity » veut dire :",err:"",hint:"'Commodité' en français = convenience. En anglais = ?",opts:["A product / raw material (produit/matière première)","Comfort / convenience","A facility","An advantage"],ans:0,exp:"'Commodity' = produit de base / matière première. 'Convenience/comfort' = commodité (fr)."},
+{s:1,q:"🎭 FAUX AMI — Le mot anglais « Intoxicated » veut dire :",err:"",hint:"'Intoxiqué' en français = poisoned. En anglais = ?",opts:["Drunk / under the influence of alcohol","Poisoned","Infected","Drugged only"],ans:0,exp:"'Intoxicated' primarily = drunk/tipsy. 'Intoxiqué' (fr) = poisoned = 'poisoned' in English."},
+
+// ══════════════════════════════════════════════════════
+// SECTION 2 — Tenses & Grammar (25 questions)
+// ══════════════════════════════════════════════════════
+{s:2,q:"Quel temps utiliser ?\n« By the time she arrives, I ______ dinner. »",err:"",hint:"Action completed BEFORE a future point → future perfect.",opts:["will have cooked","will cook","have cooked","am going to cook"],ans:0,exp:"Future perfect: 'will have + past participle' for an action completed before another future event."},
+{s:2,q:"Quel temps utiliser ?\n« I ______ never ______ sushi before I visited Japan. »",err:"",hint:"An experience (or lack of it) before a past point → past perfect.",opts:["had / eaten","have / eaten","did / eat","was / eating"],ans:0,exp:"Past perfect: 'had eaten' — for a past experience before another past event."},
+{s:2,q:"Choisissez la forme correcte :\n« If I ______ rich, I would travel the world. »",err:"",hint:"Hypothetical present/future situation → second conditional.",opts:["were","am","would be","was (formal)"],ans:0,exp:"Second conditional: 'If I WERE rich, I WOULD travel'. 'Were' is used for all persons in formal/subjunctive."},
+{s:2,q:"Forme correcte :\n« She ______ here for 10 years next month. »",err:"",hint:"Duration reaching a point in the future → future perfect.",opts:["will have lived","will live","has lived","will be living"],ans:0,exp:"Future perfect: 'will have lived' — she will reach 10 years of living there next month."},
+{s:2,q:"Choisissez :\n« I ______ just ______ the most amazing film! »",err:"",hint:"Recent past with current relevance → present perfect.",opts:["have / seen","did / see","was / seeing","am / seeing"],ans:0,exp:"Present perfect for recent experiences with present relevance: 'I have just seen'."},
+{s:2,q:"Forme correcte :\n« He refused ______ the agreement. »",err:"",hint:"'Refuse' is followed by a specific verb form.",opts:["to sign","signing","that he sign","of signing"],ans:0,exp:"'Refuse + to infinitive': 'he refused to sign'. Compare: 'enjoy + gerund'."},
+{s:2,q:"Choisissez :\n« ______ you mind ______ the window? »",err:"",hint:"'Mind' + verb form?",opts:["Would / closing","Do / to close","Could / close","Will / closing"],ans:0,exp:"'Would you mind + gerund (-ing)': 'Would you mind CLOSING the window?'"},
+{s:2,q:"Forme correcte :\n« I wish I ______ fly! »",err:"",hint:"'Wish' expresses a desire for things to be different → ?",opts:["could","can","would","should"],ans:0,exp:"'Wish + could' for ability wishes: 'I wish I could fly.' 'Wish + would' for habits you want changed."},
+{s:2,q:"Quelle phrase est correcte ?\n« ______ we leave now, we'll miss the train. »",err:"",hint:"First conditional — real future possibility.",opts:["Unless","If not","Provided that not","Without"],ans:0,exp:"'Unless' = if not: 'Unless we leave now' = 'If we don't leave now, we'll miss the train.'"},
+{s:2,q:"Forme correcte :\n« The report ______ by Friday. »",err:"",hint:"Passive voice with a future deadline.",opts:["must be submitted","must submit","must be submitting","should submitted"],ans:0,exp:"Passive: 'must be submitted' — subject + modal + 'be' + past participle."},
+{s:2,q:"Choisissez :\n« He ______ the piano since he was five. »",err:"",hint:"Action started in the past and still continuing.",opts:["has been playing","is playing","played","was playing"],ans:0,exp:"Present perfect continuous for ongoing actions from the past: 'has been playing'."},
+{s:2,q:"Forme correcte :\n« ______ she arrives, please let me know. »",err:"",hint:"Expressing a future action with a time clause.",opts:["As soon as","So soon as","As soon when","Right when as"],ans:0,exp:"'As soon as' + present simple (for future): 'As soon as she arrives, let me know.'"},
+{s:2,q:"Quelle phrase utilise correctement 'used to' ?",err:"",hint:"'Used to' describes a past habit or state that no longer exists.",opts:["I used to walk to school when I was young.","I use to walk to school.","I am used to walk to school.","I used walking to school."],ans:0,exp:"'Used to + infinitive' = past habit: 'I used to walk'. 'Be used to + gerund' = être habitué à."},
+{s:2,q:"Choisissez :\n« It's time you ______ bed. »",err:"",hint:"'It's time + subject + past tense' (subjunctive-like structure).",opts:["went to","go to","will go to","should go to"],ans:0,exp:"'It's time + subject + past simple' is a fixed structure: 'It's time you WENT to bed.'"},
+{s:2,q:"Forme correcte :\n« I'd rather you ______ smoke here. »",err:"",hint:"'Would rather + subject + verb form'.",opts:["didn't","don't","not","wouldn't"],ans:0,exp:"'I'd rather + subject + past simple': 'I'd rather you DIDN'T smoke here.'"},
+{s:2,q:"Quelle phrase est grammaticalement correcte ?",err:"",hint:"Inversion after a negative adverb.",opts:["Never have I seen such beauty.","Never I have seen such beauty.","I have never seen such beauty. (informal)","Never I saw such beauty."],ans:0,exp:"Inversion after 'Never': 'Never HAVE I seen...' — auxiliary before subject (formal/literary)."},
+{s:2,q:"Choisissez :\n« ______ it rains tomorrow, we'll cancel the picnic. »",err:"",hint:"Conditional for a real future possibility.",opts:["If","Unless","Should","Provided"],ans:0,exp:"'If it rains' (first conditional) — real possibility in the future."},
+{s:2,q:"Forme correcte :\n« I ______ better call the doctor. »",err:"",hint:"'Had better' + verb form?",opts:["had","would have","should have","better must"],ans:0,exp:"'Had better + base verb': 'I had better call' = strong advice. Never 'have better'."},
+{s:2,q:"Choisissez :\n« The more you practice, ______ you become. »",err:"",hint:"Comparative parallel structure.",opts:["the better","the more better","you become better","more good"],ans:0,exp:"'The more..., the more/better...' — parallel comparative: 'The more you practice, the BETTER you become.'"},
+{s:2,q:"Quelle phrase est correcte au passif ?",err:"",hint:"Passive voice transformation.",opts:["The letter was written by Sarah.","The letter has been wrote by Sarah.","The letter was write by Sarah.","Sarah was written the letter."],ans:0,exp:"Passive: 'was written BY Sarah' — 'be + past participle + by + agent'."},
+{s:2,q:"Choisissez :\n« He asked me where I ______ the day before. »",err:"",hint:"Reported speech — past perfect for actions before the time of reporting.",opts:["had been","was","have been","am"],ans:0,exp:"Reported speech: simple past → past perfect: 'where I HAD BEEN the day before.'"},
+{s:2,q:"Forme correcte :\n« She is used to ______ up early. »",err:"",hint:"'Be used to' + verb form.",opts:["getting","get","got","be getting"],ans:0,exp:"'Be used to + gerund': 'she is used to GETTING up early' = elle a l'habitude de se lever tôt."},
+{s:2,q:"Quelle phrase exprime une déduction logique au présent ?",err:"",hint:"Modal for logical deduction about present fact.",opts:["She must be tired — she's been working all day.","She should be tired — she working all day.","She must to be tired.","She has to being tired."],ans:0,exp:"'Must + infinitive' = logical deduction (présent): 'she must BE tired'."},
+{s:2,q:"Choisissez :\n« This is the best film I ______ ever seen. »",err:"",hint:"Superlative + best experience → which tense?",opts:["have","had","was","did"],ans:0,exp:"Present perfect with superlative: 'the best film I HAVE ever seen'."},
+{s:2,q:"Forme correcte :\n« ______ I were you, I would apologize. »",err:"",hint:"Second conditional for advice: 'if I were you'.",opts:["If","Should","When","Were"],ans:0,exp:"'If I were you, I would...' — second conditional for advice. Never 'if I was you' in formal English."},
+
+// ══════════════════════════════════════════════════════
+// SECTION 3 — Formal English (20 questions)
+// ══════════════════════════════════════════════════════
+{s:3,q:"Quelle formule ouvre le mieux un email formel en anglais ?",err:"",hint:"Standard formal email opening in English.",opts:["Dear Sir/Madam,","Hello there,","Hi !","Good day to you,"],ans:0,exp:"'Dear Sir/Madam,' is the standard formal opening when you don't know the recipient's name."},
+{s:3,q:"Quelle formule clôt le mieux un email formel ?",err:"",hint:"Standard closing for a formal English email.",opts:["Yours faithfully, (when you don't know the name)","Best wishes,","See you,","Cheers,"],ans:0,exp:"'Yours faithfully' when opening with 'Dear Sir/Madam'. 'Yours sincerely' when you know the name."},
+{s:3,q:"Comment exprimer poliment une demande formelle ?",err:"",hint:"Formal request in a business setting.",opts:["I would be grateful if you could provide...","Give me the information.","I want you to send me...","Please send the thing."],ans:0,exp:"'I would be grateful if you could...' is a highly polite formal request structure."},
+{s:3,q:"Comment accuser réception d'un email formellement ?",err:"",hint:"Acknowledging receipt in professional correspondence.",opts:["I am writing to acknowledge receipt of your email dated...","Got your email.","I received it.","Thank you for the email I got."],ans:0,exp:"'I am writing to acknowledge receipt of...' is the formal standard for confirming receipt."},
+{s:3,q:"Comment introduire poliment une mauvaise nouvelle ?",err:"",hint:"Softening bad news in formal communication.",opts:["I regret to inform you that...","I'm sorry but...","Bad news:","Unfortunately,"],ans:0,exp:"'I regret to inform you that...' is the most formal and respectful way to introduce bad news."},
+{s:3,q:"Comment s'excuser formellement en anglais ?",err:"",hint:"Formal apology in business English.",opts:["I sincerely apologise for any inconvenience caused.","Sorry!","My bad.","I'm really sorry about that."],ans:0,exp:"'I sincerely apologise for any inconvenience caused' is the complete, formal apology formula."},
+{s:3,q:"Comment exprimer sa disponibilité formellement ?",err:"",hint:"Indicating availability for a meeting.",opts:["I remain at your disposal should you require further assistance.","I'm available.","Call me anytime.","I'm there if you need."],ans:0,exp:"'I remain at your disposal' is highly formal and elegant for indicating availability."},
+{s:3,q:"Comment joindre un document à un email formellement ?",err:"",hint:"Formal way to mention an attachment.",opts:["Please find attached the document you requested.","I put the file here.","I attach the thing.","The document is in the attachment."],ans:0,exp:"'Please find attached' is the standard formal phrase for sending documents by email."},
+{s:3,q:"Comment demander poliment un délai supplémentaire ?",err:"",hint:"Requesting an extension professionally.",opts:["I was wondering if it would be possible to extend the deadline.","Can I have more time?","I need more time.","Give me extra time please."],ans:0,exp:"'I was wondering if it would be possible...' is a very polite indirect request — highly formal."},
+{s:3,q:"Comment proposer une réunion formellement ?",err:"",hint:"Scheduling a meeting in business English.",opts:["I would like to request a meeting at your earliest convenience.","Let's meet.","Can we do a meeting?","I want to see you."],ans:0,exp:"'At your earliest convenience' = dès que possible (formal). Very professional phrasing."},
+{s:3,q:"Comment exprimer un désaccord poli en réunion formelle ?",err:"",hint:"Disagreeing diplomatically in English.",opts:["I see your point, however, I would suggest that...","You are wrong.","I disagree.","That's not right."],ans:0,exp:"'I see your point, however...' acknowledges the other person before disagreeing — professional and diplomatic."},
+{s:3,q:"Comment mentionner une référence dans un email formel ?",err:"",hint:"Referring to a previous communication.",opts:["With reference to your email of [date]...","About your email...","Regarding your message...","As per your email (acceptable but slightly less formal)"],ans:0,exp:"'With reference to' is the most formal reference opener. 'As per' is also used in business."},
+{s:3,q:"Comment clore une réunion formelle avec élégance ?",err:"",hint:"Professional closing statement for a meeting.",opts:["Thank you all for your valuable contributions to today's discussion.","OK, we're done.","That's everything.","Meeting over!"],ans:0,exp:"'Thank you for your valuable contributions' closes a meeting with professionalism and gratitude."},
+{s:3,q:"Comment formuler une recommandation formelle ?",err:"",hint:"Making a formal recommendation or suggestion.",opts:["I would strongly recommend that we consider...","I think we should...","My suggestion is to...","We better do..."],ans:0,exp:"'I would strongly recommend that we consider...' is authoritative yet professional."},
+{s:3,q:"Comment transmettre de bonnes nouvelles formellement ?",err:"",hint:"Sharing positive news in a formal email.",opts:["I am delighted to inform you that...","Great news!","I'm happy to say...","Guess what?"],ans:0,exp:"'I am delighted to inform you' is the formal, professional way to share good news."},
+{s:3,q:"Comment conclure une proposition commerciale formellement ?",err:"",hint:"Closing a business proposal or pitch.",opts:["I trust you will give this proposal your favourable consideration.","Please think about it.","Consider this.","Let me know what you think."],ans:0,exp:"'I trust you will give this your favourable consideration' is elegant and confident."},
+{s:3,q:"Comment demander une clarification formellement ?",err:"",hint:"Asking for clarification in formal communication.",opts:["Could you please clarify your position on this matter?","What do you mean?","Explain please.","I don't understand — can you explain?"],ans:0,exp:"'Could you please clarify...' is polite, indirect, and highly professional."},
+{s:3,q:"Comment exprimer son accord formel ?",err:"",hint:"Expressing agreement professionally.",opts:["I am in full agreement with your proposal.","Sure, OK.","Agreed!","Fine by me."],ans:0,exp:"'I am in full agreement with' is formal and authoritative — much stronger than just 'OK'."},
+{s:3,q:"Comment exprimer l'urgence dans un email formel ?",err:"",hint:"Expressing urgency professionally.",opts:["I would appreciate your prompt attention to this matter.","URGENT!!!","Do this ASAP.","This is urgent — reply now."],ans:0,exp:"'I would appreciate your prompt attention to this matter' is formal and firm without being aggressive."},
+{s:3,q:"Comment remercier formellement après un entretien ?",err:"",hint:"Post-interview thank you note.",opts:["I would like to express my sincere gratitude for the opportunity to interview.","Thanks for the interview.","I enjoyed our chat.","Thank you so much!"],ans:0,exp:"'Express my sincere gratitude for the opportunity' is polished and memorable after an interview."},
+
+// ══════════════════════════════════════════════════════
+// SECTION 4 — Avoid & Replace (20 questions)
+// ══════════════════════════════════════════════════════
+{s:4,q:"Mot familier à éviter : « The project is kinda good. »\nQuelle est l'alternative formelle ?",err:"'Kinda' est très familier.",hint:"Replace informal fillers with precise vocabulary.",opts:["The project is quite promising.","The project is kinda great.","The project is sort of good.","The project is okay."],ans:0,exp:"'Quite promising' or 'fairly impressive' replace the filler 'kinda' with precision."},
+{s:4,q:"Anglicisme à éviter : « We need to leverage this going forward. »\nQuelle formule est plus claire et moins jargonnée ?",err:"'Leverage' et 'going forward' sont du jargon corporate.",hint:"Replace corporate buzzwords with clear language.",opts:["We need to build on this in the future.","We should leverage moving ahead.","Going forward, we leverage.","We use this leveraged forward."],ans:0,exp:"'Build on this in the future' is direct and clear — avoid buzzwords like 'leverage', 'going forward'."},
+{s:4,q:"Mot à éviter : « This idea is really cool! » (contexte formel)",err:"'Cool' est trop familier.",hint:"What adjective replaces 'cool' in formal context?",opts:["This idea is excellent / truly innovative.","This idea is so cool!","This idea is awesome.","This idea is very nice."],ans:0,exp:"'Excellent', 'innovative', 'remarkable' replace 'cool' in formal/professional communication."},
+{s:4,q:"À éviter : « I'll touch base with you later. »\nFormule plus claire :",err:"'Touch base' est un cliché corporate.",hint:"Replace the business cliché with plain English.",opts:["I will contact you later.","I'll touch you later.","I'll base touch soon.","I'll reach back to base with you."],ans:0,exp:"'I will contact/reach you later' is clearer than 'touch base'. Avoid corporate clichés."},
+{s:4,q:"À éviter : « It's not rocket science. »\nAlternative formelle :",err:"Expression trop familière pour un contexte formel.",hint:"Find a more formal way to say 'it's simple'.",opts:["This is relatively straightforward.","It's not rocket science, truly.","This is not complicated science.","It's really easy."],ans:0,exp:"'Relatively straightforward' or 'quite simple to grasp' replace the cliché 'not rocket science'."},
+{s:4,q:"À éviter : « We need to think outside the box. »\nAlternative plus précise :",err:"Cliché trop usé dans le monde professionnel.",hint:"Replace this overused expression.",opts:["We need to approach this creatively / adopt innovative strategies.","We think outside boxes.","We need fresh ideas outside the box.","We should brainstorm outside the box."],ans:0,exp:"'Adopt innovative strategies' or 'think creatively' say the same thing without the cliché."},
+{s:4,q:"À éviter : « Let's take this offline. »\nAlternative directe :",err:"Jargon de réunion trop usé.",hint:"Plain English replacement for this meeting cliché.",opts:["Let's discuss this privately/separately.","Let's go offline on this.","Let's take this outside online.","Let's disconnect for this."],ans:0,exp:"'Let's discuss this privately or separately' is clearer and more professional."},
+{s:4,q:"Mot familier à remplacer : « The boss was super happy. »",err:"'Super' est trop familier en contexte professionnel.",hint:"More formal intensifier than 'super'.",opts:["The manager was extremely / thoroughly pleased.","The boss was super pleased.","The boss was very super happy.","The manager was really happy."],ans:0,exp:"'Extremely / thoroughly pleased' is formal. 'Super' is informal and should be avoided professionally."},
+{s:4,q:"Anglicisme à éviter : « I will feedback you tomorrow. »",err:"'Feedback' utilisé comme verbe est incorrect.",hint:"'Feedback' is a noun, not a verb.",opts:["I will give you feedback tomorrow.","I feedback you tomorrow.","I will feedback tomorrow.","I will be feedbacking you."],ans:0,exp:"'Feedback' is a noun: 'give/provide feedback'. Never use it as a verb in formal writing."},
+{s:4,q:"À éviter : « Basically, what I'm saying is... » (trop fréquent en discours)",err:"'Basically' est un filler très surutilisé.",hint:"Replace the overused filler at the start of explanations.",opts:["In essence, my point is...","Basically, I am saying basically...","In basic terms, what I say...","Simply, what I'm saying..."],ans:0,exp:"'In essence', 'essentially', 'to put it simply' are more refined alternatives to 'basically'."},
+{s:4,q:"À éviter : « At the end of the day... » (cliché)",err:"Cliché usé à l'excès en anglais professionnel.",hint:"Replace this overused transitional phrase.",opts:["Ultimately, / When all is said and done,...","At the end of day we must...","In the end of the day,...","After the day ends,..."],ans:0,exp:"'Ultimately' or 'when all is said and done' replace the worn-out 'at the end of the day'."},
+{s:4,q:"À éviter : « It is what it is. »\nAlternative professionnelle :",err:"Expression trop passive et vague.",hint:"A more proactive, professional formulation.",opts:["We must accept the current situation and adapt accordingly.","It is what it is unfortunately.","That's just how things are.","We can't change things."],ans:0,exp:"'We must accept and adapt' shows maturity and proactivity — far better than passive resignation."},
+{s:4,q:"Anglicisme à remplacer : « Please revert back to me. »",err:"'Revert back' est un pléonasme courant.",hint:"'Revert' already means to go back — 'back' is redundant.",opts:["Please respond / get back to me.","Please revert to me.","Please revert back swiftly.","Please reply back to me."],ans:0,exp:"'Revert back' is a common pleonasm. 'Please respond' or 'please get back to me' is cleaner."},
+{s:4,q:"À éviter : « I'm gonna need that report. »\nFormule formelle :",err:"'Gonna' est trop oral et familier.",hint:"Replace 'gonna' with formal standard English.",opts:["I will require that report.","I am going to need that report.","That report will be needed by me.","I shall be needing that report."],ans:0,exp:"'I will require' is formal. 'Gonna' is strictly informal speech — never write it professionally."},
+{s:4,q:"À éviter en communication écrite : « As per my last email... »",err:"Cette formule est souvent perçue comme passive-agressive.",hint:"Find a neutral, professional alternative.",opts:["As I mentioned in my previous email,...","As per my last email (seen as rude)...","Like I said before in my email,...","Referring back to my email,..."],ans:0,exp:"'As I mentioned in my previous email' is neutral. 'As per my last email' is often perceived as passive-aggressive."},
+{s:4,q:"Mot à éviter : « This is a game-changer! »\nAlternative formelle :",err:"'Game-changer' est un buzzword trop usé.",hint:"More precise and formal alternative.",opts:["This represents a significant breakthrough.","This changes the game.","This is a game-changing thing.","This is hugely game-changing."],ans:0,exp:"'A significant breakthrough' or 'a major turning point' are more specific than 'game-changer'."},
+{s:4,q:"À éviter : « We need to be on the same page. »\nAlternative :",err:"Cliché souvent incompris par les non-natifs.",hint:"Clear alternative to this common meeting cliché.",opts:["We need to ensure we have a shared understanding.","We all need to be paged.","We need the same page book.","We have to align our pages."],ans:0,exp:"'Ensure a shared understanding' or 'align our perspectives' is clearer and more professional."},
+{s:4,q:"À remplacer : « The ball is in your court. »\nAlternative professionnelle :",err:"Métaphore sportive pas toujours comprise.",hint:"Replace the sports metaphor with plain language.",opts:["The decision / next step is yours to make.","The ball you have in the court.","Your court has the ball now.","You hold the ball in your court."],ans:0,exp:"'The next step is yours' or 'this decision rests with you' avoids the sports metaphor."},
+{s:4,q:"Mot à éviter : « Can you give me a ballpark figure? »\nAlternative formelle :",err:"Jargon informel américain.",hint:"More formal way to ask for an approximate number.",opts:["Could you provide a rough estimate?","Give me a ball-park.","What ballpark are we in?","What's the approximate ball park?"],ans:0,exp:"'A rough estimate' or 'an approximate figure' replace the informal 'ballpark figure'."},
+{s:4,q:"À éviter : « Let's circle back on this. »\nAlternative claire :",err:"Jargon corporate surutilisé.",hint:"Replace this overused corporate phrase.",opts:["Let's revisit this matter later.","Let's circle on this back.","We circle back soon.","This we will circle on."],ans:0,exp:"'Let's revisit this later' or 'let's return to this matter' are direct and professional."},
+
+// ══════════════════════════════════════════════════════
+// SECTION 5 — Pro Power Phrases (20 questions)
+// ══════════════════════════════════════════════════════
+{s:5,q:"Quelle expression capte immédiatement l'attention d'un auditoire ?",err:"",hint:"Opening a speech with impact.",opts:["I'd like to begin by asking you a compelling question...","Good evening everyone.","Thank you for having me.","Hello, my name is..."],ans:0,exp:"Opening with a compelling question creates instant engagement — a classic rhetorical technique used by the best speakers."},
+{s:5,q:"Quelle tournure renforce une affirmation avec autorité ?",err:"",hint:"Asserting a point with conviction.",opts:["The evidence overwhelmingly suggests that...","I think maybe...","I believe perhaps...","It could possibly be..."],ans:0,exp:"'The evidence overwhelmingly suggests' sounds authoritative and data-driven — powerful for any audience."},
+{s:5,q:"Comment introduire un argument décisif avec style ?",err:"",hint:"Transition to a key argument.",opts:["What is particularly striking, however, is that...","Also, I want to say...","Another thing is...","And also I think..."],ans:0,exp:"'What is particularly striking is that...' highlights a point elegantly and draws attention to it."},
+{s:5,q:"Quelle formule concède un point avant de contre-argumenter ?",err:"",hint:"The classic rhetorical concession.",opts:["While it is true that... one must nevertheless acknowledge that...","Yes but...","OK fine, but...","I agree a bit, but..."],ans:0,exp:"'While it is true that... one must nevertheless...' is a masterful rhetorical concession used by great debaters."},
+{s:5,q:"Quelle expression conclut un discours avec impact ?",err:"",hint:"A memorable closing line.",opts:["I leave you with this thought: the future belongs to those who act.","Thank you and goodbye.","That's all I have to say.","I'm done. Thanks."],ans:0,exp:"A powerful closing thought leaves a lasting impression. Great speakers always end with a memorable line."},
+{s:5,q:"Quelle tournure exprime une certitude persuasive ?",err:"",hint:"Conveying strong conviction.",opts:["There can be absolutely no doubt that...","I'm quite sure...","I think it's right...","Probably this is true..."],ans:0,exp:"'There can be absolutely no doubt that...' is one of the most assertive phrases in English rhetoric."},
+{s:5,q:"Comment interpeller son auditoire avec sophistication ?",err:"",hint:"Rhetorical question to engage the audience.",opts:["Allow me to pose a question that strikes at the heart of this matter:","Can I ask you something?","I have a question for you.","Let me ask you:"],ans:0,exp:"'Allow me to pose a question that strikes at the heart of this matter' — elegant and commanding."},
+{s:5,q:"Quelle formule donne du poids à une statistique ou donnée ?",err:"",hint:"Introducing a key statistic powerfully.",opts:["The figures speak for themselves: ...","The data says that...","According to numbers...","Statistics show that..."],ans:0,exp:"'The figures speak for themselves' is dramatic and powerful before delivering a statistic."},
+{s:5,q:"Quelle tournure annonce une idée innovante ?",err:"",hint:"Introducing a bold idea.",opts:["I would like to propose what may seem a bold idea, but one that is fully supported by evidence:","I have a cool idea.","Here is my idea:","I think we should..."],ans:0,exp:"Building anticipation before an idea makes it more memorable. 'Bold but evidence-based' is persuasive."},
+{s:5,q:"Quelle expression marque une transition forte dans un discours ?",err:"",hint:"Powerful transitional phrase.",opts:["Having established that point, let us now turn our attention to...","Now I will talk about something else.","Next, I'll say...","Moving on,"],ans:0,exp:"'Having established... let us now turn our attention to...' is a smooth, authoritative transition."},
+{s:5,q:"Quelle formule réfute un argument avec élégance ?",err:"",hint:"Refuting politely but firmly.",opts:["With the greatest of respect, the evidence does not support that conclusion.","That's wrong.","No, you're mistaken.","I disagree with that completely."],ans:0,exp:"'With the greatest of respect, the evidence does not support...' is firm yet diplomatic."},
+{s:5,q:"Quelle tournure crée un sentiment d'urgence dans un discours ?",err:"",hint:"Conveying urgency with rhetorical impact.",opts:["The time to act is not tomorrow — it is now.","We should do something.","Things need to change soon.","We must act at some point."],ans:0,exp:"Contrasting 'tomorrow' with 'now' creates rhetorical urgency — a classic speechwriting technique."},
+{s:5,q:"Comment introduire une citation avec autorité ?",err:"",hint:"Quoting a source powerfully.",opts:["As the eminent [person] once remarked, and these words remain as true today as ever:","Someone once said...","There's a quote that says...","I read a quote that..."],ans:0,exp:"'As the eminent [person] once remarked' lends authority and gravity to a quotation."},
+{s:5,q:"Quelle formule montre qu'on maîtrise les deux côtés d'un argument ?",err:"",hint:"Showing balanced analysis.",opts:["On the one hand... on the other hand... however, a careful analysis reveals that...","I see both sides.","There are pros and cons.","Both things are true."],ans:0,exp:"'On the one hand... on the other hand... a careful analysis reveals' shows intellectual depth and balance."},
+{s:5,q:"Quelle expression donne de la gravité à une conclusion ?",err:"",hint:"Weighty concluding phrase.",opts:["In light of the foregoing evidence, it is abundantly clear that...","So in conclusion...","To end,","So basically..."],ans:0,exp:"'In light of the foregoing evidence, it is abundantly clear' is authoritative, formal, and conclusive."},
+{s:5,q:"Comment reformuler un point pour mieux le faire comprendre ?",err:"",hint:"Sophisticated clarification phrase.",opts:["To put it another way, / In other words,...","I mean...","What I want to say is...","Let me say again..."],ans:0,exp:"'To put it another way' or 'in other words' signals a clarification elegantly — used by expert communicators."},
+{s:5,q:"Quelle formule reconnaît un point adverse avec classe ?",err:"",hint:"Acknowledge the opposition gracefully.",opts:["One must concede that this argument has some merit; however,...","OK that's a good point but...","I admit you have a point, but...","You may be right, but..."],ans:0,exp:"'One must concede... however' is elevated and persuasive — shows intellectual maturity."},
+{s:5,q:"Comment appeler à l'action à la fin d'un discours ?",err:"",hint:"Call to action — final statement.",opts:["Let us commit today to turning these words into action.","Please do something.","Act now everyone.","Let's do it!"],ans:0,exp:"A strong call to action ('commit to turning words into action') ends a speech with energy and purpose."},
+{s:5,q:"Quelle formule humanise un discours tout en maintenant son autorité ?",err:"",hint:"Connecting personally with the audience.",opts:["Like many of you, I have faced this challenge — and that is precisely why I speak with conviction.","I know how you feel.","We all go through this.","I've been there too."],ans:0,exp:"Personal anecdote + conviction: 'I have faced this — that's why I speak with conviction' builds trust instantly."},
+{s:5,q:"Quelle est la meilleure façon d'énumérer des arguments en discours ?",err:"",hint:"Enumerating key points with rhetorical force.",opts:["There are three pillars to this argument: first... second... and finally, above all...","I have 3 points. One... Two... Three...","My arguments are: a, b, c.","Let me list: first, second, third."],ans:0,exp:"'Three pillars' is a rhetorical device (rule of three) that structures an argument memorably and powerfully."},
+];
+
+// ── STATE ──────────────────────────────────────────────────
+let currentQ=0, score=0, correct=0, wrong=0, streak=0, bestStreak=0;
+let answered=false, currentSection=-1;
+
+function startTest(){
+  document.getElementById('splash').style.display='none';
+  document.getElementById('header').style.display='flex';
+  document.getElementById('mainContent').style.display='block';
+  showQuestion();
+}
+
+function setTheme(t){document.body.className='theme-'+t;}
+
+function showQuestion(){
+  if(currentQ>=Q.length){showResults();return;}
+  answered=false;
+  const q=Q[currentQ];
+  if(q.s!==currentSection){
+    currentSection=q.s;
+    const sd=SECTIONS[q.s];
+    setTheme(sd.theme);
+    const b=document.getElementById('sectionBanner');
+    b.style.display='block';
+    b.innerHTML=`<div class="icon">${sd.icon}</div><h2>${sd.name}</h2><p>${sd.desc}</p>`;
+    setTimeout(()=>b.style.display='none',3500);
+  }
+  const total=Q.length;
+  document.getElementById('questionCounter').textContent=`Q ${currentQ+1} / ${total}`;
+  document.getElementById('scoreHeader').textContent=`Score : ${score}`;
+  document.getElementById('progressFill').style.width=((currentQ/total)*100)+'%';
+  document.getElementById('sc-total').textContent=score;
+  document.getElementById('sc-correct').textContent=correct;
+  document.getElementById('sc-wrong').textContent=wrong;
+  document.getElementById('sc-streak').textContent=streak;
+  document.getElementById('qNumber').textContent=`Question ${currentQ+1} sur ${total}`;
+  document.getElementById('qCategory').textContent=SECTIONS[q.s].icon+' '+SECTIONS[q.s].name;
+  document.getElementById('qText').innerHTML=q.q.replace(/\n/g,'<br>');
+  const errEl=document.getElementById('qError');
+  if(q.err){errEl.style.display='block';errEl.innerHTML=`<strong>⚠️ Erreur signalée :</strong> ${q.err}`;}
+  else errEl.style.display='none';
+  const hintEl=document.getElementById('qHint');
+  if(q.hint){hintEl.style.display='block';hintEl.innerHTML=`💡 <em>${q.hint}</em>`;}
+  else hintEl.style.display='none';
+  const grid=document.getElementById('optionsGrid');
+  grid.innerHTML='';
+  ['A','B','C','D'].forEach((l,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt-btn';
+    btn.innerHTML=`<span class="letter">${l}</span>${q.opts[i]}`;
+    btn.onclick=()=>selectAnswer(i);
+    grid.appendChild(btn);
+  });
+  document.getElementById('feedback').style.display='none';
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('nextBtn').style.display='none';
+}
+
+function selectAnswer(chosen){
+  if(answered)return;
+  answered=true;
+  const q=Q[currentQ];
+  const btns=document.querySelectorAll('.opt-btn');
+  btns.forEach(b=>b.disabled=true);
+  const isOk=chosen===q.ans;
+  btns[q.ans].classList.add('correct');
+  if(!isOk)btns[chosen].classList.add('wrong');
+  if(isOk){score+=10;correct++;streak++;if(streak>bestStreak)bestStreak=streak;showFeedback(true,q.exp);if(streak>=3)launchStars();}
+  else{wrong++;streak=0;showFeedback(false,q.exp);}
+  document.getElementById('nextBtn').style.display='block';
+}
+
+function showFeedback(isOk,exp){
+  const fb=document.getElementById('feedback');
+  fb.style.display='block';
+  if(isOk){
+    const sm=streak>=3?` 🔥 Streak: ${streak}!`:'';
+    fb.className='feedback correct-fb';
+    fb.innerHTML=`<span>✅ <strong>Correct!${sm}</strong></span><div class="fb-explain">${exp}</div>`;
+  }else{
+    fb.className='feedback wrong-fb';
+    fb.innerHTML=`<span>❌ <strong>Not quite!</strong> The correct answer is highlighted in green above.</span><div class="fb-explain">${exp}</div>`;
+  }
+}
+
+function nextQuestion(){
+  currentQ++;
+  window.scrollTo({top:0,behavior:'smooth'});
+  showQuestion();
+}
+
+function launchStars(){
+  const emojis=['⭐','🌟','✨','💫','🎉','🏆','🇬🇧'];
+  for(let i=0;i<8;i++){
+    setTimeout(()=>{
+      const wrap=document.createElement('div');
+      wrap.className='stars';
+      const s=document.createElement('div');
+      s.className='star';
+      s.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+      s.style.left=Math.random()*90+'vw';
+      s.style.top=Math.random()*60+20+'vh';
+      wrap.appendChild(s);
+      document.body.appendChild(wrap);
+      setTimeout(()=>document.body.removeChild(wrap),1300);
+    },i*100);
+  }
+}
+
+function showResults(){
+  document.getElementById('mainContent').style.display='none';
+  document.getElementById('results').style.display='block';
+  const pct=Math.round((correct/Q.length)*100);
+  document.getElementById('resultScore').textContent=`${score} pts`;
+  document.getElementById('r-correct').textContent=correct;
+  document.getElementById('r-wrong').textContent=wrong;
+  document.getElementById('r-pct').textContent=pct+'%';
+  document.getElementById('r-best').textContent=bestStreak;
+  let trophy,title,msg;
+  if(pct>=90){trophy='🏆';title='English Master!';msg='Outstanding! You handle English with the confidence of a native speaker. Absolutely brilliant!';}
+  else if(pct>=75){trophy='🥇';title='Excellent Work!';msg='You have a solid command of English. A few more sessions and you will be unstoppable!';}
+  else if(pct>=60){trophy='🥈';title='Well Done!';msg='Good foundations! Keep practising and your English will shine even brighter!';}
+  else if(pct>=40){trophy='🥉';title='Keep Going!';msg="Progress takes patience — you're on the right track! Every mistake is a lesson.";}
+  else{trophy='📚';title='The Journey Begins!';msg='Every expert was once a beginner. Restart and watch yourself grow!';}
+  document.getElementById('resultTrophy').textContent=trophy;
+  document.getElementById('resultTitle').textContent=title;
+  document.getElementById('resultMsg').textContent=msg;
+  launchStars();launchStars();
+}
+
+function restartTest(){
+  currentQ=0;score=0;correct=0;wrong=0;streak=0;bestStreak=0;answered=false;currentSection=-1;
+  document.getElementById('results').style.display='none';
+  document.getElementById('mainContent').style.display='block';
+  document.getElementById('progressFill').style.width='0%';
+  setTheme(0);showQuestion();
+}
+</script>
+</body>
+</html>
