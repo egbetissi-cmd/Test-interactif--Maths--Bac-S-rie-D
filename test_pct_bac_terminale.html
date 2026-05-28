@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEST BAC PCT – Terminale C & D</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg1: #FFF9C4; --bg2: #4A148C; --text1: #4A148C; --text2: #FFF9C4;
+    --card1: #fff; --accent1: #FF6F00; --btn1: #7B1FA2; --btn1h: #4A148C;
+    --correct: #2E7D32; --wrong: #C62828; --star: #FFD600;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    background: var(--bg1);
+    transition: background 1s ease;
+  }
+
+  /* === ÉCRAN D'ACCUEIL === */
+  #splash {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 20px;
+    background: linear-gradient(135deg, #FFF9C4 0%, #FFE082 50%, #FFD54F 100%);
+    position: relative; overflow: hidden;
+  }
+  #splash::before {
+    content: '🔬⚗️🧲⚡🌡️🔭💡🧪🔬⚗️';
+    position: absolute; top: 10px; left: 0; right: 0;
+    font-size: 2rem; letter-spacing: 12px; opacity: 0.15;
+    white-space: nowrap; overflow: hidden;
+    animation: scroll-icons 12s linear infinite;
+  }
+  @keyframes scroll-icons {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(-100%); }
+  }
+  .splash-badge {
+    background: #4A148C; color: #FFD600; border-radius: 50px;
+    padding: 10px 28px; font-size: 1.2rem; font-weight: 800;
+    letter-spacing: 2px; margin-bottom: 18px;
+    box-shadow: 0 4px 20px rgba(74,20,140,0.4);
+    animation: pulse-badge 2s infinite;
+  }
+  @keyframes pulse-badge {
+    0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); }
+  }
+  .splash-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: clamp(2.8rem, 8vw, 5.5rem);
+    font-weight: 800; color: #4A148C;
+    line-height: 1.1; margin-bottom: 10px;
+    text-shadow: 3px 3px 0px rgba(74,20,140,0.2);
+  }
+  .splash-title span { color: #FF6F00; }
+  .splash-sub {
+    font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+    color: #6A1B9A; font-weight: 700; margin-bottom: 30px;
+  }
+  .splash-stats {
+    display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-bottom: 36px;
+  }
+  .stat-pill {
+    background: #4A148C; color: #FFD600;
+    border-radius: 40px; padding: 12px 24px;
+    font-size: 1.2rem; font-weight: 800;
+    box-shadow: 0 4px 15px rgba(74,20,140,0.3);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .stat-pill .icon { font-size: 1.5rem; }
+  .btn-start {
+    background: linear-gradient(135deg, #FF6F00, #FF8F00);
+    color: #fff; border: none; border-radius: 50px;
+    padding: 20px 60px; font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: 900; cursor: pointer; font-family: 'Nunito', sans-serif;
+    box-shadow: 0 8px 30px rgba(255,111,0,0.5);
+    transition: all 0.2s;
+    animation: bounce-btn 1.5s infinite;
+  }
+  @keyframes bounce-btn {
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-8px); }
+  }
+  .btn-start:hover { transform:scale(1.05) translateY(-4px); box-shadow:0 12px 40px rgba(255,111,0,0.6); }
+  .splash-themes { margin-top: 36px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .theme-dot {
+    width:50px; height:50px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.4rem; box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    border:3px solid rgba(255,255,255,0.6);
+    cursor:default;
+  }
+  .authors { margin-top:28px; color:#6A1B9A; font-size:1rem; font-weight:700; }
+
+  /* === EN-TÊTE DU TEST === */
+  #header {
+    background: #4A148C; color: #FFD600;
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 10px;
+    position: sticky; top:0; z-index:100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  #header .h-title {
+    font-family:'Baloo 2',cursive; font-size:clamp(1.1rem,3vw,1.6rem);
+    font-weight:800; display:flex; align-items:center; gap:10px;
+  }
+  #header .h-info {
+    display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+  }
+  .info-chip {
+    background: rgba(255,255,255,0.15);
+    border-radius:30px; padding:6px 18px;
+    font-size:1.1rem; font-weight:800;
+    display:flex; align-items:center; gap:6px;
+  }
+  #score-live { color:#69FF47; font-size:1.3rem; font-weight:900; }
+  .progress-bar-wrap {
+    height:10px; background:rgba(255,255,255,0.2);
+    border-radius:10px; overflow:hidden; width:120px;
+  }
+  #progress-bar {
+    height:100%; background:linear-gradient(90deg,#FFD600,#FF6F00);
+    border-radius:10px; transition:width 0.5s;
+  }
+
+  /* === MAIN TEST AREA === */
+  #test-area { max-width:900px; margin:0 auto; padding:24px 16px 60px; }
+
+  /* === SA HEADER === */
+  .sa-header {
+    border-radius: 20px; padding: 20px 28px; margin-bottom: 24px;
+    display:flex; align-items:center; gap:16px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    position: relative; overflow:hidden;
+  }
+  .sa-header::after {
+    content:''; position:absolute; right:-30px; top:-30px;
+    width:120px; height:120px; border-radius:50%;
+    background:rgba(255,255,255,0.1);
+  }
+  .sa-icon { font-size:2.8rem; flex-shrink:0; }
+  .sa-text { flex:1; }
+  .sa-label { font-size:1rem; font-weight:700; opacity:0.8; text-transform:uppercase; letter-spacing:2px; }
+  .sa-name { font-family:'Baloo 2',cursive; font-size:clamp(1.4rem,4vw,2rem); font-weight:800; line-height:1.2; }
+
+  /* === NOTION CARD === */
+  .notion-card {
+    border-radius:18px; padding:22px 26px; margin-bottom:28px;
+    border-left:8px solid rgba(0,0,0,0.15);
+    box-shadow:0 4px 16px rgba(0,0,0,0.08);
+  }
+  .notion-card h3 {
+    font-family:'Baloo 2',cursive; font-size:1.3rem; font-weight:800;
+    margin-bottom:12px; display:flex; align-items:center; gap:8px;
+  }
+  .notion-card ul { padding-left:0; list-style:none; }
+  .notion-card ul li {
+    font-size:1.05rem; font-weight:600; padding:5px 0;
+    border-bottom:1px dashed rgba(0,0,0,0.1);
+    display:flex; align-items:flex-start; gap:8px;
+  }
+  .notion-card ul li:last-child{ border-bottom:none; }
+  .notion-card ul li::before{ content:'⭐'; font-size:0.9rem; flex-shrink:0; margin-top:2px; }
+
+  /* === QUESTION CARD === */
+  .q-card {
+    background: #fff;
+    border-radius:22px; padding:28px 28px 22px;
+    margin-bottom:24px;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.1);
+    border-top: 6px solid transparent;
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: slideIn 0.4s ease both;
+  }
+  @keyframes slideIn {
+    from{ opacity:0; transform:translateY(24px); }
+    to  { opacity:1; transform:translateY(0); }
+  }
+  .q-num {
+    font-size:0.95rem; font-weight:800; text-transform:uppercase;
+    letter-spacing:2px; opacity:0.5; margin-bottom:8px;
+  }
+  .q-text {
+    font-size:clamp(1.1rem,3vw,1.4rem); font-weight:800;
+    line-height:1.5; margin-bottom:20px; color:#1a1a2e;
+  }
+  .q-formula {
+    background:#f0f4ff; border-radius:10px; padding:10px 16px;
+    font-family:monospace; font-size:1.1rem;
+    margin-bottom:16px; border-left:4px solid #5c6bc0;
+    color:#1a237e; font-weight:700;
+  }
+  .options { display:flex; flex-direction:column; gap:12px; }
+  .opt-btn {
+    background:#f7f7fb; border:3px solid #e0e0e0;
+    border-radius:16px; padding:14px 20px;
+    font-size:clamp(1rem,2.5vw,1.2rem); font-weight:700;
+    cursor:pointer; text-align:left;
+    display:flex; align-items:center; gap:12px;
+    transition: all 0.2s; font-family:'Nunito',sans-serif;
+    color:#1a1a2e;
+  }
+  .opt-btn:hover:not(:disabled) {
+    transform:translateX(6px);
+    border-color:#7B1FA2; background:#f3e5ff;
+  }
+  .opt-btn:disabled { cursor:default; }
+  .opt-letter {
+    width:36px; height:36px; border-radius:50%;
+    background:#e0e0e0; display:flex; align-items:center; justify-content:center;
+    font-weight:900; font-size:1rem; flex-shrink:0;
+    transition:background 0.2s;
+  }
+  .opt-btn.correct { background:#E8F5E9!important; border-color:#2E7D32!important; }
+  .opt-btn.correct .opt-letter { background:#2E7D32; color:#fff; }
+  .opt-btn.wrong   { background:#FFEBEE!important; border-color:#C62828!important; }
+  .opt-btn.wrong   .opt-letter { background:#C62828; color:#fff; }
+  .opt-btn.reveal  { background:#F3E5FF!important; border-color:#7B1FA2!important; }
+  .opt-btn.reveal  .opt-letter { background:#7B1FA2; color:#fff; }
+
+  .feedback-box {
+    margin-top:14px; border-radius:14px; padding:14px 18px;
+    font-size:1.05rem; font-weight:700; display:none;
+    animation: feedIn 0.3s ease;
+  }
+  @keyframes feedIn{ from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+  .feedback-box.correct { background:#E8F5E9; color:#1B5E20; border:2px solid #4CAF50; display:block; }
+  .feedback-box.wrong   { background:#FFEBEE; color:#7f0000; border:2px solid #EF9A9A; display:block; }
+
+  /* === RÉSULTAT FINAL === */
+  #result-screen {
+    display:none; min-height:80vh;
+    flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:30px 20px;
+  }
+  .result-circle {
+    width:180px; height:180px; border-radius:50%;
+    background:linear-gradient(135deg,#4A148C,#880E4F);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    margin:0 auto 24px; box-shadow:0 12px 40px rgba(74,20,140,0.4);
+    animation: pop 0.6s ease;
+  }
+  @keyframes pop{ from{transform:scale(0)} to{transform:scale(1)} }
+  .result-circle .big-score { font-family:'Baloo 2',cursive; font-size:3.5rem; font-weight:900; color:#FFD600; }
+  .result-circle .total { font-size:1.2rem; color:rgba(255,255,255,0.8); font-weight:700; }
+  .result-title { font-family:'Baloo 2',cursive; font-size:2.5rem; font-weight:900; margin-bottom:10px; }
+  .result-msg { font-size:1.3rem; font-weight:700; margin-bottom:30px; opacity:0.8; }
+  .result-stats {
+    display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin-bottom:36px;
+  }
+  .res-stat { background:rgba(255,255,255,0.2); border-radius:16px; padding:16px 28px; }
+  .res-stat .rs-num { font-size:2rem; font-weight:900; }
+  .res-stat .rs-lbl { font-size:0.95rem; font-weight:700; opacity:0.7; }
+  .btn-restart {
+    background:linear-gradient(135deg,#FF6F00,#FF8F00);
+    color:#fff; border:none; border-radius:50px;
+    padding:18px 50px; font-size:1.5rem; font-weight:900;
+    cursor:pointer; font-family:'Nunito',sans-serif;
+    box-shadow:0 8px 28px rgba(255,111,0,0.4);
+    transition:all 0.2s;
+  }
+  .btn-restart:hover{ transform:scale(1.05); }
+
+  /* === THEMES === */
+  .theme-0 { --qbg:#fff; --qborder:#7B1FA2; --sabg:linear-gradient(135deg,#4A148C,#7B1FA2); --sacolor:#FFD600; --nbg:#FFF9C4; --nborder:#7B1FA2; --nbg2:#F3E5FF; }
+  .theme-1 { --qbg:#fff; --qborder:#0277BD; --sabg:linear-gradient(135deg,#01579B,#0288D1); --sacolor:#fff; --nbg:#E3F2FD; --nborder:#0277BD; --nbg2:#E8EAF6; }
+  .theme-2 { --qbg:#fff; --qborder:#2E7D32; --sabg:linear-gradient(135deg,#1B5E20,#388E3C); --sacolor:#CCFF90; --nbg:#F1F8E9; --nborder:#2E7D32; --nbg2:#E8F5E9; }
+  .theme-3 { --qbg:#fff; --qborder:#AD1457; --sabg:linear-gradient(135deg,#880E4F,#C2185B); --sacolor:#FCE4EC; --nbg:#FCE4EC; --nborder:#AD1457; --nbg2:#F8BBD0; }
+  body.theme-0 { background:linear-gradient(180deg,#FFF9C4 0%,#EDE7F6 100%); }
+  body.theme-1 { background:linear-gradient(180deg,#E3F2FD 0%,#E8EAF6 100%); }
+  body.theme-2 { background:linear-gradient(180deg,#F1F8E9 0%,#E8F5E9 100%); }
+  body.theme-3 { background:linear-gradient(180deg,#FCE4EC 0%,#F8BBD0 100%); }
+
+  .sa-header { background: var(--sabg,linear-gradient(135deg,#4A148C,#7B1FA2)); color: var(--sacolor,#FFD600); }
+  .q-card { background:var(--qbg,#fff); border-top-color:var(--qborder,#7B1FA2); }
+  .notion-card { background:var(--nbg,#FFF9C4); border-left-color:var(--qborder,#7B1FA2); }
+  .notion-card h3 { color:var(--qborder,#7B1FA2); }
+
+  /* === NAVIGATION === */
+  .nav-area { display:flex; justify-content:center; gap:16px; margin-top:30px; padding-bottom:40px; }
+  .btn-nav {
+    background:var(--qborder,#7B1FA2); color:#fff; border:none;
+    border-radius:50px; padding:16px 40px; font-size:1.2rem; font-weight:800;
+    cursor:pointer; font-family:'Nunito',sans-serif;
+    box-shadow:0 6px 20px rgba(0,0,0,0.2);
+    transition:all 0.2s;
+  }
+  .btn-nav:hover{ transform:translateY(-3px); opacity:0.9; }
+  .btn-nav:disabled{ opacity:0.4; cursor:default; transform:none; }
+
+  /* === RESPONSIVE === */
+  @media(max-width:480px){
+    #test-area{ padding:14px 10px 50px; }
+    .q-card{ padding:20px 16px 16px; }
+    .sa-header{ padding:16px 18px; }
+    .notion-card{ padding:16px 18px; }
+    .opt-btn{ padding:12px 14px; }
+  }
+
+  /* Confetti */
+  .confetti-piece {
+    position:fixed; top:-10px; border-radius:3px;
+    animation: fall linear forwards;
+    pointer-events:none; z-index:9999;
+  }
+  @keyframes fall{
+    to{ transform:translateY(110vh) rotate(720deg); opacity:0; }
+  }
+</style>
+</head>
+<body class="theme-0">
+
+<!-- ÉCRAN D'ACCUEIL -->
+<div id="splash">
+  <div class="splash-badge">🎓 BACCALAURÉAT 2025–2026</div>
+  <div class="splash-title">TEST BAC<br><span>PCT</span></div>
+  <div class="splash-sub">Terminale C &amp; D — Révision Générale</div>
+  <div class="splash-stats">
+    <div class="stat-pill"><span class="icon">❓</span> 150 Questions</div>
+    <div class="stat-pill"><span class="icon">🏆</span> 6 Domaines</div>
+    <div class="stat-pill"><span class="icon">⚡</span> Réponse Immédiate</div>
+    <div class="stat-pill"><span class="icon">🧠</span> Notions Clés</div>
+  </div>
+  <button class="btn-start" onclick="startTest()">🚀 COMMENCER LE TEST !</button>
+  <div class="splash-themes">
+    <div class="theme-dot" style="background:linear-gradient(#FFF9C4,#4A148C)">🔮</div>
+    <div class="theme-dot" style="background:linear-gradient(#87CEEB,#001F5B)">💧</div>
+    <div class="theme-dot" style="background:linear-gradient(#98FF98,#1B5E20)">🌿</div>
+    <div class="theme-dot" style="background:linear-gradient(#FFB6C1,#880E4F)">🌸</div>
+  </div>
+  <div class="authors">✨ Conçu pour les Candidats au Baccalauréat — PCT Tle C &amp; D ✨</div>
+</div>
+
+<!-- EN-TÊTE TEST -->
+<div id="header" style="display:none;">
+  <div class="h-title">🔬 TEST BAC PCT</div>
+  <div class="h-info">
+    <div class="info-chip">📝 Q.<span id="q-current">1</span>/<span id="q-total">150</span></div>
+    <div class="info-chip">⭐ Score : <span id="score-live">0</span></div>
+    <div class="info-chip">
+      <div class="progress-bar-wrap"><div id="progress-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ZONE TEST -->
+<div id="test-area" style="display:none;"></div>
+
+<!-- RÉSULTAT -->
+<div id="result-screen">
+  <div class="result-circle">
+    <div class="big-score" id="final-score">0</div>
+    <div class="total">/ <span id="final-total">150</span></div>
+  </div>
+  <div class="result-title" id="result-title">Bravo !</div>
+  <div class="result-msg" id="result-msg"></div>
+  <div class="result-stats">
+    <div class="res-stat">
+      <div class="rs-num" id="rs-correct" style="color:#4CAF50">0</div>
+      <div class="rs-lbl">✅ Correctes</div>
+    </div>
+    <div class="res-stat">
+      <div class="rs-num" id="rs-wrong" style="color:#F44336">0</div>
+      <div class="rs-lbl">❌ Incorrectes</div>
+    </div>
+    <div class="res-stat">
+      <div class="rs-num" id="rs-pct" style="color:#FF9800">0%</div>
+      <div class="rs-lbl">📊 Taux de réussite</div>
+    </div>
+  </div>
+  <button class="btn-restart" onclick="location.reload()">🔄 Recommencer</button>
+</div>
+
+<script>
+// ===================== DONNÉES DU TEST =====================
+
+const THEMES = ['theme-0','theme-1','theme-2','theme-3'];
+
+const SECTIONS = [
+
+  // ══════════════════════════════════════════════════════════
+  // SA 1 – CHAMPS DE FORCES ET INTERACTIONS
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 1, icon: '🔭', title: 'Champs de Forces & Interactions',
+    domain: 'Mécanique & Magnétisme',
+    notions: [
+      'Un champ gravitationnel crée une force d\'attraction entre deux masses : F = G·M·m/r²',
+      'Le champ électrostatique E = F/q ; il pointe vers les charges négatives',
+      'La loi de Laplace : F = I·L·B·sinθ (force sur un conducteur dans un champ B)',
+      'Lois de Newton : ΣF = m·a (principe fondamental de la dynamique)',
+      'Mouvement parabolique : composante horizontale uniforme, verticale uniformément accélérée',
+      'Induction de Faraday : e = -dΦ/dt (variation du flux magnétique)',
+      'Particule chargée dans B : mouvement circulaire uniforme si v ⊥ B',
+      'Satellites : v = √(GM/r), la période T = 2π√(r³/GM)',
+      'Loi de Coulomb : F = k·q₁·q₂/r²  avec k = 9×10⁹ N·m²/C²',
+      'L\'énergie cinétique : Ec = ½mv² ; énergie potentielle de gravitation : Ep = -GMm/r'
+    ],
+    questions: [
+      {
+        q: 'Deux masses M = 6×10²⁴ kg et m = 70 kg sont séparées de r = 6400 km. Quelle est la force gravitationnelle qui s\'exerce sur m ? (G = 6,67×10⁻¹¹ N·m²/kg²)',
+        options: ['686 N', '9,8 N', '70 N', '490 N'],
+        correct: 0,
+        feedback: '✅ F = GMm/r² = (6,67×10⁻¹¹ × 6×10²⁴ × 70) / (6,4×10⁶)² ≈ 686 N. C\'est le poids d\'une personne de 70 kg !'
+      },
+      {
+        q: 'Une particule de charge q = 2×10⁻⁶ C est placée dans un champ électrique E = 500 V/m. Quelle force électrostatique subit-elle ?',
+        options: ['1×10⁻³ N', '2×10⁻³ N', '1×10⁻² N', '5×10⁻⁴ N'],
+        correct: 0,
+        feedback: '✅ F = qE = 2×10⁻⁶ × 500 = 1×10⁻³ N = 1 mN. La relation de base est F = qE !'
+      },
+      {
+        q: 'Un satellite est en orbite circulaire à une altitude h. Sa vitesse orbitale dépend principalement de :',
+        options: ['Sa masse propre', 'La masse de la Terre et son rayon orbital', 'Sa forme aérodynamique', 'La pression atmosphérique'],
+        correct: 1,
+        feedback: '✅ v = √(GM/r) où r = R_Terre + h. La masse du satellite n\'apparaît PAS dans la formule ! C\'est une conséquence remarquable.'
+      },
+      {
+        q: 'La force de Laplace sur un conducteur de longueur L = 0,5 m portant un courant I = 3 A dans un champ B = 0,2 T (perpendiculaire au conducteur) vaut :',
+        options: ['0,3 N', '0,6 N', '1,5 N', '0,03 N'],
+        correct: 0,
+        feedback: '✅ F = BIL·sin90° = 0,2 × 3 × 0,5 × 1 = 0,3 N. La loi de Laplace : F = BIL·sinθ.'
+      },
+      {
+        q: 'Une particule chargée pénètre perpendiculairement dans un champ magnétique uniforme B. Son trajectoire est :',
+        options: ['Un arc de cercle', 'Une parabole', 'Une droite', 'Une ellipse'],
+        correct: 0,
+        feedback: '✅ La force de Lorentz (F = qvB) est perpendiculaire à v → trajectoire circulaire. Rayon : r = mv/(qB).'
+      },
+      {
+        q: 'Selon le principe de Newton (2ᵉ loi), si une force nette de 10 N agit sur une masse de 2 kg, son accélération est :',
+        options: ['5 m/s²', '20 m/s²', '0,2 m/s²', '12 m/s²'],
+        correct: 0,
+        feedback: '✅ a = ΣF/m = 10/2 = 5 m/s². Voilà le Principe Fondamental de la Dynamique !'
+      },
+      {
+        q: 'Lors d\'un mouvement de chute libre sans frottement, quelle grandeur reste constante ?',
+        options: ['La vitesse', 'L\'accélération', 'La hauteur', 'L\'énergie potentielle'],
+        correct: 1,
+        feedback: '✅ L\'accélération a = g = 9,8 m/s² reste constante (champ de pesanteur uniforme). La vitesse augmente !'
+      },
+      {
+        q: 'La f.é.m. induite dans un circuit est liée au flux magnétique Φ par la loi de Faraday : e = ___',
+        options: ['-dΦ/dt', '+dΦ/dt', 'B × S', 'L × dI/dt'],
+        correct: 0,
+        feedback: '✅ e = -dΦ/dt (loi de Faraday-Lenz). Le signe négatif traduit la loi de Lenz : l\'induction s\'oppose à la cause qui la produit.'
+      },
+      {
+        q: 'Un proton (m = 1,67×10⁻²⁷ kg, q = 1,6×10⁻¹⁹ C) est accéléré sous une tension U = 1000 V. Sa vitesse finale est approximativement :',
+        options: ['4,4 × 10⁵ m/s', '1,9 × 10⁶ m/s', '3 × 10⁸ m/s', '2,2 × 10⁵ m/s'],
+        correct: 0,
+        feedback: '✅ qU = ½mv² → v = √(2qU/m) = √(2×1,6×10⁻¹⁹×1000 / 1,67×10⁻²⁷) ≈ 4,4×10⁵ m/s.'
+      },
+      {
+        q: 'Le champ gravitationnel g à la surface de la Terre (M = 6×10²⁴ kg, R = 6400 km) vaut :',
+        options: ['≈ 9,8 m/s²', '≈ 6,67 m/s²', '≈ 11,2 m/s²', '≈ 3,7 m/s²'],
+        correct: 0,
+        feedback: '✅ g = GM/R² = (6,67×10⁻¹¹ × 6×10²⁴)/(6,4×10⁶)² ≈ 9,8 m/s². C\'est la valeur que vous connaissez !'
+      },
+      {
+        q: 'Un objet est lancé horizontalement depuis une hauteur h = 20 m avec une vitesse v₀ = 10 m/s. Combien de temps met-il à toucher le sol ? (g = 10 m/s²)',
+        options: ['2 s', '1 s', '4 s', '√2 s'],
+        correct: 0,
+        feedback: '✅ h = ½gt² → t = √(2h/g) = √(2×20/10) = √4 = 2 s. La composante horizontale n\'influe pas sur la durée de chute !'
+      },
+      {
+        q: 'La troisième loi de Newton (action-réaction) affirme que :',
+        options: [
+          'La Terre attire la pomme avec une force égale à celle que la pomme exerce sur la Terre',
+          'Un corps au repos reste au repos',
+          'F = ma',
+          'L\'énergie se conserve'
+        ],
+        correct: 0,
+        feedback: '✅ Toute action exercée par A sur B est accompagnée d\'une réaction égale, opposée et de même droite d\'action exercée par B sur A.'
+      },
+      {
+        q: 'Pour deux lois de Kepler : la 3ᵉ loi stipule que T²/a³ est :',
+        options: ['Constant pour tous les satellites d\'une même planète', 'Variable selon la masse du satellite', 'Égal à la constante de gravitation G', 'Proportionnel à la vitesse orbitale'],
+        correct: 0,
+        feedback: '✅ T²/a³ = 4π²/GM est la même constante pour tous les corps en orbite autour du même astre. C\'est la 3ᵉ loi de Kepler !'
+      },
+      {
+        q: 'L\'énergie mécanique d\'un satellite en orbite circulaire est :',
+        options: ['-GMm/(2r)', 'GMm/r', '-GMm/r', 'Nulle'],
+        correct: 0,
+        feedback: '✅ Em = Ec + Ep = GMm/(2r) + (-GMm/r) = -GMm/(2r). Elle est négative, ce qui traduit que le satellite est "lié" à la planète.'
+      },
+      {
+        q: 'Un conducteur de longueur L portant un courant I est plongé dans un champ magnétique B. La force de Laplace est maximale quand l\'angle entre I et B est :',
+        options: ['90°', '0°', '45°', '180°'],
+        correct: 0,
+        feedback: '✅ F = BIL·sinθ → F max quand θ = 90°, c\'est-à-dire quand le courant est perpendiculaire au champ magnétique.'
+      },
+      {
+        q: 'Le travail effectué par la force gravitationnelle lors du déplacement d\'un objet de masse m d\'une hauteur h₁ à h₂ (avec h₂ > h₁) est :',
+        options: ['mg(h₁-h₂) < 0', 'mg(h₂-h₁) > 0', 'Nul', 'mg·h₂'],
+        correct: 0,
+        feedback: '✅ W = mg(h₁-h₂) est négatif quand on monte (h₂>h₁). La pesanteur fait un travail résistant lors d\'une montée !'
+      },
+      {
+        q: 'La f.é.m. d\'auto-induction dans une bobine d\'inductance L est :',
+        options: ['e = -L·dI/dt', 'e = L·I', 'e = L/R', 'e = R·I'],
+        correct: 0,
+        feedback: '✅ e = -L·dI/dt. L\'inductance L (en Henry) s\'oppose aux variations de courant : c\'est le phénomène d\'auto-induction !'
+      },
+      {
+        q: 'Dans un champ électrique uniforme, une particule positive se déplace dans le sens du champ. Son énergie potentielle électrique :',
+        options: ['Diminue', 'Augmente', 'Reste constante', 'Devient nulle'],
+        correct: 0,
+        feedback: '✅ Ep = qV. La particule positive va vers les potentiels décroissants → Ep diminue → l\'énergie cinétique augmente (conservation de l\'énergie mécanique).'
+      },
+      {
+        q: 'Le flux magnétique Φ à travers une surface S dans un champ B (angle θ entre B et la normale) est :',
+        options: ['Φ = B·S·cosθ', 'Φ = B·S·sinθ', 'Φ = B/S', 'Φ = B·S²'],
+        correct: 0,
+        feedback: '✅ Φ = B·S·cosθ en Webers (Wb). Quand θ = 0° (champ perpendiculaire à la surface), le flux est maximum : Φ = BS.'
+      },
+      {
+        q: 'Un électron se déplace à v = 10⁶ m/s perpendiculairement à un champ B = 0,01 T. Le rayon de sa trajectoire circulaire est : (m_e = 9,1×10⁻³¹ kg, e = 1,6×10⁻¹⁹ C)',
+        options: ['≈ 0,57 mm', '≈ 5,7 cm', '≈ 5,7 mm', '≈ 0,057 mm'],
+        correct: 0,
+        feedback: '✅ r = mv/(qB) = (9,1×10⁻³¹ × 10⁶)/(1,6×10⁻¹⁹ × 0,01) = 9,1×10⁻²⁵ / 1,6×10⁻²¹ ≈ 5,69×10⁻⁴ m ≈ 0,57 mm.'
+      },
+      {
+        q: 'Le mouvement d\'un projectile lancé sans frottement est la composition de :',
+        options: [
+          'Un mouvement rectiligne uniforme horizontal et un mouvement uniformément accéléré vertical',
+          'Deux mouvements uniformément accélérés',
+          'Un mouvement circulaire et une translation',
+          'Un mouvement rectiligne uniforme dans toutes directions'
+        ],
+        correct: 0,
+        feedback: '✅ La composante horizontale : vₓ = v₀ (constante). La composante verticale : vy = g·t (croissante). Résultat = trajectoire parabolique !'
+      },
+      {
+        q: 'L\'accélération de la pesanteur sur la Lune vaut environ g_L = 1,62 m/s². Un objet de masse 10 kg pèse sur la Lune :',
+        options: ['16,2 N', '98 N', '9,8 N', '162 N'],
+        correct: 0,
+        feedback: '✅ P = mg = 10 × 1,62 = 16,2 N. La masse reste 10 kg partout, mais le poids change selon la planète !'
+      },
+      {
+        q: 'Dans quel cas la force magnétique sur une charge en mouvement est-elle nulle ?',
+        options: [
+          'Quand la vitesse est parallèle au champ magnétique',
+          'Quand la charge est positive',
+          'Quand B est très grand',
+          'Quand la vitesse est perpendiculaire à B'
+        ],
+        correct: 0,
+        feedback: '✅ F = qv × B. La force est nulle quand v est parallèle à B (angle θ = 0° → sin0° = 0). La charge doit aussi ≠ 0 bien sûr !'
+      },
+      {
+        q: 'L\'inductance L d\'une bobine est de 50 mH. Si le courant varie de 0 à 2 A en 0,1 s, la f.é.m. induite vaut :',
+        options: ['-1 V', '+1 V', '-0,1 V', '+2 V'],
+        correct: 0,
+        feedback: '✅ e = -L·ΔI/Δt = -50×10⁻³ × (2-0)/0,1 = -50×10⁻³ × 20 = -1 V. Le signe négatif indique l\'opposition (loi de Lenz).'
+      },
+      {
+        q: 'Deux sphères chargées q₁ = q₂ = 1 µC, séparées de r = 1 cm. La force de Coulomb entre elles vaut : (k = 9×10⁹ N·m²/C²)',
+        options: ['90 N', '9 N', '0,9 N', '900 N'],
+        correct: 0,
+        feedback: '✅ F = kq₁q₂/r² = 9×10⁹ × (10⁻⁶)² / (10⁻²)² = 9×10⁹ × 10⁻¹² / 10⁻⁴ = 9×10⁹ × 10⁻⁸ = 90 N. Impressionnant !'
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // SA 2 – CHIMIE DES SOLUTIONS AQUEUSES
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 2, icon: '⚗️', title: 'Chimie des Solutions Aqueuses',
+    domain: 'Chimie Générale',
+    notions: [
+      'pH = -log[H₃O⁺] ; pOH = -log[OH⁻] ; pH + pOH = 14 à 25°C',
+      'Acide fort (HCl, HNO₃) : totalement dissocié → [H₃O⁺] = C',
+      'Base forte (NaOH, KOH) : totalement dissociée → [OH⁻] = C',
+      'Acide faible : [H₃O⁺] = √(Ka × C) → pH = ½(pKa - logC)',
+      'Couple acide/base : AH/A⁻ ; Ka = [H₃O⁺][A⁻]/[AH]',
+      'Équation de neutralisation : H₃O⁺ + OH⁻ → 2H₂O',
+      'Facteur cinétique : température ↑ → vitesse ↑ ; concentration ↑ → vitesse ↑',
+      'Loi de vitesse : v = k[A]ᵃ[B]ᵇ (k constante de vitesse)',
+      'Autoprotolyse de l\'eau : Ke = [H₃O⁺][OH⁻] = 10⁻¹⁴ à 25°C',
+      'Solution tampon : mélange d\'un acide faible et de sa base conjuguée'
+    ],
+    questions: [
+      {
+        q: 'Le pH d\'une solution de HCl de concentration C = 0,01 mol/L est :',
+        options: ['2', '12', '7', '1'],
+        correct: 0,
+        feedback: '✅ HCl est un acide fort : [H₃O⁺] = C = 10⁻² mol/L → pH = -log(10⁻²) = 2.'
+      },
+      {
+        q: 'On dissout NaOH dans l\'eau : C = 0,1 mol/L. Le pH de cette solution est :',
+        options: ['13', '1', '7', '11'],
+        correct: 0,
+        feedback: '✅ NaOH est une base forte : [OH⁻] = 0,1 = 10⁻¹ → pOH = 1 → pH = 14 - 1 = 13.'
+      },
+      {
+        q: 'À 25°C, le produit ionique de l\'eau Ke vaut :',
+        options: ['10⁻¹⁴', '10⁻⁷', '10⁻¹', '10⁻²⁴'],
+        correct: 0,
+        feedback: '✅ Ke = [H₃O⁺][OH⁻] = 10⁻¹⁴. Dans l\'eau pure : [H₃O⁺] = [OH⁻] = 10⁻⁷ mol/L → pH = 7 (neutre).'
+      },
+      {
+        q: 'Un acide faible HA a un pKa = 4,8 et une concentration C = 0,1 mol/L. Son pH approximatif est :',
+        options: ['2,9', '4,8', '7', '1,9'],
+        correct: 0,
+        feedback: '✅ pH = ½(pKa - logC) = ½(4,8 - log0,1) = ½(4,8 + 1) = ½ × 5,8 = 2,9.'
+      },
+      {
+        q: 'Lors d\'une réaction acide-base entre HCl et NaOH, le sel formé et l\'eau produits sont :',
+        options: ['NaCl + H₂O', 'Na₂O + HCl', 'H₂O₂ + NaCl', 'NaH + Cl₂O'],
+        correct: 0,
+        feedback: '✅ HCl + NaOH → NaCl + H₂O. C\'est une réaction de neutralisation (ou saponification dans d\'autres contextes).'
+      },
+      {
+        q: 'La force d\'un acide en solution aqueuse est liée à :',
+        options: [
+          'Son taux de dissociation (total = fort, partiel = faible)',
+          'Sa concentration',
+          'Sa couleur',
+          'Sa température de fusion'
+        ],
+        correct: 0,
+        feedback: '✅ Un acide fort est totalement dissocié (τ = 100%), un acide faible est partiellement dissocié (τ < 100%). Ex : HCl fort, CH₃COOH faible.'
+      },
+      {
+        q: 'Quelle est la concentration en ions OH⁻ d\'une solution de pH = 11 à 25°C ?',
+        options: ['10⁻³ mol/L', '10⁻¹¹ mol/L', '10⁻⁷ mol/L', '10⁻¹ mol/L'],
+        correct: 0,
+        feedback: '✅ pOH = 14 - pH = 14 - 11 = 3 → [OH⁻] = 10⁻³ mol/L. La relation pH + pOH = 14 est fondamentale !'
+      },
+      {
+        q: 'La cinétique chimique étudie :',
+        options: [
+          'La vitesse des réactions chimiques',
+          'L\'énergie libérée par les réactions',
+          'L\'équilibre des réactions',
+          'La stœchiométrie des réactions'
+        ],
+        correct: 0,
+        feedback: '✅ La cinétique chimique s\'intéresse à la vitesse de transformation des réactifs en produits et aux facteurs qui l\'influencent.'
+      },
+      {
+        q: 'Quel facteur N\'influence PAS la vitesse d\'une réaction chimique ?',
+        options: [
+          'La couleur des réactifs',
+          'La température',
+          'La concentration des réactifs',
+          'La présence d\'un catalyseur'
+        ],
+        correct: 0,
+        feedback: '✅ La couleur n\'a aucun effet sur la vitesse. Les vrais facteurs cinétiques sont : T°, concentration, catalyseur, surface de contact, lumière (pour certaines réactions).'
+      },
+      {
+        q: 'Le pH d\'une solution eau pure à 25°C est :',
+        options: ['7', '0', '14', '6'],
+        correct: 0,
+        feedback: '✅ L\'eau pure est neutre : [H₃O⁺] = [OH⁻] = 10⁻⁷ mol/L → pH = 7. Cette neutralité est valable à 25°C uniquement !'
+      },
+      {
+        q: 'Dans la réaction CH₃COOH + H₂O ⇌ CH₃COO⁻ + H₃O⁺, l\'acide conjugué et la base conjuguée du couple de l\'acétate sont respectivement :',
+        options: [
+          'CH₃COOH (acide) et CH₃COO⁻ (base)',
+          'H₂O (acide) et OH⁻ (base)',
+          'H₃O⁺ (acide) et H₂O (base)',
+          'CH₃COO⁻ (acide) et CH₃COOH (base)'
+        ],
+        correct: 0,
+        feedback: '✅ Le couple acide/base de l\'acide acétique est CH₃COOH / CH₃COO⁻. L\'acide donne un proton H⁺ pour donner sa base conjuguée.'
+      },
+      {
+        q: 'Une solution tampon permet de :',
+        options: [
+          'Maintenir un pH quasi constant lors d\'ajouts modérés d\'acide ou de base',
+          'Neutraliser toutes les bases',
+          'Accélérer les réactions chimiques',
+          'Augmenter la concentration en ions H₃O⁺'
+        ],
+        correct: 0,
+        feedback: '✅ Une solution tampon (acide faible + base conjuguée) résiste aux variations de pH. Ex : le sang (pH ≈ 7,4) est tamponné par le système H₂CO₃/HCO₃⁻.'
+      },
+      {
+        q: 'La constante Ka d\'un acide faible est reliée à son pKa par :',
+        options: ['Ka = 10⁻ᵖᴷᵃ', 'Ka = pKa', 'Ka = log(pKa)', 'Ka = 1/pKa'],
+        correct: 0,
+        feedback: '✅ pKa = -log(Ka) → Ka = 10⁻ᵖᴷᵃ. Plus pKa est faible, plus Ka est grand, et plus l\'acide est fort.'
+      },
+      {
+        q: 'Lors d\'un dosage (titrage) acide-base, l\'équivalence est atteinte quand :',
+        options: [
+          'Le nombre de moles d\'acide égale le nombre de moles de base',
+          'Le pH atteint 7',
+          'La solution devient incolore',
+          'La température atteint 25°C'
+        ],
+        correct: 0,
+        feedback: '✅ À l\'équivalence : nₐcide = nbase (en tenant compte des stœchiométries). Le pH = 7 seulement pour acide fort + base forte !'
+      },
+      {
+        q: 'Un catalyseur augmente la vitesse d\'une réaction en :',
+        options: [
+          'Abaissant l\'énergie d\'activation',
+          'Augmentant la température',
+          'Augmentant la concentration des réactifs',
+          'Modifiant l\'équilibre thermodynamique'
+        ],
+        correct: 0,
+        feedback: '✅ Le catalyseur fournit un chemin réactionnel alternatif avec une énergie d\'activation plus faible. Il n\'est pas consommé et ne modifie pas ΔG de la réaction !'
+      },
+      {
+        q: 'Le pH d\'une solution d\'acide fort HNO₃ de concentration C = 10⁻³ mol/L est :',
+        options: ['3', '11', '7', '4'],
+        correct: 0,
+        feedback: '✅ HNO₃ est totalement dissocié → [H₃O⁺] = 10⁻³ → pH = 3.'
+      },
+      {
+        q: 'On mélange 50 mL de HCl (C₁ = 0,2 mol/L) et 50 mL de NaOH (C₂ = 0,1 mol/L). Après neutralisation, la solution est :',
+        options: ['Acide (excès de HCl)', 'Basique (excès de NaOH)', 'Neutre (équivalence)', 'Indéterminée'],
+        correct: 0,
+        feedback: '✅ n(HCl) = 0,05×0,2 = 10 mmol ; n(NaOH) = 0,05×0,1 = 5 mmol. Excès d\'acide = 5 mmol dans 100 mL → [H₃O⁺] = 5×10⁻³/0,1 = 0,05 mol/L → pH = 1,3.'
+      },
+      {
+        q: 'Laquelle de ces formules représente un acide selon Brønsted-Lowry ?',
+        options: [
+          'Un donneur de proton H⁺',
+          'Un accepteur de proton H⁺',
+          'Un donneur d\'électrons',
+          'Un composé ionique'
+        ],
+        correct: 0,
+        feedback: '✅ Selon Brønsted-Lowry : un acide est un donneur de proton (H⁺) et une base est un accepteur de proton. Cette définition est plus large que celle d\'Arrhenius !'
+      },
+      {
+        q: 'La vitesse instantanée d\'une réaction A → B est définie par :',
+        options: ['v = -d[A]/dt = +d[B]/dt', 'v = [A]/t', 'v = Δ[A]·Δt', 'v = k/[A]'],
+        correct: 0,
+        feedback: '✅ v = -d[A]/dt (disparition du réactif) = +d[B]/dt (formation du produit). Le signe négatif indique que [A] diminue.'
+      },
+      {
+        q: 'Pour une réaction du 1ᵉʳ ordre en A : v = k[A]. Si [A] double, la vitesse :',
+        options: ['Double aussi', 'Quadruple', 'Reste la même', 'Est divisée par 2'],
+        correct: 0,
+        feedback: '✅ v = k[A] → si [A] double : v_new = k × 2[A] = 2v. Pour un ordre 2 : v = k[A]² → la vitesse serait quadruplée !'
+      },
+      {
+        q: 'Quel indicateur coloré est adapté pour un titrage acide fort / base forte (équivalence à pH ≈ 7) ?',
+        options: [
+          'L\'hélianthine ou le bleu de bromothymol',
+          'La phénolphtaléine uniquement',
+          'L\'indicateur universel uniquement',
+          'La fluorescéine'
+        ],
+        correct: 0,
+        feedback: '✅ Pour acide fort/base forte, le saut de pH est large (≈ 3 à 11). On peut utiliser hélianthine (zone 3,1-4,4), BBT (6-7,6) ou phénolphtaléine (8,2-10).'
+      },
+      {
+        q: 'Dans une solution de CH₃COONa (sel d\'acide faible), la solution est :',
+        options: ['Basique', 'Acide', 'Neutre', 'Fortement acide'],
+        correct: 0,
+        feedback: '✅ CH₃COO⁻ est la base conjuguée d\'un acide faible → elle se protone partiellement avec l\'eau : CH₃COO⁻ + H₂O ⇌ CH₃COOH + OH⁻ → solution basique !'
+      },
+      {
+        q: 'La réaction A + B → C + D est d\'ordre 1 en A et d\'ordre 2 en B. L\'unité de k est :',
+        options: ['L²·mol⁻²·s⁻¹', 'L·mol⁻¹·s⁻¹', 's⁻¹', 'mol·L⁻¹·s⁻¹'],
+        correct: 0,
+        feedback: '✅ Ordre global = 1+2 = 3. Pour ordre n : [k] = L^(n-1)·mol^(1-n)·s⁻¹ → pour n=3 : L²·mol⁻²·s⁻¹.'
+      },
+      {
+        q: 'L\'autoprotolyse de l\'eau (H₂O + H₂O ⇌ H₃O⁺ + OH⁻) produit à 25°C des concentrations égales de :',
+        options: ['10⁻⁷ mol/L de H₃O⁺ et OH⁻', '10⁻¹⁴ mol/L de H₃O⁺', '1 mol/L de H₃O⁺', '10⁻² mol/L de OH⁻'],
+        correct: 0,
+        feedback: '✅ Ke = [H₃O⁺][OH⁻] = 10⁻¹⁴. Dans l\'eau pure : [H₃O⁺] = [OH⁻] = √10⁻¹⁴ = 10⁻⁷ mol/L.'
+      },
+      {
+        q: 'Comparer pKa(acide acétique) = 4,8 et pKa(acide formique) = 3,7. Lequel est le plus fort ?',
+        options: ['L\'acide formique (pKa plus petit)', 'L\'acide acétique (pKa plus grand)', 'Ils sont équivalents', 'Impossible à déterminer'],
+        correct: 0,
+        feedback: '✅ Plus le pKa est petit, plus Ka est grand, et plus l\'acide est fort. L\'acide formique (pKa = 3,7) est plus fort que l\'acide acétique (pKa = 4,8).'
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // SA 3 – OSCILLATIONS MÉCANIQUES ET ÉLECTRIQUES
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 3, icon: '〰️', title: 'Oscillations Mécaniques & Électriques',
+    domain: 'Mécanique & Électricité',
+    notions: [
+      'Pendule simple : T = 2π√(L/g) — indépendant de la masse et de l\'amplitude (petits angles)',
+      'Ressort-masse : T = 2π√(m/k) — k constante de raideur en N/m',
+      'Fréquence : f = 1/T ; pulsation ω = 2πf = 2π/T',
+      'Circuit LC : oscillations libres, T = 2π√(LC)',
+      'Circuit RLC série forcé : résonance quand ω = ω₀ = 1/√(LC)',
+      'Impédance Z = √(R² + (Lω - 1/Cω)²)',
+      'Équation différentielle du pendule : ẍ + (g/L)x = 0 (petits angles)',
+      'Énergie dans un ressort : Ep = ½kx² ; Ec = ½mv²',
+      'Facteur de qualité Q = Lω₀/R : mesure la sélectivité en résonance',
+      'Oscillations amorties : énergie perdue par frottement/résistance'
+    ],
+    questions: [
+      {
+        q: 'Un pendule simple de longueur L = 1 m oscille sous g = 10 m/s². Sa période T est :',
+        options: ['≈ 2π/√10 ≈ 1,99 s', '2 s', '√10 s', 'π s'],
+        correct: 0,
+        feedback: '✅ T = 2π√(L/g) = 2π√(1/10) = 2π/√10 ≈ 2π/3,16 ≈ 1,99 s ≈ 2 s. On retient souvent T ≈ 2 s pour L = 1 m !'
+      },
+      {
+        q: 'Un ressort de constante k = 100 N/m supporte une masse m = 0,25 kg. La période des oscillations est :',
+        options: ['≈ 0,314 s', '1 s', '2π s', '0,5 s'],
+        correct: 0,
+        feedback: '✅ T = 2π√(m/k) = 2π√(0,25/100) = 2π√(2,5×10⁻³) = 2π × 0,05 ≈ 0,314 s.'
+      },
+      {
+        q: 'Dans un circuit LC (L = 0,1 H, C = 10 µF), la fréquence propre des oscillations est :',
+        options: ['≈ 159 Hz', '≈ 1000 Hz', '≈ 50 Hz', '≈ 100 Hz'],
+        correct: 0,
+        feedback: '✅ ω₀ = 1/√(LC) = 1/√(0,1×10⁻⁵) = 1/√10⁻⁶ = 1000 rad/s → f₀ = 1000/2π ≈ 159 Hz.'
+      },
+      {
+        q: 'En résonance dans un circuit RLC série, la condition est :',
+        options: ['Lω = 1/(Cω), soit ω = 1/√(LC)', 'R = L', 'C = L', 'ω = R/L'],
+        correct: 0,
+        feedback: '✅ La résonance se produit quand X_L = X_C → Lω = 1/(Cω) → ω² = 1/(LC) → ω₀ = 1/√(LC). L\'impédance est alors minimale : Z = R.'
+      },
+      {
+        q: 'Quelle grandeur est conservée dans un oscillateur mécanique SANS frottement ?',
+        options: ["L'énergie mécanique totale", "L'amplitude", "La vitesse", "L'accélération"],
+        correct: 0,
+        feedback: '✅ Sans frottement, Em = Ec + Ep = constante. La conversion est permanente entre énergie cinétique (max au centre) et potentielle (max aux extrêmes).'
+      },
+      {
+        q: 'Le rôle du condensateur C dans un circuit oscillant LC est de :',
+        options: ['Stocker l\'énergie électrique (champ électrique)', 'Créer un courant continu', 'Dissiper l\'énergie', 'Amplifier la tension'],
+        correct: 0,
+        feedback: '✅ Le condensateur stocke l\'énergie sous forme électrique : Ec = ½Cu². La bobine stocke l\'énergie magnétique : Eb = ½Li². Elles échangent alternativement !'
+      },
+      {
+        q: 'Dans un pendule simple, si on triple la longueur L, la période T est multipliée par :',
+        options: ['√3', '3', '9', '1/3'],
+        correct: 0,
+        feedback: '✅ T = 2π√(L/g) → T ∝ √L. Si L → 3L : T_new = 2π√(3L/g) = √3 × T. La période est multipliée par √3 ≈ 1,73.'
+      },
+      {
+        q: 'L\'équation différentielle des oscillations libres non amorties d\'un ressort-masse est :',
+        options: ['m·ẍ + k·x = 0', 'm·ẍ - k·x = 0', 'k·ẋ + m·x = 0', 'm·ẍ + R·ẋ = 0'],
+        correct: 0,
+        feedback: '✅ Par le PFD : F_ressort = -kx → m·ẍ = -kx → m·ẍ + kx = 0. La solution est x(t) = A·cos(ω₀t + φ) avec ω₀ = √(k/m).'
+      },
+      {
+        q: 'Dans un circuit RLC série, l\'impédance Z est :',
+        options: ['Z = √[R² + (Lω - 1/Cω)²]', 'Z = R + L + C', 'Z = R × L × C', 'Z = R/(LC)'],
+        correct: 0,
+        feedback: '✅ Z = √[R² + (X_L - X_C)²] avec X_L = Lω (réactance inductive) et X_C = 1/(Cω) (réactance capacitive). À la résonance : X_L = X_C → Z = R.'
+      },
+      {
+        q: 'Le facteur de qualité Q d\'un circuit RLC est grand quand :',
+        options: ['La résonance est aiguë et sélective (pic étroit)', 'Le circuit dissipe beaucoup d\'énergie', 'R est grand', 'L est petite'],
+        correct: 0,
+        feedback: '✅ Q = Lω₀/R = 1/(RCω₀). Un grand Q signifie une résonance sélective (bande passante étroite) : utile pour les radios et filtres !'
+      },
+      {
+        q: 'Un oscillateur mécanique amorti perd de l\'énergie à cause de :',
+        options: ['Forces de frottement visqueux', 'La gravité', 'Le ressort', "L'inertie de la masse"],
+        correct: 0,
+        feedback: '✅ Le frottement (visqueux, solide) et la résistance électrique dissipent l\'énergie en chaleur, réduisant progressivement l\'amplitude des oscillations.'
+      },
+      {
+        q: 'La tension aux bornes du condensateur dans un circuit LC varie comme :',
+        options: ['u_C(t) = U_m·cos(ω₀t + φ)', 'u_C(t) = U_m·e^(-t/τ)', 'u_C(t) = U_m·t', 'u_C(t) = constante'],
+        correct: 0,
+        feedback: '✅ Dans un circuit LC sans résistance, la tension oscille sinusoïdalement : u_C(t) = U_m·cos(ω₀t + φ) avec ω₀ = 1/√(LC).'
+      },
+      {
+        q: 'La pulsation propre ω₀ d\'un ressort-masse (m = 100 g, k = 40 N/m) vaut :',
+        options: ['20 rad/s', '200 rad/s', '4 rad/s', '0,4 rad/s'],
+        correct: 0,
+        feedback: '✅ ω₀ = √(k/m) = √(40/0,1) = √400 = 20 rad/s. Fréquence : f = 20/2π ≈ 3,18 Hz.'
+      },
+      {
+        q: 'En régime sinusoïdal forcé d\'un circuit RLC, si ω < ω₀, le circuit se comporte comme :',
+        options: ['Un circuit capacitif (C domine)', 'Un circuit inductif (L domine)', 'Un circuit purement résistif', 'Un circuit sans courant'],
+        correct: 0,
+        feedback: '✅ Si ω < ω₀ : X_C > X_L → le condensateur domine → circuit à caractère capacitif. Si ω > ω₀ : X_L > X_C → inductif.'
+      },
+      {
+        q: 'La fréquence d\'un pendule simple dépend-elle de la masse du pendule ?',
+        options: ['Non, elle ne dépend que de L et g', 'Oui, elle augmente avec la masse', 'Oui, elle diminue avec la masse', 'Cela dépend de l\'amplitude'],
+        correct: 0,
+        feedback: '✅ T = 2π√(L/g) ne contient pas m ! Un pendule léger ou lourd de même longueur oscille à la même fréquence. Galilée l\'a découvert au XVI° siècle !'
+      },
+      {
+        q: 'Dans un circuit RLC série en résonance, la tension aux bornes de la résistance R est :',
+        options: ['Égale à la tension d\'alimentation totale', 'Nulle', 'Plus grande que la tension d\'alimentation', 'Divisée par R'],
+        correct: 0,
+        feedback: '✅ En résonance, X_L = X_C → les tensions de L et C se compensent → U_R = U (toute la tension est aux bornes de R). Z = R (impédance minimale).'
+      },
+      {
+        q: 'L\'énergie potentielle élastique d\'un ressort de constante k étiré de x est :',
+        options: ['Ep = ½kx²', 'Ep = kx', 'Ep = kx²', 'Ep = ½k/x²'],
+        correct: 0,
+        feedback: '✅ Ep = ½kx². Au maximum d\'extension (v=0) : Em = ½kA². Au passage à l\'équilibre (x=0) : Em = ½mv²_max = ½kA².'
+      },
+      {
+        q: 'Le courant i dans un circuit LC (sans résistance) satisfait l\'équation :',
+        options: ['L·di/dt + q/C = 0 → ï + ω₀²i = 0', 'R·i + L·di/dt = 0', 'i = C·du/dt uniquement', 'Li = Cq'],
+        correct: 0,
+        feedback: '✅ En différentiant la loi des mailles : L·di/dt + q/C = 0. Comme i = dq/dt : L·d²i/dt² + i/C = 0 → ï + ω₀²i = 0 avec ω₀² = 1/(LC).'
+      },
+      {
+        q: 'Un oscillateur harmonique a une période T = 0,4 s. Sa fréquence f et sa pulsation ω sont :',
+        options: ['f = 2,5 Hz ; ω ≈ 15,7 rad/s', 'f = 0,4 Hz ; ω = 1 rad/s', 'f = 4 Hz ; ω = 8π rad/s', 'f = 2 Hz ; ω = 4π rad/s'],
+        correct: 0,
+        feedback: '✅ f = 1/T = 1/0,4 = 2,5 Hz ; ω = 2πf = 2π × 2,5 ≈ 15,7 rad/s.'
+      },
+      {
+        q: 'Dans un pendule simple en oscillation libre non amortie, quand la masse est à sa position d\'équilibre, sa vitesse est :',
+        options: ['Maximale', 'Nulle', 'Minimale mais non nulle', 'Égale à √(gL)'],
+        correct: 0,
+        feedback: '✅ À l\'équilibre (x = 0) : toute l\'énergie est cinétique → v = v_max. Aux extrémités (x = ±A) : v = 0, toute l\'énergie est potentielle.'
+      },
+      {
+        q: 'La bande passante Δω d\'un circuit RLC est définie par Δω = ω₀/Q. Si Q = 10 et ω₀ = 1000 rad/s, Δω vaut :',
+        options: ['100 rad/s', '10 rad/s', '10000 rad/s', '1000 rad/s'],
+        correct: 0,
+        feedback: '✅ Δω = ω₀/Q = 1000/10 = 100 rad/s. Un grand Q donne une petite bande passante → sélectivité élevée (bonne réception radio par exemple).'
+      },
+      {
+        q: 'Lors des oscillations libres non amorties d\'un ressort-masse, l\'amplitude A :',
+        options: ['Reste constante', 'Diminue exponentiellement', 'Augmente', 'Oscille elle-même'],
+        correct: 0,
+        feedback: '✅ Sans frottement, l\'énergie est conservée et l\'amplitude reste constante indéfiniment. En réalité, les frottements causent un amortissement.'
+      },
+      {
+        q: 'La loi d\'évolution de la charge q dans un circuit LC est q(t) = Q_m·cos(ω₀t + φ). L\'intensité i(t) est :',
+        options: [
+          'i(t) = -Q_m·ω₀·sin(ω₀t + φ)',
+          'i(t) = Q_m·cos(ω₀t + φ)',
+          'i(t) = Q_m·ω₀·cos(ω₀t + φ)',
+          'i(t) = Q_m/ω₀·sin(ω₀t + φ)'
+        ],
+        correct: 0,
+        feedback: '✅ i = dq/dt = -Q_m·ω₀·sin(ω₀t + φ). Le courant est en avance de π/2 sur la charge du condensateur (déphasage de 90°).'
+      },
+      {
+        q: 'Dans un oscillateur mécanique, la condition de résonance se traduit par :',
+        options: [
+          'La fréquence d\'excitation égale la fréquence propre',
+          'L\'amplitude tend vers zéro',
+          'Les frottements augmentent',
+          'La masse augmente'
+        ],
+        correct: 0,
+        feedback: '✅ En résonance : ω_excitation = ω₀. L\'amplitude est alors maximale. Exemple catastrophique : le pont de Tacoma en 1940 détruit par résonance éolienne !'
+      },
+      {
+        q: 'L\'énergie totale stockée dans un circuit LC à l\'instant t (avec u_C et i) est :',
+        options: ['E = ½Cu_C² + ½Li²', 'E = Cu_C + Li', 'E = ½(C+L)(u_C + i)²', 'E = u_C·i'],
+        correct: 0,
+        feedback: '✅ E = ½Cu_C² (énergie électrique dans C) + ½Li² (énergie magnétique dans L). Cette somme est constante en l\'absence de résistance !'
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // SA 4 – CHIMIE ORGANIQUE
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 4, icon: '🧪', title: 'Chimie Organique',
+    domain: 'Chimie Organique',
+    notions: [
+      'Stéréochimie : isomérie de configuration (Z/E) et de conformation (chaise/bateau)',
+      'Carbone asymétrique C* : lié à 4 groupes différents → chiralité',
+      'Alcools : groupe -OH ; primaire (R-CH₂-OH), secondaire (R₂-CHOH), tertiaire (R₃-COH)',
+      'Oxydation ménagée : alcool primaire → aldéhyde → acide carboxylique',
+      'Oxydation ménagée : alcool secondaire → cétone (non oxydable davantage)',
+      'Amines : groupe -NH₂ ; elles sont des bases (R-NH₂ + H₂O ⇌ R-NH₃⁺ + OH⁻)',
+      'Acides carboxyliques : groupe -COOH ; réaction d\'estérification avec alcools',
+      'Acides α-aminés : groupe -NH₂ et -COOH sur le même carbone α',
+      'Estérification : acide + alcool ⇌ ester + eau (catalyse acide, équilibre)',
+      'Liaison peptidique : -CO-NH- formée entre acides aminés (condensation)'
+    ],
+    questions: [
+      {
+        q: 'Un carbone asymétrique est un carbone :',
+        options: [
+          'Lié à 4 substituants tous différents',
+          'Doublement lié à un autre carbone',
+          'Portant 2 atomes d\'hydrogène',
+          'Faisant partie d\'un cycle aromatique'
+        ],
+        correct: 0,
+        feedback: '✅ Un carbone asymétrique (C*) est lié à 4 groupes TOUS différents → la molécule est chirale → existence d\'énantiomères (images miroirs non superposables).'
+      },
+      {
+        q: 'L\'oxydation ménagée d\'un alcool primaire R-CH₂OH donne successivement :',
+        options: ['Un aldéhyde R-CHO puis un acide R-COOH', 'Une cétone puis un alcool secondaire', 'Un ester', 'Un alcène'],
+        correct: 0,
+        feedback: '✅ Alcool 1° → (oxydation) → aldéhyde → (oxydation) → acide carboxylique. Un alcool secondaire donne une cétone (stop, pas d\'oxydation ultérieure en milieu neutre).'
+      },
+      {
+        q: 'Le groupe fonctionnel caractéristique des acides carboxyliques est :',
+        options: ['-COOH', '-OH', '-NH₂', '-CHO'],
+        correct: 0,
+        feedback: '✅ -COOH (ou -CO₂H) est le groupe carboxyle. Il contient à la fois un carbonyle C=O et un hydroxyle -OH. C\'est un acide faible.'
+      },
+      {
+        q: 'La réaction d\'estérification entre un acide carboxylique et un alcool est :',
+        options: ['Lente, équilibrée et exothermique', 'Rapide et totale', 'Une réaction d\'oxydation', 'Irréversible'],
+        correct: 0,
+        feedback: '✅ Estérification : lente, limitée (équilibre), athermique, catalysée par H⁺. La réaction inverse est la saponification (hydrolyse en milieu basique) totale et rapide !'
+      },
+      {
+        q: 'Un acide α-aminé possède simultanément :',
+        options: [
+          'Un groupe amine -NH₂ et un groupe carboxyle -COOH sur le même carbone α',
+          'Deux groupes -COOH',
+          'Un groupe -OH et un groupe -NH₂',
+          'Deux groupes amines'
+        ],
+        correct: 0,
+        feedback: '✅ Structure générale : NH₂-C*H(R)-COOH. Le carbone α porte -NH₂, -COOH, -H et le radical R. En solution : forme zwitterionique NH₃⁺-CHR-COO⁻.'
+      },
+      {
+        q: 'Les amines sont des bases car :',
+        options: [
+          'Elles acceptent un proton grâce au doublet libre de l\'azote',
+          'Elles libèrent des ions OH⁻ par dissociation',
+          'Elles contiennent de l\'oxygène',
+          'Elles réagissent avec les alcools'
+        ],
+        correct: 0,
+        feedback: '✅ R-NH₂ + H₂O ⇌ R-NH₃⁺ + OH⁻. L\'azote de l\'amine possède un doublet non liant qui capte un proton H⁺ → caractère basique (accepteur de proton, Brønsted).'
+      },
+      {
+        q: 'La liaison peptidique entre deux acides aminés est :',
+        options: [
+          '-CO-NH- (amide), formée par condensation avec élimination d\'eau',
+          '-O-CO- (ester)',
+          '-S-S- (disulfure)',
+          '-NH-NH- (hydrazine)'
+        ],
+        correct: 0,
+        feedback: '✅ La liaison peptidique -CO-NH- résulte de la condensation du -COOH d\'un acide aminé avec le -NH₂ d\'un autre, libérant H₂O. C\'est la base des protéines !'
+      },
+      {
+        q: 'En stéréochimie Z/E (isomérie géométrique), la configuration Z signifie que :',
+        options: [
+          'Les groupes prioritaires sont du même côté de la double liaison',
+          'Les groupes prioritaires sont de côtés opposés',
+          'La molécule est chirale',
+          'Le carbone est asymétrique'
+        ],
+        correct: 0,
+        feedback: '✅ Z = zusammen (ensemble en allemand) : groupes prioritaires du MÊME côté. E = entgegen (opposé) : groupes prioritaires de côtés OPPOSÉS. Priorité par numéro atomique (règles CIP).'
+      },
+      {
+        q: 'Un alcool tertiaire peut-il être oxydé par un oxydant ménagé (KMnO₄ dilué) ?',
+        options: ['Non, les alcools tertiaires ne s\'oxydent pas en conditions ménagées', 'Oui, en cétone', 'Oui, en acide', 'Oui, en aldéhyde'],
+        correct: 0,
+        feedback: '✅ Alcool tertiaire (R₃C-OH) : pas de H sur le carbone portant -OH → pas d\'oxydation ménagée possible. Pour l\'oxyder, il faut des conditions très drastiques (rupture de chaîne).'
+      },
+      {
+        q: 'La formule générale d\'un ester est :',
+        options: ['R-COO-R\'', 'R-COOH', 'R-CO-R\'', 'R-O-R\''],
+        correct: 0,
+        feedback: '✅ Un ester a la formule R-COO-R\' (ou R-CO₂R\'). Il résulte de la réaction d\'un acide carboxylique R-COOH avec un alcool R\'-OH.'
+      },
+      {
+        q: 'L\'hydrolyse d\'un ester en milieu basique (saponification) est :',
+        options: [
+          'Totale et irréversible',
+          'Partielle et réversible',
+          'Identique à l\'estérification',
+          'Sans formation de sel'
+        ],
+        correct: 0,
+        feedback: '✅ La saponification (hydrolyse basique) est TOTALE et IRREVERSIBLE (contrairement à l\'estérification). Elle produit un sel de carboxylate R-COO⁻ + alcool R\'-OH.'
+      },
+      {
+        q: 'Les acides aminés naturels (sauf glycine) sont tous de configuration :',
+        options: ['L (lévogyre selon la convention de Fischer)', 'D', 'Racémique', 'Achiraux'],
+        correct: 0,
+        feedback: '✅ Les 20 acides aminés protéinogènes naturels sont de configuration L (convention de Fischer). La glycine (R = H) n\'est pas chirale car ses 4 substituants ne sont pas tous différents.'
+      },
+      {
+        q: 'Un alcool secondaire CH₃-CHOH-CH₃ (propan-2-ol) s\'oxyde en :',
+        options: ['Propanone (acétone) CH₃-CO-CH₃', 'Acide propanoïque', 'Propanal', 'Propène'],
+        correct: 0,
+        feedback: '✅ Alcool 2° → cétone. CH₃-CHOH-CH₃ + [O] → CH₃-CO-CH₃ (propanone/acétone). La cétone ne peut pas être oxydée davantage en conditions ménagées.'
+      },
+      {
+        q: 'Le point isoélectrique (pHI) d\'un acide aminé est le pH pour lequel :',
+        options: [
+          'La forme zwitterionique est dominante et la charge nette est nulle',
+          'L\'acide aminé est totalement protonné',
+          'L\'acide aminé se décompose',
+          'La liaison peptidique se forme'
+        ],
+        correct: 0,
+        feedback: '✅ Au pHI = (pKa1 + pKa2)/2, la forme zwitterionique NH₃⁺-CHR-COO⁻ est maximale. La migration électrophorétique est nulle à ce pH.'
+      },
+      {
+        q: 'Les isomères de conformation d\'un cyclohexane sont :',
+        options: [
+          'La forme chaise (stable) et la forme bateau (moins stable)',
+          'Des stéréoisomères de configuration Z et E',
+          'Des énantiomères',
+          'Des formes avec des carbones asymétriques différents'
+        ],
+        correct: 0,
+        feedback: '✅ Le cyclohexane peut adopter la conformation chaise (tous substituants éq ou ax, minimisant les tensions) ou bateau (moins stable, plus tendu). La chaise est largement prépondérante.'
+      },
+      {
+        q: 'La méthylamine CH₃-NH₂ est une base plus forte que l\'ammoniac NH₃ car :',
+        options: [
+          'Le groupe méthyle enrichit l\'azote en électrons (effet inductif donneur)',
+          'Elle a une masse molaire plus grande',
+          'Elle a deux groupes amine',
+          'Elle est moins soluble dans l\'eau'
+        ],
+        correct: 0,
+        feedback: '✅ Le groupe alkyle CH₃- est électro-donneur par induction : il enrichit le doublet de l\'azote → l\'azote capte plus facilement H⁺ → basicité accrue. pKb(CH₃NH₂) < pKb(NH₃).'
+      },
+      {
+        q: 'Une molécule possédant un carbone asymétrique peut-elle être achiral ?',
+        options: [
+          'Oui, si elle possède un plan de symétrie (composé méso)',
+          'Non, jamais',
+          'Oui, seulement si elle a 2 carbones asymétriques',
+          'Cela dépend de la température'
+        ],
+        correct: 0,
+        feedback: '✅ Un composé méso possède des C* mais aussi un plan de symétrie interne → les effets se compensent → molécule achiral. Ex : l\'acide méso-tartrique.'
+      },
+      {
+        q: 'La déshydratation d\'un alcool (ex: CH₃-CH₂-OH) en milieu acide concentré et chaud donne :',
+        options: ['Un alcène (CH₂=CH₂)', 'Un acide carboxylique', 'Un aldéhyde', 'Une cétone'],
+        correct: 0,
+        feedback: '✅ À haute température avec H₂SO₄ concentré : déshydratation → alcène. À basse température : déshydratation intermoléculaire → éther-oxyde (R-O-R\').'
+      },
+      {
+        q: 'La réaction entre l\'éthanol et l\'acide acétique (estérification) donne :',
+        options: ['Acétate d\'éthyle + eau', 'Acide propanoïque + eau', 'Éthylamine + eau', 'Éthylène + eau'],
+        correct: 0,
+        feedback: '✅ CH₃COOH + C₂H₅OH ⇌ CH₃COOC₂H₅ + H₂O. L\'acétate d\'éthyle est un solvant courant avec une odeur fruitée caractéristique !'
+      },
+      {
+        q: 'Le test de Lucas permet de distinguer les alcools primaires, secondaires et tertiaires. Avec HCl/ZnCl₂ à température ambiante, l\'alcool tertiaire :',
+        options: ['Réagit immédiatement (solution trouble)', 'Ne réagit pas', 'Réagit après 5 minutes', 'Donne un précipité blanc'],
+        correct: 0,
+        feedback: '✅ Réactivité : tertiaire (immédiat, trouble rapide) > secondaire (5-10 min) > primaire (pas de réaction à T ambiante). La vitesse dépend de la stabilité du carbocation formé !'
+      },
+      {
+        q: 'La réaction de polycondensation entre des diacides et des diamines forme :',
+        options: ['Des polyamides (nylons)', 'Des polyesters', 'Des polysaccharides', 'Des protéines uniquement'],
+        correct: 0,
+        feedback: '✅ Diacide (n-COOH) + diamine (n-NH₂) → polyamide + n·H₂O. Le nylon est un polyamide. La réaction libère des molécules d\'eau (polycondensation).'
+      },
+      {
+        q: 'Les énantiomères d\'une molécule chirale ont les mêmes propriétés physiques, SAUF :',
+        options: [
+          'Le pouvoir rotatoire (signe opposé devant la lumière polarisée)',
+          'Le point de fusion',
+          'La solubilité',
+          'Le spectre IR'
+        ],
+        correct: 0,
+        feedback: '✅ Les énantiomères sont des images miroirs non superposables. Propriétés identiques SAUF avec lumière polarisée (pouvoirs rotatoires opposés) et réactivité vis-à-vis de molécules chirales (enzymes !).'
+      },
+      {
+        q: 'L\'acide glutamique (acide aminé) a 2 groupes -COOH et 1 groupe -NH₂. Son point isoélectrique pHI est :',
+        options: ['Acide (< 7)', 'Basique (> 7)', 'Neutre (= 7)', 'Impossible à déterminer'],
+        correct: 0,
+        feedback: '✅ Plus de -COOH que de -NH₂ → le pHI est acide (< 7). Pour un acide aminé avec excès de -NH₂ (ex: lysine), pHI > 7. La règle : pHI = (pKa₁ + pKa₂)/2 du côté de la charge nulle.'
+      },
+      {
+        q: 'Pour rendre une estérification totale, on peut :',
+        options: [
+          'Éliminer l\'eau au fur et à mesure (Dean-Stark), ou utiliser un excès de réactif',
+          'Ajouter plus de catalyseur acide seulement',
+          'Augmenter la pression',
+          'Refroidir le milieu réactionnel'
+        ],
+        correct: 0,
+        feedback: '✅ Pour déplacer l\'équilibre d\'estérification vers les produits (Le Chatelier) : éliminer l\'eau produite, utiliser un excès d\'un réactif, ou utiliser des agents déshydratants.'
+      },
+      {
+        q: 'Un dipeptide est formé de 2 acides aminés reliés par :',
+        options: ['1 liaison peptidique', '2 liaisons peptidiques', '1 liaison ester', '1 liaison ionique'],
+        correct: 0,
+        feedback: '✅ 2 acides aminés → 1 liaison peptidique + 1 molécule d\'eau libérée. Pour n acides aminés : (n-1) liaisons peptidiques et (n-1) molécules d\'eau libérées.'
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // SA 5 – OPTIQUE
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 5, icon: '🔭', title: 'Optique',
+    domain: 'Optique',
+    notions: [
+      'Relation de conjugaison (Descartes) : 1/v - 1/u = 1/f\' (lentilles minces)',
+      'Vergence D = 1/f\' (en dioptries, si f\' en mètres)',
+      'Lentille convergente : f\' > 0 ; lentille divergente : f\' < 0',
+      'Grandissement γ = taille image / taille objet = v/u (Descartes)',
+      'Dispersion : indice n(violet) > n(rouge) → déviation différente par prisme',
+      'Longueur d\'onde dans le vide : rouge ≈ 700 nm, violet ≈ 400 nm',
+      'Polarisation : onde transversale → lumière polarisée rectilignement par filtre (TleD)',
+      'Loi de Malus : I = I₀·cos²θ (intensité après 2 polariseurs croisés d\'angle θ)',
+      'Objet réel, image réelle (si v > 0) ou virtuelle (si v < 0)',
+      'Construction de l\'image : 2 rayons remarquables (axial, focal, central)'
+    ],
+    questions: [
+      {
+        q: 'Une lentille convergente a une focale f\' = 10 cm. Un objet est placé à 30 cm. L\'image se forme à quelle distance de la lentille ?',
+        options: ['15 cm (image réelle)', '10 cm', '30 cm', '-15 cm (image virtuelle)'],
+        correct: 0,
+        feedback: '✅ 1/v - 1/u = 1/f\'. Objet réel : u = -30 cm. 1/v = 1/f\' + 1/u = 1/10 + 1/(-30) = 3/30 - 1/30 = 2/30 → v = 15 cm (image réelle, de l\'autre côté).'
+      },
+      {
+        q: 'La vergence D d\'une lentille de focale f\' = 25 cm est :',
+        options: ['+4 dioptries', '+25 dioptries', '+0,25 dioptrie', '-4 dioptries'],
+        correct: 0,
+        feedback: '✅ D = 1/f\'(m) = 1/0,25 = 4 dioptries. Une lentille de lunette +4δ est convergente et corrige l\'hypermétropie (vision de près difficile).'
+      },
+      {
+        q: 'Pourquoi un prisme disperse-t-il la lumière blanche en un spectre coloré ?',
+        options: [
+          'L\'indice de réfraction dépend de la longueur d\'onde : n(violet) > n(rouge)',
+          'Le prisme absorbe certaines couleurs',
+          'La lumière blanche contient des particules de couleurs différentes',
+          'La réflexion totale favorise certaines couleurs'
+        ],
+        correct: 0,
+        feedback: '✅ n_violet > n_rouge → angle de réfraction différent selon λ → dispersion. Le violet est plus dévié que le rouge. C\'est la base du spectroscope et de l\'arc-en-ciel !'
+      },
+      {
+        q: 'Pour une lentille convergente, si l\'objet est placé entre F et la lentille (u entre 0 et f\'), l\'image est :',
+        options: ['Virtuelle, droite et agrandie (loupe)', 'Réelle et renversée', 'Réelle et droite', 'Virtuelle et réduite'],
+        correct: 0,
+        feedback: '✅ C\'est le principe de la loupe ! Objet entre F et O → image virtuelle, droite, agrandie, du même côté que l\'objet. L\'observateur voit une image virtuelle agrandie.'
+      },
+      {
+        q: 'Le grandissement transversal γ d\'un système optique est défini par :',
+        options: ["γ = taille d'image / taille d'objet = A'B'/AB", "γ = f'/f", "γ = v × u", "γ = D × f'"],
+        correct: 0,
+        feedback: '✅ γ = A\'B\'/AB = OA\'/OA = v/u (en convention algébrique). Si |γ| > 1 : image agrandie ; γ < 0 : image renversée.'
+      },
+      {
+        q: 'La lumière polarisée rectilignement a ses vibrations :',
+        options: [
+          'Dans un seul plan contenant la direction de propagation',
+          'Dans tous les plans (lumière naturelle)',
+          'Circulaires',
+          'Longitudinales'
+        ],
+        correct: 0,
+        feedback: '✅ La lumière naturelle vibre dans tous les plans perpendiculaires à la propagation. Après un polariseur, elle ne vibre que dans un seul plan : c\'est la polarisation rectiligne (TleD).'
+      },
+      {
+        q: 'La loi de Malus stipule que l\'intensité lumineuse après deux polariseurs (angle θ entre eux) est :',
+        options: ['I = I₀·cos²θ', 'I = I₀·cosθ', 'I = I₀/2', 'I = I₀·sin²θ'],
+        correct: 0,
+        feedback: '✅ I = I₀·cos²θ. À θ = 0° : I = I₀ (polariseurs parallèles, max). À θ = 90° : I = 0 (polariseurs croisés, extinction totale). À θ = 45° : I = I₀/2.'
+      },
+      {
+        q: 'L\'oeil emmétrope (normal) forme l\'image des objets lointains :',
+        options: ['Exactement sur la rétine', 'En avant de la rétine (myopie)', 'En arrière de la rétine (hypermétropie)', 'Sans accommodation'],
+        correct: 0,
+        feedback: '✅ L\'emmétrope voit nettement au loin sans accommodation. Le myope voit l\'image en avant de la rétine (lentille divergente nécessaire). L\'hypermétrope en arrière (lentille convergente).'
+      },
+      {
+        q: 'La longueur d\'onde de la lumière verte dans le vide est approximativement :',
+        options: ['550 nm', '400 nm', '700 nm', '1000 nm'],
+        correct: 0,
+        feedback: '✅ Spectre visible : violet ≈ 400 nm, vert ≈ 550 nm, rouge ≈ 700 nm. Le spectre s\'étend de 380 à 780 nm environ.'
+      },
+      {
+        q: 'Un objet réel se trouve à 20 cm d\'une lentille divergente de focale f\' = -10 cm. Où est l\'image ?',
+        options: ['À -6,67 cm (virtuelle, entre O et F)', 'À +6,67 cm (réelle)', 'À 20 cm', 'À l\'infini'],
+        correct: 0,
+        feedback: '✅ 1/v = 1/f\' + 1/u = 1/(-10) + 1/(-20) = -1/10 - 1/20 = -3/20 → v = -20/3 ≈ -6,67 cm. Image virtuelle, du même côté que l\'objet, réduite.'
+      },
+      {
+        q: 'L\'association de deux lentilles minces de vergences D₁ et D₂ accolées donne une vergence totale :',
+        options: ['D = D₁ + D₂', 'D = D₁ × D₂', 'D = D₁ - D₂', '1/D = 1/D₁ + 1/D₂'],
+        correct: 0,
+        feedback: '✅ Pour des lentilles ACCOLÉES (contact) : D_total = D₁ + D₂ (les vergences s\'ajoutent). Équivalent : 1/f\' = 1/f₁\' + 1/f₂\'.'
+      },
+      {
+        q: 'La décomposition de la lumière blanche par un prisme montre que :',
+        options: [
+          'Le violet est le plus dévié, le rouge le moins dévié',
+          'Le rouge est le plus dévié',
+          'Toutes les couleurs sont déviées identiquement',
+          'Seul le jaune passe sans déviation'
+        ],
+        correct: 0,
+        feedback: '✅ n_violet > n_rouge → déviation violet > déviation rouge. L\'ordre du spectre (depuis la base du prisme) : rouge, orange, jaune, vert, bleu, indigo, violet.'
+      },
+      {
+        q: 'Pour voir correctement à 25 cm (distance minimale de vision distincte), un objet est placé devant une loupe de f\' = 5 cm. Le grossissement commercial G est :',
+        options: ['5 (= 25/f\')', '25', '0,2', '125'],
+        correct: 0,
+        feedback: '✅ G = 25/f\'(cm) = 25/5 = 5. Le grossissement commercial G = Dm/f\' où Dm = 25 cm est la distance minimale de vision distincte conventionnelle.'
+      },
+      {
+        q: 'Lors de la formation de l\'arc-en-ciel, la lumière du soleil subit dans les gouttes d\'eau :',
+        options: [
+          'Réfraction à l\'entrée, réflexion interne, puis réfraction à la sortie',
+          'Uniquement de la réflexion',
+          'Uniquement de la réfraction',
+          'De la diffraction'
+        ],
+        correct: 0,
+        feedback: '✅ Arc-en-ciel : réfraction (entrée) + réflexion interne + réfraction (sortie). La dispersion à la réfraction sépare les couleurs. L\'arc est visible à 42° du soleil pour le rouge.'
+      },
+      {
+        q: 'Un myope a un punctum remotum (point le plus éloigné vu net) à 50 cm. Sa correction nécessite une lentille de vergence :',
+        options: ['-2 dioptries', '+2 dioptries', '-50 dioptries', '+0,5 dioptrie'],
+        correct: 0,
+        feedback: '✅ La lentille doit former une image à l\'infini de l\'objet situé au punctum remotum : f\' = -50 cm = -0,5 m → D = 1/f\' = -2 dioptries. Lentille divergente !'
+      },
+      {
+        q: 'Qu\'est-ce que la réflexion totale interne ?',
+        options: [
+          'Phénomène où la lumière passant d\'un milieu dense à un moins dense est totalement réfléchie si l\'angle > angle critique',
+          'Réflexion de toute la lumière sur un miroir parfait',
+          'Absorption totale de la lumière dans le verre',
+          'Polarisation de la lumière réfléchie'
+        ],
+        correct: 0,
+        feedback: '✅ Pour angle d\'incidence > angle critique θc (sinθc = n₂/n₁), la lumière ne peut pas passer dans le milieu moins dense → réflexion totale. Principe des fibres optiques !'
+      },
+      {
+        q: 'Le pouvoir séparateur d\'un microscope désigne sa capacité à :',
+        options: [
+          'Distinguer deux points très rapprochés comme distincts',
+          'Agrandir les objets',
+          'Illuminer les préparations',
+          'Polariser la lumière'
+        ],
+        correct: 0,
+        feedback: '✅ Le pouvoir séparateur (ou résolution) = distance minimale entre deux points encore distinguables. Il est limité par la diffraction : résolution ≈ λ/(2NA) où NA est l\'ouverture numérique.'
+      },
+      {
+        q: 'Dans un polarimètre, si un tube rempli de solution de sucre fait tourner le plan de polarisation de +10°, on dit que la solution est :',
+        options: ['Dextrogyre (+)', 'Lévogyre (-)', 'Racémique', 'Achiral'],
+        correct: 0,
+        feedback: '✅ Rotation à droite (+) = dextrogyre. Rotation à gauche (-) = lévogyre. Le glucose est dextrogyre (+52,7°), le fructose est lévogyre (-92°). C\'est la base de la polarimétrie !'
+      },
+      {
+        q: 'La distance focale image f\' d\'une lentille mince vaut +20 cm. Un objet de 2 cm de haut est placé à 60 cm. La taille de l\'image est :',
+        options: ['1 cm (renversée)', '2 cm (droite)', '4 cm (renversée)', '6 cm (droite)'],
+        correct: 0,
+        feedback: '✅ 1/v = 1/20 + 1/(-60) = 3/60 - 1/60 = 2/60 → v = 30 cm. γ = v/u = 30/(-60) = -1/2. Image = 2 × 1/2 = 1 cm, renversée (γ < 0).'
+      },
+      {
+        q: 'La lumière naturelle traversant un premier polariseur est polarisée. Son intensité est alors :',
+        options: ['I₀/2 (moitié de l\'intensité initiale)', 'I₀ (inchangée)', '0', '2I₀'],
+        correct: 0,
+        feedback: '✅ Le premier polariseur divise l\'intensité par 2 : I = I₀/2. Ensuite, un second polariseur selon la loi de Malus : I = (I₀/2)·cos²θ. Pour θ = 0° : I = I₀/2 ; pour θ = 90° : I = 0.'
+      },
+      {
+        q: 'La distance focale objet f d\'une lentille convergente de vergence D = +5 δ est :',
+        options: ['-20 cm', '+20 cm', '-5 cm', '+5 cm'],
+        correct: 0,
+        feedback: '✅ f\' = 1/D = 1/5 = 0,2 m = 20 cm. La distance focale objet f = -f\' = -20 cm (convention algébrique). Le foyer objet est à gauche de la lentille pour une lentille convergente.'
+      },
+      {
+        q: 'Un rayon lumineux traversant une lentille mince en passant par le centre optique O :',
+        options: ['Continue sans déviation', 'Est réfléchi', 'Est arrêté', 'Se diffracte'],
+        correct: 0,
+        feedback: '✅ Tout rayon passant par le centre optique O n\'est pas dévié. C\'est l\'un des 3 rayons remarquables utilisés pour construire l\'image (avec les rayons passant par F et F\').'
+      },
+      {
+        q: 'Le spectre électromagnétique classe les rayonnements. Du plus énergétique au moins énergétique :',
+        options: ['γ > X > UV > visible > IR > micro-ondes > radio', 'Radio > micro-ondes > IR > visible > UV > X > γ', 'Visible > UV > IR > X > γ', 'IR > UV > visible > X > γ'],
+        correct: 0,
+        feedback: '✅ L\'énergie E = hf = hc/λ → plus λ est court, plus c\'est énergétique. Rayons gamma (λ < 0,01 nm) sont les plus énergétiques, ondes radio (λ > 1 m) les moins.'
+      },
+      {
+        q: 'Pour corriger l\'astigmatisme, on utilise :',
+        options: ['Des lentilles cylindriques (toriques)', 'Des lentilles sphériques convergentes', 'Des lentilles divergentes simples', 'Des prismes'],
+        correct: 0,
+        feedback: '✅ L\'astigmatisme est dû à une cornée non sphérique (forme torique). La correction utilise des lentilles toriques qui compensent les courbures différentes dans les différents méridiens.'
+      },
+      {
+        q: 'Dans les fibres optiques, la transmission de la lumière repose sur :',
+        options: ['La réflexion totale interne répétée', 'La réfraction à chaque interface', 'La diffraction', 'La polarisation'],
+        correct: 0,
+        feedback: '✅ La lumière injectée dans une fibre optique subit des milliers de réflexions totales internes successives. Elle se propage sans pertes (ou très faibles) sur de grandes distances !'
+      },
+    ]
+  },
+
+  // ══════════════════════════════════════════════════════════
+  // SA 6 – PHYSIQUE ATOMIQUE ET NUCLÉAIRE
+  // ══════════════════════════════════════════════════════════
+  {
+    id: 6, icon: '⚛️', title: 'Physique Atomique & Nucléaire',
+    domain: 'Physique Atomique et Nucléaire',
+    notions: [
+      'Notation du noyau : ᴬ_ZX (A = nombre de masse, Z = numéro atomique)',
+      'Radioactivité α : ᴬ_ZX → ᴬ⁻⁴_(Z-2)Y + ⁴₂He',
+      'Radioactivité β⁻ : n → p + e⁻ + ν̄_e ; Z augmente de 1',
+      'Radioactivité β⁺ : p → n + e⁺ + ν_e ; Z diminue de 1',
+      'Loi de décroissance : N(t) = N₀·e^(-λt) ; A(t) = A₀·e^(-λt)',
+      'Demi-vie t₁/₂ = ln2/λ ≈ 0,693/λ',
+      'Défaut de masse Δm = Zm_p + Nm_n - m_noyau',
+      'Énergie de liaison : E_liai = Δm × c² (en MeV : Δm en u × 931,5 MeV/u)',
+      'Fission : noyau lourd → 2 fragments + neutrons + énergie',
+      'Fusion : 2 noyaux légers → noyau plus lourd + énergie (étoiles, soleil)',
+      'Niveaux d\'énergie atomique : E_n = -13,6/n² eV (atome d\'hydrogène)'
+    ],
+    questions: [
+      {
+        q: 'Un noyau ²³⁸₉₂U émet une particule α. Le noyau fils est :',
+        options: ['²³⁴₉₀Th', '²³⁴₉₁Pa', '²³⁸₉₃Np', '²³⁶₉₀Th'],
+        correct: 0,
+        feedback: '✅ Émission α (⁴₂He) : A → A-4 = 238-4 = 234 ; Z → Z-2 = 92-2 = 90 → ²³⁴₉₀Th (thorium-234). Conservation du nombre de masse et du numéro atomique !'
+      },
+      {
+        q: 'La demi-vie t₁/₂ d\'un radioélément est :',
+        options: [
+          'La durée au bout de laquelle la moitié des noyaux se sont désintégrés',
+          'La durée de vie totale d\'un noyau radioactif',
+          'La durée pour que l\'activité devienne nulle',
+          'La période de l\'émission gamma'
+        ],
+        correct: 0,
+        feedback: '✅ t₁/₂ = ln2/λ. Après 1 demi-vie : N = N₀/2. Après 2 demi-vies : N = N₀/4. Après 10 demi-vies : N ≈ N₀/1000 (0,1% restant).'
+      },
+      {
+        q: 'La désintégration β⁻ d\'un noyau correspond à :',
+        options: [
+          'La transformation d\'un neutron en proton avec émission d\'un électron',
+          'La transformation d\'un proton en neutron',
+          'L\'émission d\'un noyau d\'hélium',
+          'L\'absorption d\'un électron par le noyau'
+        ],
+        correct: 0,
+        feedback: '✅ β⁻ : n → p + e⁻ + ν̄_e. Z augmente de 1, A reste constant. Ex : ¹⁴₆C → ¹⁴₇N + e⁻ + ν̄_e (datation au carbone 14 !).'
+      },
+      {
+        q: 'L\'énergie de liaison par nucléon est maximale (≈ 8,8 MeV/nucléon) pour le noyau de :',
+        options: ['Fer-56 (⁵⁶₂₆Fe)', 'Uranium-238', 'Hydrogène-1', 'Hélium-4'],
+        correct: 0,
+        feedback: '✅ Le ⁵⁶Fe a l\'énergie de liaison par nucléon la plus grande → c\'est le noyau le plus stable. Les noyaux plus légers libèrent de l\'énergie par FUSION, les plus lourds par FISSION.'
+      },
+      {
+        q: 'L\'énergie totale libérée dans E = mc². Si Δm = 1 u = 1,66×10⁻²⁷ kg, l\'énergie équivalente est :',
+        options: ['931,5 MeV ≈ 1,49×10⁻¹⁰ J', '1 MeV', '13,6 eV', '0,511 MeV'],
+        correct: 0,
+        feedback: '✅ E = Δmc² = 1,66×10⁻²⁷ × (3×10⁸)² = 1,49×10⁻¹⁰ J ≈ 931,5 MeV. La conversion 1 u = 931,5 MeV est fondamentale en physique nucléaire !'
+      },
+      {
+        q: 'La notation ᴬ_ZX du noyau signifie : le nombre de neutrons N est :',
+        options: ['N = A - Z', 'N = Z', 'N = A + Z', 'N = A/Z'],
+        correct: 0,
+        feedback: '✅ A = Z + N → N = A - Z. Pour ¹⁶₈O : N = 16 - 8 = 8 neutrons. Pour ²³⁸₉₂U : N = 238 - 92 = 146 neutrons !'
+      },
+      {
+        q: 'Un échantillon radioactif a une activité A₀ = 800 Bq à t = 0. Après 3 demi-vies, son activité est :',
+        options: ['100 Bq', '200 Bq', '400 Bq', '50 Bq'],
+        correct: 0,
+        feedback: '✅ Après chaque t₁/₂, l\'activité est divisée par 2. Après 3 t₁/₂ : A = A₀/2³ = 800/8 = 100 Bq.'
+      },
+      {
+        q: 'La fission nucléaire de l\'uranium-235 consiste en :',
+        options: [
+          'La capture d\'un neutron lent → fragmentation en 2 noyaux + neutrons + énergie',
+          'La fusion de 2 noyaux d\'uranium',
+          'L\'émission de particules α successives',
+          'La capture électronique'
+        ],
+        correct: 0,
+        feedback: '✅ ²³⁵U + n → produits de fission + 2-3 neutrons + ~200 MeV. Ces neutrons provoquent de nouvelles fissions → réaction en chaîne (centrales nucléaires, bombe).'
+      },
+      {
+        q: 'Les niveaux d\'énergie de l\'atome d\'hydrogène selon Bohr sont donnés par E_n = :',
+        options: ['-13,6/n² eV', '-13,6 × n² eV', 'n × 13,6 eV', '13,6/n eV'],
+        correct: 0,
+        feedback: '✅ E_n = -13,6/n² eV. État fondamental n=1 : E₁ = -13,6 eV. Ionisation : E∞ = 0 → énergie de ionisation = 13,6 eV. Émission lors de la transition n₂ → n₁.'
+      },
+      {
+        q: 'La longueur d\'onde émise lors de la transition n=3 → n=2 de l\'hydrogène (série de Balmer) est dans :',
+        options: ['Le visible (rouge, 656 nm)', 'L\'UV', 'L\'infrarouge', 'Les rayons X'],
+        correct: 0,
+        feedback: '✅ ΔE = 13,6(1/4 - 1/9) = 13,6 × 5/36 ≈ 1,89 eV → λ = hc/E = 656 nm (rouge). C\'est la raie Hα ! La série de Balmer (n→2) est dans le visible.'
+      },
+      {
+        q: 'Le défaut de masse Δm = 0,03 u pour un noyau. Son énergie de liaison est :',
+        options: ['≈ 27,95 MeV', '≈ 0,03 eV', '≈ 3 MeV', '≈ 300 MeV'],
+        correct: 0,
+        feedback: '✅ E = Δm × 931,5 MeV/u = 0,03 × 931,5 ≈ 27,95 MeV. Plus l\'énergie de liaison est grande, plus le noyau est stable (difficile à désintégrer).'
+      },
+      {
+        q: 'La radioactivité γ correspond à :',
+        options: [
+          'L\'émission d\'un photon de haute énergie lors de la désexcitation du noyau',
+          'L\'émission d\'un électron',
+          'L\'émission d\'un noyau d\'hélium',
+          'L\'émission d\'un proton'
+        ],
+        correct: 0,
+        feedback: '✅ γ = photon (E = hf, très haute énergie). Souvent accompagne α ou β. Ni A ni Z ne changent. Le γ est le plus pénétrant (nécessite du plomb pour l\'arrêter).'
+      },
+      {
+        q: 'La fusion nucléaire (réaction du soleil) libère de l\'énergie parce que :',
+        options: [
+          'Le noyau formé est plus stable (énergie de liaison par nucléon supérieure)',
+          'Les réactants sont radioactifs',
+          'La température est très basse',
+          'Les noyaux lourds se cassent'
+        ],
+        correct: 0,
+        feedback: '✅ Pour les noyaux légers (H, He), la fusion augmente l\'énergie de liaison par nucléon → libération d\'énergie. Le soleil fusionne ²H + ³H → ⁴He + n + 17,6 MeV.'
+      },
+      {
+        q: 'L\'activité A d\'un radioélément (en Bq) est liée à N (nombre de noyaux) par :',
+        options: ['A = λ × N (λ = constante radioactive)', 'A = N/t₁/₂', 'A = N × t₁/₂', 'A = ln(N)'],
+        correct: 0,
+        feedback: '✅ A = λN avec λ = ln2/t₁/₂. L\'activité mesure le nombre de désintégrations par seconde. 1 Bq = 1 désintégration/s. Ancien : 1 Ci = 3,7×10¹⁰ Bq.'
+      },
+      {
+        q: 'Un noyau ²³⁸₉₂U subit 8 désintégrations α. Le noyau final est :',
+        options: ['²⁰⁶₈₄Po', '²⁰⁶₈₂Pb', '²⁰⁶₈₀Hg', '²¹⁰₈₆Rn'],
+        correct: 0,
+        feedback: '⚠️ Attention : 8 désintégrations α → A - 8×4 = 238-32 = 206 ; Z - 8×2 = 92-16 = 76... mais la chaîne réelle inclut aussi des β⁻ pour arriver à ²⁰⁶₈₂Pb. Cette question est simplifiée !'
+      },
+      {
+        q: 'Le carbone-14 (t₁/₂ = 5730 ans) est utilisé pour dater des objets parce que :',
+        options: [
+          'Les organismes vivants absorbent du ¹⁴C qui décroît après leur mort',
+          'Le ¹⁴C est très abondant dans l\'atmosphère',
+          'Sa demi-vie est de quelques millions d\'années',
+          'Il émet des rayons γ très pénétrants'
+        ],
+        correct: 0,
+        feedback: '✅ Les organismes vivants maintiennent un rapport ¹⁴C/¹²C constant (échanges avec l\'atmosphère). Après la mort, ¹⁴C décroît (β⁻) → mesure du rapport → âge entre 300 et 50 000 ans !'
+      },
+      {
+        q: 'L\'énergie de la raie spectrale d\'un atome est liée à la transition par :',
+        options: ['E_photon = E_n2 - E_n1 = hν', 'E_photon = m × c²', 'E_photon = kT', 'E_photon = E_n1 + E_n2'],
+        correct: 0,
+        feedback: '✅ E_photon = |ΔE| = |E_n2 - E_n1| = hν = hc/λ. Si E_n2 > E_n1 : absorption (photon absorbé). Si E_n2 < E_n1 : émission (photon émis). C\'est Planck-Einstein !'
+      },
+      {
+        q: 'Les rayons α sont arrêtés par :',
+        options: ['Une feuille de papier ou quelques cm d\'air', '1 mm de plomb', '1 m de béton', 'Rien (traversent tout)'],
+        correct: 0,
+        feedback: '✅ Les α sont lourds (+2e, masse 4u) → très ionisants mais peu pénétrants. Arrêtés par une feuille de papier ou la peau. Les β : quelques mm d\'alu. Les γ : plusieurs cm de plomb.'
+      },
+      {
+        q: 'Dans une réaction nucléaire, les lois de conservation imposent que :',
+        options: [
+          'La somme des A et la somme des Z se conservent',
+          'Seule la masse totale se conserve',
+          'Seuls les neutrons se conservent',
+          'La charge seule est conservée'
+        ],
+        correct: 0,
+        feedback: '✅ Conservation du nombre de masse A (nucléons), du numéro atomique Z (charge), de l\'énergie-impulsion. Ces lois permettent d\'identifier les noyaux fils dans les réactions nucléaires.'
+      },
+      {
+        q: 'La réaction de fusion ²H + ²H → ³He + n libère de l\'énergie car :',
+        options: [
+          'La masse du ³He + n est inférieure à la masse des 2 ²H (défaut de masse)',
+          'La fission nucléaire est simultanée',
+          'Les noyaux d\'hydrogène sont plus stables',
+          'La réaction absorbe des neutrons'
+        ],
+        correct: 0,
+        feedback: '✅ Δm = m_réactifs - m_produits > 0 → énergie libérée E = Δmc². Pour la fusion, cette énergie est colossale. La fusion contrôlée (ITER) est la future énergie propre !'
+      },
+      {
+        q: 'L\'énergie cinétique d\'un électron accéléré par une tension U = 1 MV est environ :',
+        options: ['1 MeV', '0,5 MeV', '2 MeV', '0,1 MeV'],
+        correct: 0,
+        feedback: '✅ Ec = qU = e × 1×10⁶ V = 1 MeV (en électron-volts, par définition : 1 eV = énergie d\'un électron accéléré sous 1 V). Pour un proton : même calcul, 1 MeV.'
+      },
+      {
+        q: 'Un noyau ¹³⁷₅₅Cs (césium) subit une désintégration β⁻. Le noyau fils est :',
+        options: ['¹³⁷₅₆Ba (barium)', '¹³³₅₃I (iode)', '¹³⁷₅₄Xe (xénon)', '¹³⁷₅₄Cs'],
+        correct: 0,
+        feedback: '✅ β⁻ : Z → Z+1, A constant. ¹³⁷₅₅Cs → ¹³⁷₅₆Ba + e⁻ + ν̄_e. Le ¹³⁷Cs (radioactif, t₁/₂ = 30 ans) s\'est répandu après Tchernobyl et Fukushima.'
+      },
+      {
+        q: 'Le spectre d\'émission d\'un atome est un spectre de raies car :',
+        options: [
+          'Les niveaux d\'énergie atomiques sont quantifiés (discrets)',
+          'Les atomes n\'émettent que des couleurs primaires',
+          'La lumière blanche est décomposée par l\'atome',
+          'Les électrons ont une masse continue'
+        ],
+        correct: 0,
+        feedback: '✅ Les électrons ne peuvent occuper que des niveaux d\'énergie discrets (Bohr, mécanique quantique). Chaque transition produit une raie à fréquence précise. C\'est la signature spectrale de chaque élément !'
+      },
+      {
+        q: 'Le noyau ²H₁ (deutérium) contient :',
+        options: ['1 proton + 1 neutron', '2 protons + 0 neutron', '1 proton + 2 neutrons', '2 protons + 2 neutrons'],
+        correct: 0,
+        feedback: '✅ ²H : A = 2, Z = 1 → N = A - Z = 1 neutron. C\'est l\'isotope stable de l\'hydrogène. Le tritium ³H : 1p + 2n (radioactif).'
+      },
+      {
+        q: 'La constante radioactive λ (s⁻¹) est liée à la demi-vie t₁/₂ par :',
+        options: ['λ = ln2/t₁/₂ ≈ 0,693/t₁/₂', 'λ = t₁/₂/ln2', 'λ = 1/t₁/₂', 'λ = 2/t₁/₂'],
+        correct: 0,
+        feedback: '✅ λ = ln2/t₁/₂. D\'où : N(t) = N₀·e^(-λt) = N₀·2^(-t/t₁/₂). La constante λ est caractéristique de chaque radioélément (indépendante de T, P, état chimique) !'
+      },
+    ]
+  }
+];
+
+// ===================== LOGIQUE DU TEST =====================
+let allQuestions = [];
+let currentQ = 0;
+let score = 0;
+let answered = 0;
+
+function buildAllQuestions() {
+  SECTIONS.forEach(section => {
+    section.questions.forEach(q => {
+      allQuestions.push({ ...q, sectionId: section.id });
+    });
+  });
+}
+
+function getThemeIndex(qIndex) {
+  // Change theme every 37-38 questions
+  return Math.floor(qIndex / 38) % THEMES.length;
+}
+
+function startTest() {
+  buildAllQuestions();
+  document.getElementById('splash').style.display = 'none';
+  document.getElementById('header').style.display = 'flex';
+  document.getElementById('test-area').style.display = 'block';
+  document.getElementById('q-total').textContent = allQuestions.length;
+  renderSection(0);
+}
+
+function renderSection(sIndex) {
+  const section = SECTIONS[sIndex];
+  const area = document.getElementById('test-area');
+  area.innerHTML = '';
+
+  // Section header
+  const sh = document.createElement('div');
+  sh.className = 'sa-header';
+  sh.innerHTML = `
+    <div class="sa-icon">${section.icon}</div>
+    <div class="sa-text">
+      <div class="sa-label">Situation d'Apprentissage ${section.id} — ${section.domain}</div>
+      <div class="sa-name">${section.title}</div>
+    </div>
+  `;
+  area.appendChild(sh);
+
+  // Notions card
+  const nc = document.createElement('div');
+  nc.className = 'notion-card';
+  nc.innerHTML = `<h3>📌 Notions Importantes à Retenir</h3><ul>
+    ${section.notions.map(n => `<li>${n}</li>`).join('')}
+  </ul>`;
+  area.appendChild(nc);
+
+  // Questions
+  const qStart = SECTIONS.slice(0, sIndex).reduce((a, s) => a + s.questions.length, 0);
+  section.questions.forEach((q, qi) => {
+    const globalIdx = qStart + qi;
+    area.appendChild(buildQuestionCard(q, globalIdx, sIndex));
+  });
+
+  // Navigation
+  const nav = document.createElement('div');
+  nav.className = 'nav-area';
+  if (sIndex > 0) {
+    const bp = document.createElement('button');
+    bp.className = 'btn-nav'; bp.textContent = '⬅ Section précédente';
+    bp.onclick = () => { renderSection(sIndex - 1); scrollToTop(); };
+    nav.appendChild(bp);
+  }
+  if (sIndex < SECTIONS.length - 1) {
+    const bn = document.createElement('button');
+    bn.className = 'btn-nav'; bn.textContent = 'Section suivante ➡';
+    bn.onclick = () => { renderSection(sIndex + 1); scrollToTop(); };
+    nav.appendChild(bn);
+  } else {
+    const bf = document.createElement('button');
+    bf.className = 'btn-nav'; bf.textContent = '🏆 Voir mes Résultats';
+    bf.onclick = showResults;
+    nav.appendChild(bf);
+  }
+  area.appendChild(nav);
+
+  // Apply theme
+  const theme = THEMES[sIndex % THEMES.length];
+  document.body.className = theme;
+}
+
+function buildQuestionCard(q, globalIdx, sectionIdx) {
+  const div = document.createElement('div');
+  div.className = 'q-card';
+  div.id = `q-${globalIdx}`;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const theme = THEMES[sectionIdx % THEMES.length];
+
+  let borderColors = ['#7B1FA2','#0288D1','#388E3C','#C2185B'];
+  div.style.borderTopColor = borderColors[sectionIdx % 4];
+
+  div.innerHTML = `
+    <div class="q-num">Question ${globalIdx + 1}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="options" id="opts-${globalIdx}">
+      ${q.options.map((opt, i) => `
+        <button class="opt-btn" id="opt-${globalIdx}-${i}" onclick="handleAnswer(${globalIdx},${i},${q.correct},'${encodeURIComponent(q.feedback)}')">
+          <span class="opt-letter">${letters[i]}</span>
+          <span>${opt}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div class="feedback-box" id="fb-${globalIdx}"></div>
+  `;
+  return div;
+}
+
+function handleAnswer(qIdx, chosen, correct, feedbackEnc) {
+  // Prevent double-answering
+  const opts = document.getElementById(`opts-${qIdx}`);
+  if (opts.dataset.answered) return;
+  opts.dataset.answered = '1';
+
+  const feedback = decodeURIComponent(feedbackEnc);
+  const allBtns = opts.querySelectorAll('.opt-btn');
+
+  allBtns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === correct) btn.classList.add('correct');
+    else if (i === chosen && chosen !== correct) btn.classList.add('wrong');
+  });
+
+  const fb = document.getElementById(`fb-${qIdx}`);
+  if (chosen === correct) {
+    score++;
+    fb.textContent = feedback;
+    fb.className = 'feedback-box correct';
+    document.getElementById('score-live').textContent = score;
+  } else {
+    fb.innerHTML = `❌ Mauvaise réponse ! ${feedback}`;
+    fb.className = 'feedback-box wrong';
+  }
+  answered++;
+
+  // Update progress
+  const pct = Math.round((answered / allQuestions.length) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('q-current').textContent = answered;
+}
+
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showResults() {
+  document.getElementById('test-area').style.display = 'none';
+  document.getElementById('header').style.display = 'none';
+  const rs = document.getElementById('result-screen');
+  rs.style.display = 'flex';
+
+  const total = allQuestions.length;
+  const wrong = answered - score;
+  const pct = Math.round((score / total) * 100);
+
+  document.getElementById('final-score').textContent = score;
+  document.getElementById('final-total').textContent = total;
+  document.getElementById('rs-correct').textContent = score;
+  document.getElementById('rs-wrong').textContent = wrong;
+  document.getElementById('rs-pct').textContent = pct + '%';
+
+  let title, msg;
+  if (pct >= 80) {
+    title = '🏆 Félicitations !'; msg = 'Excellente maîtrise du programme PCT ! Tu es prêt(e) pour le BAC !';
+    launchConfetti();
+  } else if (pct >= 60) {
+    title = '👍 Très bien !'; msg = 'Bonne préparation ! Revois les sections où tu as eu des difficultés.';
+  } else if (pct >= 40) {
+    title = '💪 Courage !'; msg = 'Continue à réviser ! Relis les notions importantes et refais le test.';
+  } else {
+    title = '📚 À retravailler !'; msg = 'Prends le temps de bien relire les notions importantes de chaque section.';
+  }
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-msg').textContent = msg;
+
+  rs.style.background = 'linear-gradient(135deg, #4A148C 0%, #880E4F 100%)';
+  rs.style.color = '#fff';
+}
+
+function launchConfetti() {
+  const colors = ['#FFD600','#FF6F00','#76FF03','#00E5FF','#FF4081','#E040FB'];
+  for (let i = 0; i < 80; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.width = (6 + Math.random() * 10) + 'px';
+      c.style.height = (8 + Math.random() * 12) + 'px';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+      c.style.animationDelay = Math.random() * 0.5 + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4000);
+    }, i * 30);
+  }
+}
+</script>
+</body>
+</html>
