@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌿 BAC SVT Terminale D – Test Interactif</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fffde7;
+  --primary: #6a1b9a;
+  --accent: #f9a825;
+  --card: #fff;
+  --text: #2d1b4e;
+  --correct: #2e7d32;
+  --wrong: #c62828;
+  --radius: 18px;
+  --shadow: 0 8px 32px rgba(106,27,154,0.13);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.8s, color 0.8s;
+}
+
+/* ─── THEMES ─── */
+body.theme-0 { --bg: #fff9e3; --primary: #6a1b9a; --accent: #f9a825; --text: #2d1b4e; --card: #fff8e1; }
+body.theme-1 { --bg: #e8f4fd; --primary: #0d47a1; --accent: #1e88e5; --text: #0a2342; --card: #ddeeff; }
+body.theme-2 { --bg: #e8f5e9; --primary: #1b5e20; --accent: #43a047; --text: #0a2a0c; --card: #dff3e1; }
+body.theme-3 { --bg: #fce4ec; --primary: #880e4f; --accent: #e91e63; --text: #3d0020; --card: #ffd6e7; }
+
+/* ─── SPLASH ─── */
+#splash {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 30px 20px; text-align: center;
+  background: linear-gradient(135deg, #6a1b9a 0%, #f9a825 100%);
+  animation: splashFade 1.2s ease;
+}
+@keyframes splashFade { from{opacity:0;transform:scale(0.92)} to{opacity:1;transform:scale(1)} }
+
+.splash-emoji { font-size: 5rem; animation: bounce 1.5s infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-18px)} }
+
+.splash-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(2.2rem, 7vw, 4rem);
+  font-weight: 800;
+  color: #fff;
+  margin: 16px 0 8px;
+  text-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+.splash-sub {
+  font-size: clamp(1.2rem, 4vw, 1.7rem);
+  color: #ffe082;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.splash-desc {
+  font-size: clamp(1rem, 3vw, 1.35rem);
+  color: rgba(255,255,255,0.9);
+  max-width: 680px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+.splash-stats {
+  display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
+  margin-bottom: 36px;
+}
+.stat-pill {
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 50px;
+  padding: 10px 22px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+}
+.btn-start {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(1.3rem, 4vw, 1.8rem);
+  font-weight: 800;
+  background: #fff;
+  color: #6a1b9a;
+  border: none; cursor: pointer;
+  padding: 18px 56px;
+  border-radius: 60px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  transition: transform 0.15s, box-shadow 0.15s;
+  letter-spacing: 0.5px;
+}
+.btn-start:hover { transform: scale(1.06); box-shadow: 0 14px 40px rgba(0,0,0,0.3); }
+
+/* ─── MAIN APP ─── */
+#app { display: none; max-width: 900px; margin: 0 auto; padding: 20px 14px 60px; }
+
+/* Progress bar */
+#progress-wrap {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg);
+  padding: 14px 0 8px;
+  border-bottom: 2px solid rgba(0,0,0,0.06);
+  margin-bottom: 24px;
+}
+.progress-info {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+  font-size: 1.05rem; font-weight: 700;
+}
+.progress-bar-bg {
+  height: 16px; background: rgba(0,0,0,0.08);
+  border-radius: 999px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 999px;
+  transition: width 0.5s cubic-bezier(.4,0,.2,1);
+}
+.score-badge {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 1.1rem; font-weight: 800;
+  color: var(--primary);
+}
+
+/* SA header */
+.sa-header {
+  text-align: center;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 22px 20px;
+  margin: 28px 0 20px;
+  animation: fadeSlide 0.5s ease;
+}
+@keyframes fadeSlide { from{opacity:0;transform:translateY(-14px)} to{opacity:1;transform:translateY(0)} }
+.sa-header h2 { font-family:'Baloo 2',cursive; font-size: clamp(1.4rem,5vw,2rem); font-weight:800; }
+.sa-header p { font-size: clamp(0.95rem,3vw,1.2rem); margin-top:6px; opacity:0.9; }
+
+/* Notion card */
+.notion-card {
+  background: var(--card);
+  border: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  margin-bottom: 24px;
+  animation: fadeSlide 0.5s ease 0.1s both;
+  box-shadow: var(--shadow);
+}
+.notion-card h3 {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.3rem; font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.notion-card ul { list-style: none; padding: 0; }
+.notion-card ul li {
+  font-size: 1.05rem; line-height: 1.6;
+  padding: 5px 0 5px 26px;
+  position: relative;
+  font-weight: 600;
+}
+.notion-card ul li::before {
+  content: '✦';
+  position: absolute; left: 0;
+  color: var(--accent);
+}
+
+/* Question card */
+.question-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 28px 26px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  border: 2px solid transparent;
+  animation: fadeSlide 0.4s ease;
+  transition: border-color 0.3s;
+}
+.question-card.answered-correct { border-color: #2e7d32; }
+.question-card.answered-wrong { border-color: #c62828; }
+
+.q-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+.q-num {
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.95rem; font-weight: 800;
+  padding: 4px 14px;
+  border-radius: 50px;
+}
+.q-topic {
+  font-size: 0.9rem; font-weight: 700;
+  color: var(--primary);
+  background: rgba(0,0,0,0.06);
+  padding: 4px 12px;
+  border-radius: 50px;
+}
+.q-text {
+  font-size: clamp(1.15rem, 3.5vw, 1.4rem);
+  font-weight: 800;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+
+/* Options */
+.options { display: flex; flex-direction: column; gap: 12px; }
+.opt-btn {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(0,0,0,0.04);
+  border: 2.5px solid rgba(0,0,0,0.1);
+  border-radius: 14px;
+  padding: 14px 18px;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  font-weight: 700;
+  color: var(--text);
+  text-align: left;
+  transition: all 0.2s;
+}
+.opt-btn:hover:not(:disabled) {
+  background: rgba(0,0,0,0.08);
+  border-color: var(--primary);
+  transform: translateX(4px);
+}
+.opt-letter {
+  width: 36px; height: 36px; min-width: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 1.1rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.opt-btn.correct {
+  background: #e8f5e9 !important;
+  border-color: #2e7d32 !important;
+  color: #1b5e20 !important;
+}
+.opt-btn.correct .opt-letter { background: #2e7d32; }
+.opt-btn.wrong {
+  background: #ffebee !important;
+  border-color: #c62828 !important;
+  color: #b71c1c !important;
+}
+.opt-btn.wrong .opt-letter { background: #c62828; }
+.opt-btn:disabled { cursor: default; }
+
+/* Feedback */
+.feedback {
+  margin-top: 14px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 1.1rem; font-weight: 700;
+  line-height: 1.5;
+  display: none;
+  animation: feedPop 0.3s cubic-bezier(.4,0,.2,1);
+}
+@keyframes feedPop { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+.feedback.show { display: block; }
+.feedback.correct { background: #e8f5e9; color: #1b5e20; border-left: 5px solid #2e7d32; }
+.feedback.wrong { background: #fff3e0; color: #e65100; border-left: 5px solid #f57c00; }
+
+/* ─── RESULTS ─── */
+#results {
+  display: none; text-align: center;
+  padding: 40px 20px; max-width: 700px; margin: 0 auto;
+  animation: fadeSlide 0.6s ease;
+}
+.result-emoji { font-size: 5rem; margin-bottom: 16px; }
+.result-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(2rem, 7vw, 3rem);
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+.result-score {
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
+  font-weight: 900;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.result-message {
+  font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+  font-weight: 700;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  color: var(--text);
+}
+.result-stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px; margin-bottom: 32px;
+}
+.res-stat {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.res-stat-num {
+  font-size: 2.2rem; font-weight: 900;
+  color: var(--primary);
+}
+.res-stat-label {
+  font-size: 1rem; font-weight: 700;
+  color: var(--text); opacity: 0.7;
+}
+.btn-restart {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.4rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+  border: none; cursor: pointer;
+  padding: 16px 48px;
+  border-radius: 60px;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s;
+}
+.btn-restart:hover { transform: scale(1.05); }
+
+/* responsive */
+@media(max-width:500px) {
+  .question-card { padding: 18px 14px; }
+  .opt-btn { padding: 12px 12px; }
+}
+</style>
+</head>
+<body class="theme-0">
+
+<!-- ─── SPLASH ─── -->
+<div id="splash">
+  <div class="splash-emoji">🌿</div>
+  <div class="splash-title">BAC SVT – Terminale D</div>
+  <div class="splash-sub">Test Interactif de Révision Générale</div>
+  <div class="splash-desc">
+    Maîtrise tout le programme SVT Terminale D du Bénin grâce à ce test 
+    professionnel et captivant. Feedback immédiat, notions clés, et progression 
+    pas à pas. Prêt(e) à exceller ?
+  </div>
+  <div class="splash-stats">
+    <div class="stat-pill">📝 150+ Questions</div>
+    <div class="stat-pill">📚 4 Situations d'Apprentissage</div>
+    <div class="stat-pill">⚡ Feedback Immédiat</div>
+    <div class="stat-pill">🏆 Score en Temps Réel</div>
+  </div>
+  <button class="btn-start" onclick="startTest()">🚀 Commencer le Test !</button>
+</div>
+
+<!-- ─── MAIN APP ─── -->
+<div id="app">
+  <div id="progress-wrap">
+    <div class="progress-info">
+      <span id="prog-label" style="font-size:1.05rem;">Question 1 / 150</span>
+      <div class="score-badge">🏆 Score : <span id="score-live">0</span></div>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+  </div>
+  <div id="quiz-body"></div>
+</div>
+
+<!-- ─── RESULTS ─── -->
+<div id="results">
+  <div class="result-emoji" id="res-emoji">🎉</div>
+  <div class="result-title">Test Terminé !</div>
+  <div class="result-score" id="res-score">Score : 0 / 150</div>
+  <div class="result-message" id="res-msg"></div>
+  <div class="result-stats">
+    <div class="res-stat"><div class="res-stat-num" id="r-correct">0</div><div class="res-stat-label">Bonnes réponses</div></div>
+    <div class="res-stat"><div class="res-stat-num" id="r-wrong">0</div><div class="res-stat-label">Mauvaises réponses</div></div>
+    <div class="res-stat"><div class="res-stat-num" id="r-pct">0%</div><div class="res-stat-label">Taux de réussite</div></div>
+  </div>
+  <button class="btn-restart" onclick="restartTest()">🔄 Recommencer le Test</button>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//   QUIZ DATA
+// ══════════════════════════════════════════════
+const SA_LABELS = [
+  { id: "SA1", title: "SA1 – L'Information Génétique", subtitle: "Nature, Localisation et Mécanismes de Transmission", theme: 0 },
+  { id: "SA2", title: "SA2 – Le Système Immunitaire", subtitle: "Sauvegarde de l'Intégrité de l'Organisme", theme: 1 },
+  { id: "SA3", title: "SA3 – La Transmission des Messages", subtitle: "Communication Nerveuse et Hormonale", theme: 2 },
+  { id: "SA4", title: "SA4 – Physiologie de la Reproduction", subtitle: "Reproduction Humaine et Maîtrise de la Procréation", theme: 3 },
+];
+
+const NOTIONS = {
+  SA1: [
+    "L'ADN est le support chimique de l'information génétique.",
+    "L'ADN est composé de deux brins anti-parallèles formant une double hélice.",
+    "Un nucléotide = sucre (désoxyribose) + base azotée + groupement phosphate.",
+    "Les bases azotées se couplent : A-T et G-C (règle de Chargaff).",
+    "Un gène est une séquence d'ADN codant pour un caractère héréditaire.",
+    "Les allèles sont les différentes formes d'un même gène.",
+    "La mitose produit 2 cellules identiques à la cellule mère (2n→2n).",
+    "La méiose produit 4 cellules haploïdes (2n→n) et brassage génétique.",
+    "Le brassage génétique assure la diversité des individus.",
+    "Mendel a établi les lois de ségrégation et d'assortiment indépendant.",
+    "La trisomie 21 = présence de 3 chromosomes 21 (2n=47).",
+    "La drépanocytose est une mutation du gène de l'hémoglobine.",
+    "L'hémophilie est liée au chromosome X (hérédité liée au sexe).",
+  ],
+  SA2: [
+    "Les barrières naturelles (peau, mucus) constituent la 1re ligne de défense.",
+    "La phagocytose : les polynucléaires et macrophages détruisent les agents pathogènes.",
+    "Les lymphocytes B produisent les anticorps (immunité humorale).",
+    "Les lymphocytes T assurent l'immunité cellulaire (destruction des cellules infectées).",
+    "Un anticorps est spécifique à un antigène (complémentarité).",
+    "La mémoire immunitaire permet une réponse plus rapide lors du 2e contact.",
+    "Le vaccin stimule le système immunitaire sans provoquer la maladie.",
+    "Le sérum contient des anticorps déjà formés (protection passive).",
+    "Le VIH détruit les lymphocytes T CD4, affaiblissant l'immunité.",
+    "Les maladies auto-immunes = le système immunitaire attaque ses propres cellules.",
+    "Les allergies = réaction exagérée du système immunitaire à un allergène.",
+  ],
+  SA3: [
+    "Un neurone = corps cellulaire + axone + dendrites.",
+    "L'influx nerveux est un signal électrique (potentiel d'action).",
+    "La synapse est la zone de communication entre deux neurones.",
+    "Les neurotransmetteurs transmettent le message entre neurones.",
+    "L'arc réflexe = récepteur → nerf sensitif → centre → nerf moteur → effecteur.",
+    "Le réflexe myotatique protège le muscle contre les étirements excessifs.",
+    "L'encéphale comprend : cerveau, cervelet, tronc cérébral.",
+    "Les hormones sont des messagers chimiques transportés par le sang.",
+    "La régulation hormonale implique des mécanismes de rétrocontrôle.",
+    "L'œil convertit la lumière en signal nerveux via la rétine.",
+  ],
+  SA4: [
+    "La spermatogenèse produit les spermatozoïdes dans les tubes séminifères.",
+    "L'ovogenèse produit les ovocytes dans les ovaires.",
+    "Le cycle menstruel dure environ 28 jours et est contrôlé par les hormones.",
+    "La fécondation a lieu dans le tiers externe de la trompe utérine.",
+    "La nidation = implantation de l'embryon dans la muqueuse utérine.",
+    "La grossesse dure environ 9 mois (40 semaines d'aménorrhée).",
+    "FSH et LH contrôlent le cycle ovarien (hormones hypophysaires).",
+    "La contraception hormonale bloque l'ovulation par les œstro-progestatifs.",
+    "Le préservatif protège contre les IST et les grossesses non désirées.",
+    "Le VIH/SIDA se transmet par voie sexuelle, sanguine ou materno-fœtale.",
+  ],
+};
+
+const QUESTIONS = [
+// ════ SA1 ════
+{ sa:"SA1", topic:"Localisation de l'info génétique", q:"Où est principalement localisée l'information génétique dans une cellule eucaryote ?", opts:["Dans le cytoplasme","Dans le noyau","Dans la membrane cellulaire","Dans les mitochondries uniquement"], ans:1, exp:"L'information génétique est principalement localisée dans le noyau, sous forme d'ADN organisé en chromosomes." },
+{ sa:"SA1", topic:"Localisation de l'info génétique", q:"Comment appelle-t-on l'ensemble des chromosomes d'un individu classés par paires ?", opts:["Génome","Caryotype","Phénotype","Génotype"], ans:1, exp:"Le caryotype est la représentation photographique des chromosomes classés par paires, taille et forme." },
+{ sa:"SA1", topic:"Chromosomes", q:"Combien de paires de chromosomes possède une cellule humaine diploïde normale ?", opts:["23 paires","22 paires","46 paires","24 paires"], ans:0, exp:"La cellule humaine diploïde possède 46 chromosomes soit 23 paires de chromosomes homologues." },
+{ sa:"SA1", topic:"Chromosomes", q:"Les chromosomes homologues sont des chromosomes qui ...", opts:["Ont la même taille uniquement","Portent les mêmes gènes aux mêmes loci","Sont identiques en tout point","N'existent que chez la femme"], ans:1, exp:"Les chromosomes homologues portent les mêmes gènes aux mêmes loci mais peuvent porter des allèles différents." },
+{ sa:"SA1", topic:"Chromosomes sexuels", q:"Quelle est la formule chromosomique d'une femme humaine ?", opts:["44A + XY","44A + XX","46A + XY","44A + YY"], ans:1, exp:"La femme possède 44 autosomes + 2 chromosomes sexuels XX, soit 46 chromosomes au total." },
+{ sa:"SA1", topic:"Nature chimique de l'ADN", q:"Quel est le sucre entrant dans la composition des nucléotides de l'ADN ?", opts:["Ribose","Glucose","Désoxyribose","Fructose"], ans:2, exp:"Le désoxyribose est le sucre à 5 carbones caractéristique des nucléotides de l'ADN." },
+{ sa:"SA1", topic:"Nature chimique de l'ADN", q:"Quelles sont les bases puriques de l'ADN ?", opts:["Thymine et Cytosine","Adénine et Guanine","Adénine et Thymine","Guanine et Cytosine"], ans:1, exp:"L'Adénine (A) et la Guanine (G) sont les bases puriques. La Thymine (T) et la Cytosine (C) sont les bases pyrimidiques." },
+{ sa:"SA1", topic:"Structure de l'ADN", q:"Selon la règle de Chargaff, quelles bases s'apparient dans l'ADN ?", opts:["A avec G et T avec C","A avec T et G avec C","A avec C et G avec T","Toutes les bases s'apparient librement"], ans:1, exp:"La règle de Chargaff stipule : Adénine s'apparie avec Thymine (A=T) et Guanine avec Cytosine (G≡C) par liaisons hydrogène." },
+{ sa:"SA1", topic:"Structure de l'ADN", q:"Qui a découvert la structure en double hélice de l'ADN en 1953 ?", opts:["Mendel et Darwin","Watson et Crick","Pasteur et Koch","Morgan et Lamarck"], ans:1, exp:"James Watson et Francis Crick ont découvert la structure en double hélice de l'ADN en 1953, grâce aux travaux de Rosalind Franklin." },
+{ sa:"SA1", topic:"Gènes et allèles", q:"Qu'est-ce qu'un allèle ?", opts:["Un chromosome entier","Une forme alternative d'un gène","Un type de nucléotide","Une cellule haploïde"], ans:1, exp:"Un allèle est une forme alternative d'un gène occupant le même locus sur des chromosomes homologues." },
+{ sa:"SA1", topic:"Gènes et allèles", q:"Un individu qui possède deux allèles identiques pour un gène est dit :", opts:["Hétérozygote","Homozygote","Diploïde","Haploïde"], ans:1, exp:"Un individu homozygote possède deux allèles identiques (AA ou aa) pour un gène donné." },
+{ sa:"SA1", topic:"Mitose", q:"Combien de cellules filles produit une mitose ?", opts:["1","2","4","8"], ans:1, exp:"La mitose produit 2 cellules filles génétiquement identiques à la cellule mère et entre elles." },
+{ sa:"SA1", topic:"Mitose", q:"Quelle est la ploïdie des cellules filles produites par mitose à partir d'une cellule 2n ?", opts:["n","2n","4n","3n"], ans:1, exp:"La mitose conserve la ploïdie : une cellule mère 2n produit 2 cellules filles 2n (division cellulaire conforme)." },
+{ sa:"SA1", topic:"Mitose", q:"Quelle est la phase de la mitose où les chromosomes s'alignent sur le plan équatorial ?", opts:["Prophase","Anaphase","Métaphase","Télophase"], ans:2, exp:"La métaphase est la phase où les chromosomes (à 2 chromatides) s'alignent sur la plaque équatoriale." },
+{ sa:"SA1", topic:"Méiose", q:"La méiose produit combien de cellules haploïdes ?", opts:["2","4","8","1"], ans:1, exp:"La méiose comporte 2 divisions successives et produit 4 cellules haploïdes (n chromosomes)." },
+{ sa:"SA1", topic:"Méiose", q:"Lors de quelle division de la méiose les chromosomes homologues se séparent-ils ?", opts:["Méiose II","Méiose I","Pendant la mitose","Lors de la fécondation"], ans:1, exp:"La méiose I (réductionnelle) sépare les chromosomes homologues, réduisant la ploïdie de 2n à n." },
+{ sa:"SA1", topic:"Méiose", q:"Le brassage intrachromosomique lors de la méiose résulte de :", opts:["La séparation des chromatides","Le crossing-over (enjambement)","La fécondation","La duplication de l'ADN"], ans:1, exp:"Le crossing-over (enjambement) entre chromatides de chromosomes homologues crée de nouveaux assemblages d'allèles." },
+{ sa:"SA1", topic:"Gamètes", q:"La méiose dans les testicules aboutit à la formation de :", opts:["Ovocytes","Spermatocytes","Spermatozoïdes","Ovogonies"], ans:2, exp:"La spermatogenèse (méiose dans les testicules) produit 4 spermatozoïdes fonctionnels haploïdes." },
+{ sa:"SA1", topic:"Fécondation", q:"Quel est le résultat de la fécondation en termes de ploïdie ?", opts:["n + n = n","n + n = 2n","2n + 2n = 4n","2n + n = 3n"], ans:1, exp:"La fécondation (union d'un ovocyte n et d'un spermatozoïde n) restaure la diploïdie : n + n = 2n (zygote)." },
+{ sa:"SA1", topic:"Mendel – Monohybridisme", q:"En croisant deux parents purs de phénotypes opposés, la F1 est :", opts:["50% d'un phénotype, 50% de l'autre","Uniforme et exprime le phénotype dominant","Uniformément récessif","Un mélange des deux phénotypes"], ans:1, exp:"1ère loi de Mendel (uniformité de la F1) : tous les individus de la F1 ont le même phénotype dominant." },
+{ sa:"SA1", topic:"Mendel – Monohybridisme", q:"Quels sont les génotypes produits en F2 d'un croisement monohybride Aa × Aa ?", opts:["AA, Aa, aa en proportions 1:2:1","AA et aa en proportions 1:1","Uniquement AA","Uniquement Aa"], ans:0, exp:"F2 : 1/4 AA : 2/4 Aa : 1/4 aa, soit 3 phénotypes dominants pour 1 phénotype récessif (phénotypiquement)." },
+{ sa:"SA1", topic:"Dominance", q:"Un allèle dominant :", opts:["Ne s'exprime que chez l'homozygote","S'exprime même à l'état hétérozygote","Est toujours lié au sexe","Cause toujours une maladie"], ans:1, exp:"Un allèle dominant s'exprime dans le phénotype qu'il soit en une ou deux copies (AA ou Aa)." },
+{ sa:"SA1", topic:"Groupes sanguins", q:"Quels sont les deux systèmes principaux de groupes sanguins ?", opts:["ABO et Rhésus","MNS et Lewis","Kell et Duffy","ABO et Kell"], ans:0, exp:"Les systèmes ABO et Rhésus (Rh+/Rh-) sont les plus importants cliniquement pour les transfusions sanguines." },
+{ sa:"SA1", topic:"Groupes sanguins", q:"Quelle est la codominance dans le système ABO ?", opts:["Les allèles A et B sont codominants entre eux","L'allèle O est dominant","B est dominant sur A","A et B sont tous deux récessifs"], ans:0, exp:"Les allèles IA et IB sont codominants : un individu IAIB exprime les deux antigènes A et B → groupe AB." },
+{ sa:"SA1", topic:"Hérédité liée au sexe", q:"Pourquoi les hommes sont-ils plus souvent atteints de maladies liées au chromosome X ?", opts:["Ils ont deux chromosomes X","Ils ont un seul chromosome X (XY), donc pas d'allèle sain pour compenser","Leur système immunitaire est moins fort","Les femmes sont immunisées"], ans:1, exp:"L'homme (XY) n'a qu'un seul chromosome X : si l'allèle récessif pathologique est présent, la maladie s'exprime (hémizygotie)." },
+{ sa:"SA1", topic:"Anomalies génétiques", q:"La trisomie 21 résulte de :", opts:["Une mutation ponctuelle","Une non-disjonction lors de la méiose","Un crossing-over anormal","Une délétion chromosomique"], ans:1, exp:"La trisomie 21 (syndrome de Down) résulte d'une non-disjonction du chromosome 21 lors de la méiose, donnant 3 chromosomes 21." },
+{ sa:"SA1", topic:"Anomalies génétiques", q:"Combien de chromosomes possède une personne atteinte de trisomie 21 ?", opts:["44","45","47","48"], ans:2, exp:"La trisomie 21 donne un caryotype à 47 chromosomes au lieu de 46 normaux." },
+{ sa:"SA1", topic:"Drépanocytose", q:"La drépanocytose affecte :", opts:["Les leucocytes","L'hémoglobine des globules rouges","Les plaquettes sanguines","Les lymphocytes T"], ans:1, exp:"La drépanocytose (anémie falciforme) est due à une mutation du gène de la β-globine qui déforme les globules rouges en faucille." },
+{ sa:"SA1", topic:"Hémophilie", q:"L'hémophilie est une maladie :", opts:["Autosomale dominante","Liée au chromosome X, récessive","Liée au chromosome Y","Autosomale récessive uniquement"], ans:1, exp:"L'hémophilie A est liée au chromosome X (gène F8) et est récessive. Elle touche principalement les garçons (XY)." },
+{ sa:"SA1", topic:"Mutations", q:"Qu'est-ce qu'une mutation génique ?", opts:["Un changement du nombre de chromosomes","Une modification de la séquence nucléotidique de l'ADN","Un croisement entre chromosomes","L'absence d'un chromosome"], ans:1, exp:"Une mutation génique est une modification permanente de la séquence de l'ADN (substitution, insertion, délétion de nucléotides)." },
+{ sa:"SA1", topic:"Mutations", q:"Les agents mutagènes comprennent :", opts:["L'eau et l'oxygène","Les rayons UV, les rayonnements X et certains produits chimiques","Les vitamines et minéraux","La lumière visible uniquement"], ans:1, exp:"Les agents mutagènes sont des facteurs physiques (UV, rayons X) ou chimiques (benzène) qui augmentent la fréquence des mutations." },
+{ sa:"SA1", topic:"Dihybridisme", q:"En dihybridisme, si les deux gènes sont sur des chromosomes différents, le rapport phénotypique en F2 est :", opts:["1:1:1:1","3:1","9:3:3:1","1:2:1"], ans:2, exp:"Loi d'assortiment indépendant de Mendel : en dihybridisme, la F2 donne un rapport 9:3:3:1 (4 phénotypes)." },
+{ sa:"SA1", topic:"ADN", q:"Combien de liaisons hydrogène s'établissent entre G et C dans l'ADN ?", opts:["1","2","3","4"], ans:2, exp:"La paire G-C est reliée par 3 liaisons hydrogène (la paire A-T n'en a que 2), ce qui rend la paire G-C plus stable." },
+{ sa:"SA1", topic:"Réplication de l'ADN", q:"La réplication de l'ADN est dite semi-conservative car :", opts:["Elle est partielle","Chaque brin fils conserve un brin parental","Elle se fait en une seule étape","Elle ne conserve rien de l'ADN parent"], ans:1, exp:"Semi-conservative signifie que chaque molécule fille garde un brin de l'ADN parent et un brin nouvellement synthétisé." },
+{ sa:"SA1", topic:"Chromosomes", q:"Un chromosome à deux chromatides est relié en son centre par :", opts:["Une synapse","Un centromère","Un nucléosome","Un ribosome"], ans:1, exp:"Le centromère est la région d'un chromosome qui relie les 2 chromatides sœurs et qui s'attache aux fibres du fuseau lors de la mitose." },
+{ sa:"SA1", topic:"Méiose vs Mitose", q:"Quelle différence fondamentale y a-t-il entre mitose et méiose ?", opts:["La mitose produit des cellules haploïdes","La méiose comporte 2 divisions et produit des cellules haploïdes","La mitose ne se produit que dans les gonades","La méiose produit 2 cellules identiques"], ans:1, exp:"La méiose comporte 2 divisions (méiose I et II) et produit 4 cellules haploïdes différentes. La mitose = 1 division, 2 cellules diploïdes identiques." },
+{ sa:"SA1", topic:"Gènes liés", q:"Des gènes portés par le même chromosome sont appelés gènes :", opts:["Indépendants","Liés (en couplage)","Codominants","Épistasiques"], ans:1, exp:"Des gènes situés sur le même chromosome sont dit gènes liés. Ils ne suivent pas la loi d'assortiment indépendant." },
+{ sa:"SA1", topic:"Prévention", q:"Le conseil génétique vise à :", opts:["Traiter les maladies génétiques","Informer les familles sur les risques de transmission des maladies héréditaires","Fabriquer des vaccins","Dépister les infections"], ans:1, exp:"Le conseil génétique informe les couples sur les risques de transmission de maladies héréditaires et les aide à prendre des décisions éclairées." },
+
+// ════ SA2 ════
+{ sa:"SA2", topic:"Immunité naturelle", q:"La peau joue un rôle de barrière contre les agents pathogènes grâce à :", opts:["Sa transparence","Son imperméabilité et les substances antimicrobiennes qu'elle sécrète","Sa capacité à produire des anticorps","Sa richesse en vaisseaux sanguins"], ans:1, exp:"La peau constitue une barrière physique (imperméable) et chimique (pH acide, sébum, lysozyme) contre les micro-organismes." },
+{ sa:"SA2", topic:"Réaction inflammatoire", q:"Les signes cardinaux de l'inflammation sont :", opts:["Fièvre, toux, douleur, fatigue","Rougeur, chaleur, tuméfaction (gonflement), douleur","Pâleur, hypothermie, douleur","Démangeaison, prurit, urticaire"], ans:1, exp:"Les 4 signes cardinaux de l'inflammation : rubor (rougeur), calor (chaleur), tumor (gonflement), dolor (douleur)." },
+{ sa:"SA2", topic:"Globules blancs", q:"Quelles cellules sanguines participent à la défense immunitaire ?", opts:["Les érythrocytes","Les plaquettes","Les leucocytes (globules blancs)","L'hémoglobine"], ans:2, exp:"Les leucocytes (globules blancs) sont les cellules du système immunitaire : neutrophiles, monocytes, lymphocytes, etc." },
+{ sa:"SA2", topic:"Phagocytose", q:"La phagocytose est réalisée principalement par :", opts:["Les lymphocytes B","Les polynucléaires neutrophiles et les macrophages","Les plaquettes","Les érythrocytes"], ans:1, exp:"Les polynucléaires neutrophiles et les macrophages sont les principales cellules phagocytaires qui ingèrent et détruisent les agents pathogènes." },
+{ sa:"SA2", topic:"Phagocytose", q:"Dans quel ordre se déroulent les étapes de la phagocytose ?", opts:["Digestion → Ingestion → Reconnaissance → Destruction","Reconnaissance → Ingestion → Formation du phagolysosome → Destruction","Destruction → Reconnaissance → Ingestion","Ingestion → Reconnaissance → Digestion"], ans:1, exp:"Phagocytose : 1) Reconnaissance de l'antigène, 2) Ingestion (formation du phagosome), 3) Fusion avec le lysosome (phagolysosome), 4) Destruction enzymatique." },
+{ sa:"SA2", topic:"Lymphocytes", q:"Où se forment les lymphocytes ?", opts:["Dans le foie","Dans la moelle osseuse rouge","Dans la rate","Dans le pancréas"], ans:1, exp:"Les lymphocytes (B et T) se forment dans la moelle osseuse rouge à partir de cellules souches hématopoïétiques." },
+{ sa:"SA2", topic:"Lymphocytes B", q:"Les lymphocytes B deviennent des plasmocytes pour :", opts:["Détruire directement les cellules infectées","Sécréter massivement des anticorps","Phagocyter les bactéries","Présenter les antigènes aux lymphocytes T"], ans:1, exp:"Lors de la réponse humorale, les lymphocytes B se différencient en plasmocytes qui produisent de grandes quantités d'anticorps spécifiques." },
+{ sa:"SA2", topic:"Anticorps", q:"Un anticorps est constitué de :", opts:["Une seule chaîne polypeptidique","2 chaînes lourdes et 2 chaînes légères en forme de Y","3 sous-unités","Un ADN bicaténaire"], ans:1, exp:"Un anticorps (immunoglobuline) est une protéine en forme de Y composée de 2 chaînes lourdes et 2 chaînes légères reliées par des ponts disulfure." },
+{ sa:"SA2", topic:"Anticorps", q:"La relation entre un anticorps et son antigène est :", opts:["Non spécifique","Spécifique (complémentarité de forme)","Basée sur la taille","Basée sur la charge électrique uniquement"], ans:1, exp:"La liaison anticorps-antigène est hautement spécifique : elle repose sur la complémentarité de forme entre le site de fixation de l'anticorps et le déterminant antigénique." },
+{ sa:"SA2", topic:"Réponse immunitaire cellulaire", q:"Les lymphocytes T cytotoxiques détruisent :", opts:["Les bactéries extracellulaires","Les cellules infectées par des virus ou les cellules cancéreuses","Les parasites dans le sang","Les toxines bactériennes"], ans:1, exp:"Les LTc (lymphocytes T cytotoxiques) reconnaissent et détruisent les cellules infectées par des virus ou les cellules tumorales par cytolyse." },
+{ sa:"SA2", topic:"Mémoire immunitaire", q:"Lors d'un deuxième contact avec le même antigène, la réponse immunitaire est :", opts:["Plus lente et moins intense","Plus rapide et plus intense grâce aux cellules mémoires","Identique à la 1re réponse","Absente"], ans:1, exp:"Les lymphocytes mémoires (B et T) persistent après la 1re réponse et permettent une réaction secondaire plus rapide et plus efficace." },
+{ sa:"SA2", topic:"Vaccination", q:"Le principe de la vaccination repose sur :", opts:["L'injection d'anticorps préformés","La stimulation du système immunitaire par un antigène inoffensif pour créer une mémoire immunitaire","La prise d'antibiotiques en préventif","L'élimination des germes par des antiseptiques"], ans:1, exp:"La vaccination introduit un antigène atténué, inactivé ou fragmenté pour induire une réponse primaire et créer une mémoire immunitaire protectrice." },
+{ sa:"SA2", topic:"Vaccination", q:"Les vaccins vivants atténués présentent comme avantage :", opts:["Ils n'ont aucun effet secondaire","Ils induisent une réponse immunitaire forte et durable","Ils conviennent à tous, y compris les immunodéprimés","Ils ne nécessitent aucun rappel"], ans:1, exp:"Les vaccins vivants atténués (ex: BCG, ROR) induisent une forte réponse immunitaire humorale et cellulaire avec une mémoire durable." },
+{ sa:"SA2", topic:"Sérothérapie", q:"La différence entre vaccination et sérothérapie est :", opts:["Les deux apportent des anticorps","La vaccination apporte des anticorps, la sérothérapie stimule leur production","La vaccination crée une immunité active, la sérothérapie apporte une immunité passive immédiate","Elles sont identiques"], ans:2, exp:"Vaccination = immunité active (le corps fabrique ses anticorps + mémoire). Sérothérapie = immunité passive (anticorps injectés, protection immédiate mais sans mémoire)." },
+{ sa:"SA2", topic:"VIH/SIDA", q:"Le VIH cible principalement :", opts:["Les lymphocytes B","Les lymphocytes T4 (CD4+)","Les neutrophiles","Les plaquettes"], ans:1, exp:"Le VIH (virus de l'immunodéficience humaine) infecte et détruit les lymphocytes T CD4+ (LT4), aboutissant à l'immunodéficience caractéristique du SIDA." },
+{ sa:"SA2", topic:"VIH/SIDA", q:"Le SIDA se déclare généralement quand le taux de lymphocytes T4 tombe en dessous de :", opts:["500 cellules/mm³","200 cellules/mm³","1000 cellules/mm³","100 cellules/mm³"], ans:1, exp:"Le stade SIDA est défini par un taux de LT CD4+ < 200 cellules/mm³ ou l'apparition d'infections opportunistes." },
+{ sa:"SA2", topic:"VIH/SIDA", q:"Le VIH est un :", opts:["Bactérie","Parasite","Rétrovirus","Champignon"], ans:2, exp:"Le VIH est un rétrovirus : il possède un génome à ARN et une transcriptase inverse qui copie l'ARN viral en ADN dans la cellule hôte." },
+{ sa:"SA2", topic:"Maladies auto-immunes", q:"Exemple de maladie auto-immune :", opts:["Le paludisme","La tuberculose","La polyarthrite rhumatoïde","La typhoïde"], ans:2, exp:"La polyarthrite rhumatoïde est une maladie auto-immune où le système immunitaire attaque les articulations. Autres exemples : diabète type 1, lupus." },
+{ sa:"SA2", topic:"Allergies", q:"Dans une allergie, l'immunoglobuline principalement impliquée est :", opts:["IgG","IgA","IgE","IgM"], ans:2, exp:"Les IgE (immunoglobulines E) sont les anticorps impliqués dans les réactions allergiques (hypersensibilité de type I)." },
+{ sa:"SA2", topic:"Organes lymphoïdes", q:"Quels sont les organes lymphoïdes primaires chez l'humain ?", opts:["Rate et ganglions lymphatiques","Moelle osseuse rouge et thymus","Foie et pancréas","Amygdales et appendice"], ans:1, exp:"Les organes lymphoïdes primaires sont la moelle osseuse rouge (maturation des LB) et le thymus (maturation des LT)." },
+{ sa:"SA2", topic:"Immunité", q:"L'immunité innée est caractérisée par :", opts:["Sa spécificité pour chaque pathogène","Sa rapidité d'action et son absence de mémoire immunologique","Sa capacité à produire des anticorps","Sa dépendance aux lymphocytes"], ans:1, exp:"L'immunité innée (naturelle) est non spécifique, agit rapidement (0-4h) et n'a pas de mémoire. Elle comprend les barrières physiques et la phagocytose." },
+{ sa:"SA2", topic:"Cytokines", q:"Les interleukines sont des molécules qui :", opts:["Constituent la paroi des bactéries","Coordonnent la communication entre cellules immunitaires","Sont produites uniquement par les bactéries","Forment la structure des anticorps"], ans:1, exp:"Les interleukines (type de cytokines) sont des molécules de signalisation produites par les globules blancs pour coordonner la réponse immunitaire." },
+{ sa:"SA2", topic:"Antigène", q:"Un antigène est défini comme :", opts:["Un anticorps circulant","Toute substance reconnue comme étrangère et capable de déclencher une réponse immunitaire","Une cellule du système immunitaire","Un gène du système HLA"], ans:1, exp:"Un antigène (Ag) est toute molécule (protéine, polysaccharide, etc.) reconnue comme non-soi et capable de déclencher une réponse immunitaire spécifique." },
+{ sa:"SA2", topic:"Réponse immunitaire", q:"Quelle cellule présente les antigènes aux lymphocytes T ?", opts:["Les érythrocytes","Les cellules présentatrices d'antigènes (CPA) dont les macrophages","Les plaquettes","Les neutrophiles uniquement"], ans:1, exp:"Les CPA (macrophages, cellules dendritiques) phagocytent les pathogènes, puis présentent leurs fragments antigéniques aux lymphocytes T via le CMH." },
+{ sa:"SA2", topic:"Immunodéficience", q:"Un patient immunodéprimé est particulièrement vulnérable aux :", opts:["Maladies génétiques","Infections opportunistes","Maladies cardiovasculaires","Cancers osseaux uniquement"], ans:1, exp:"Un immunodéprimé (insuffisance du système immunitaire) est très vulnérable aux infections opportunistes (germes normalement inoffensifs pour un individu sain)." },
+
+// ════ SA3 ════
+{ sa:"SA3", topic:"Neurone", q:"Quelle est la partie du neurone qui transmet l'influx nerveux vers d'autres cellules ?", opts:["Dendrites","Corps cellulaire","Axone","Noyau"], ans:2, exp:"L'axone est le prolongement du neurone qui conduit l'influx nerveux du corps cellulaire vers les cellules cibles (autres neurones ou effecteurs)." },
+{ sa:"SA3", topic:"Neurone", q:"Les dendrites d'un neurone ont pour fonction de :", opts:["Transmettre l'influx vers les muscles","Recevoir les informations d'autres neurones","Produire l'énergie cellulaire","Fabriquer les neurotransmetteurs"], ans:1, exp:"Les dendrites sont des prolongements courts et ramifiés qui reçoivent les signaux des neurones voisins et les conduisent vers le corps cellulaire." },
+{ sa:"SA3", topic:"Influx nerveux", q:"L'influx nerveux est de nature :", opts:["Chimique uniquement","Électrique (électrochimique)","Mécanique","Thermique"], ans:1, exp:"L'influx nerveux est un signal électrique (potentiel d'action) résultant d'un flux d'ions (Na+, K+) à travers la membrane du neurone." },
+{ sa:"SA3", topic:"Influx nerveux", q:"Que se passe-t-il lors d'un potentiel d'action ?", opts:["La cellule se divise","Une dépolarisation rapide suivie d'une repolarisation de la membrane","La cellule produit des protéines","Le neurone meurt"], ans:1, exp:"Le potentiel d'action = dépolarisation (entrée massive de Na+) puis repolarisation (sortie de K+). C'est le signal électrique de l'influx nerveux." },
+{ sa:"SA3", topic:"Synapse", q:"La synapse est :", opts:["Une jonction entre deux os","La zone de contact fonctionnel entre deux neurones ou entre un neurone et un effecteur","Un type de globule blanc","Une hormone cérébrale"], ans:1, exp:"La synapse est la zone de communication entre deux neurones (synapse neuroneuronique) ou entre un neurone et un muscle/glande (synapse neuroeffectrice)." },
+{ sa:"SA3", topic:"Synapse", q:"Les neurotransmetteurs sont libérés dans :", opts:["Le noyau du neurone","La fente synaptique","Le sang","Les mitochondries"], ans:1, exp:"Les neurotransmetteurs sont libérés par exocytose depuis les vésicules synaptiques dans la fente synaptique (espace entre neurones)." },
+{ sa:"SA3", topic:"Neurotransmetteurs", q:"Quel est le principal neurotransmetteur excitateur des jonctions neuromusculaires ?", opts:["Dopamine","Acétylcholine","Sérotonine","Noradrénaline"], ans:1, exp:"L'acétylcholine est le neurotransmetteur libéré à la jonction neuromusculaire (plaque motrice) pour déclencher la contraction musculaire." },
+{ sa:"SA3", topic:"Arc réflexe", q:"Dans quel ordre circule l'information dans un arc réflexe ?", opts:["Effecteur → Centre → Récepteur","Récepteur → Nerf sensitif → Centre nerveux → Nerf moteur → Effecteur","Centre → Récepteur → Effecteur","Nerf moteur → Centre → Nerf sensitif"], ans:1, exp:"Arc réflexe : Stimulus → Récepteur → Nerf sensitif (afférent) → Centre nerveux → Nerf moteur (efférent) → Effecteur (muscle/glande)." },
+{ sa:"SA3", topic:"Arc réflexe", q:"Quel est le centre nerveux des réflexes médullaires (spinaux) ?", opts:["Le cerveau","La moelle épinière","Le cervelet","Le bulbe rachidien"], ans:1, exp:"Les réflexes médullaires (ex: réflexe rotulien) ont leur centre intégrateur dans la moelle épinière et ne nécessitent pas le cerveau." },
+{ sa:"SA3", topic:"Réflexe myotatique", q:"Le réflexe myotatique est déclenché par :", opts:["Un stimulus douloureux","L'étirement d'un muscle","La chaleur","Un bruit fort"], ans:1, exp:"Le réflexe myotatique (ex: réflexe rotulien) est déclenché par l'étirement du muscle et entraîne sa contraction réflexe (protection contre les étirements excessifs)." },
+{ sa:"SA3", topic:"Système nerveux", q:"Quelle partie du système nerveux central est responsable de la coordination des mouvements ?", opts:["Cerveau","Cervelet","Moelle épinière","Hypophyse"], ans:1, exp:"Le cervelet est le centre de coordination des mouvements, de l'équilibre et du tonus musculaire." },
+{ sa:"SA3", topic:"Système nerveux", q:"La moelle épinière remplit deux fonctions principales :", opts:["Production d'hormones et digestion","Centre de réflexes et voie de conduction de l'information","Régulation du rythme cardiaque uniquement","Filtration du sang et production de lymphocytes"], ans:1, exp:"La moelle épinière : 1) Centre nerveux des réflexes médullaires, 2) Voie de conduction de l'information entre le cerveau et la périphérie." },
+{ sa:"SA3", topic:"Oeil", q:"Dans l'œil, les cellules qui transforment la lumière en signal nerveux sont :", opts:["Les cornéennes","Les photorécepteurs (cônes et bâtonnets) de la rétine","Les cellules du cristallin","Les cellules de la choroïde"], ans:1, exp:"Les photorécepteurs de la rétine : bâtonnets (vision nocturne/niveaux de gris) et cônes (vision diurne/couleurs) convertissent la lumière en influx nerveux." },
+{ sa:"SA3", topic:"Oeil", q:"La myopie correspond à :", opts:["Une vision nette de loin, floue de près","Une vision floue de loin, nette de près","L'absence totale de vision","La perte de la vision des couleurs"], ans:1, exp:"Dans la myopie, l'image se forme en avant de la rétine (globe oculaire trop long ou cristallin trop convergent) : vision floue de loin, nette de près. Correction : verres divergents." },
+{ sa:"SA3", topic:"Oreille", q:"L'oreille interne contient deux structures sensorielles essentielles :", opts:["Le tympan et l'ossicule","La cochlée (audition) et les canaux semi-circulaires (équilibre)","Le pavillon et le conduit auditif","L'enclume et l'étrier uniquement"], ans:1, exp:"L'oreille interne : 1) Cochlée → transduction des sons en influx nerveux (audition), 2) Canaux semi-circulaires et vestibule → sens de l'équilibre." },
+{ sa:"SA3", topic:"Glandes endocrines", q:"Quelle glande est souvent appelée 'chef d'orchestre' des glandes endocrines ?", opts:["Les surrénales","L'hypophyse (glande pituitaire)","La thyroïde","Le pancréas"], ans:1, exp:"L'hypophyse (petite glande à la base du cerveau) contrôle de nombreuses autres glandes endocrines (thyroïde, gonades, surrénales) par ses hormones tropes." },
+{ sa:"SA3", topic:"Hormones", q:"Les hormones sont transportées dans l'organisme par :", opts:["Les nerfs","Le sang","La lymphe uniquement","L'air inspiré"], ans:1, exp:"Les hormones sont des messagers chimiques sécrétés par les glandes endocrines dans le sang et transportées jusqu'aux organes cibles." },
+{ sa:"SA3", topic:"Régulation hormonale", q:"Le mécanisme de rétrocontrôle négatif (rétro-inhibition) dans la régulation hormonale signifie :", opts:["Une hormone stimule sa propre production","Une hormone inhibe sa propre production quand sa concentration est élevée","Deux hormones ont le même effet","Une hormone active d'autres hormones"], ans:1, exp:"La rétro-inhibition négative : quand la concentration d'une hormone atteint un niveau optimal, elle inhibe sa propre sécrétion (maintient l'homéostasie)." },
+{ sa:"SA3", topic:"Insuline", q:"L'insuline est produite par :", opts:["Le foie","Les cellules bêta du pancréas","Les reins","Les glandes surrénales"], ans:1, exp:"L'insuline est produite par les cellules β des îlots de Langerhans du pancréas. Elle abaisse la glycémie en favorisant l'absorption du glucose par les cellules." },
+{ sa:"SA3", topic:"Thyroïde", q:"Les hormones thyroïdiennes (T3, T4) régulent :", opts:["La reproduction","Le métabolisme de base et la croissance","La tension artérielle uniquement","La production d'érythrocytes"], ans:1, exp:"Les hormones thyroïdiennes (T3, T4) régulent le métabolisme de base, la croissance, le développement du système nerveux et la thermogenèse." },
+{ sa:"SA3", topic:"Neurotransmetteurs", q:"La dépression est souvent associée à un déficit en :", opts:["Adrénaline","Sérotonine et dopamine","Acétylcholine","Testostérone"], ans:1, exp:"La dépression est liée à un déficit en sérotonine et dopamine (neurotransmetteurs du bien-être). Les antidépresseurs augmentent la disponibilité de ces molécules." },
+{ sa:"SA3", topic:"Nerfs", q:"Un nerf mixte contient :", opts:["Uniquement des fibres sensitives","Uniquement des fibres motrices","À la fois des fibres sensitives et motrices","Uniquement des fibres végétatives"], ans:2, exp:"Un nerf mixte contient des fibres afférentes (sensitives) et efférentes (motrices), contrairement aux nerfs sensitifs purs ou moteurs purs." },
+{ sa:"SA3", topic:"Système nerveux autonome", q:"Le système nerveux parasympathique a des effets :", opts:["Accélérateurs (combat/fuite)","Ralentisseurs et restaurateurs (repos/digestion)","Uniquement sur les muscles squelettiques","Identiques au système sympathique"], ans:1, exp:"Le parasympathique : ralentit le rythme cardiaque, stimule la digestion, constriction pupillaire (repos et digestion). Le sympathique : effets inverses (combat/fuite)." },
+{ sa:"SA3", topic:"Encéphale", q:"Quel lobe cérébral est principalement responsable du traitement des informations visuelles ?", opts:["Lobe frontal","Lobe temporal","Lobe occipital","Lobe pariétal"], ans:2, exp:"Le cortex visuel primaire est situé dans le lobe occipital (partie postérieure du cerveau). Les informations de la rétine y sont traitées." },
+
+// ════ SA4 ════
+{ sa:"SA4", topic:"Appareil reproducteur masculin", q:"Où sont produits les spermatozoïdes ?", opts:["Dans la prostate","Dans les tubes séminifères des testicules","Dans les vésicules séminales","Dans l'épididyme"], ans:1, exp:"Les spermatozoïdes sont produits dans les tubes séminifères des testicules par la spermatogenèse (processus de méiose)." },
+{ sa:"SA4", topic:"Appareil reproducteur masculin", q:"Quel organe masculin produit la testostérone ?", opts:["La prostate","Les cellules de Leydig des testicules","L'épididyme","Les vésicules séminales"], ans:1, exp:"La testostérone est produite par les cellules de Leydig situées dans le tissu interstitiel des testicules." },
+{ sa:"SA4", topic:"Spermatogenèse", q:"La spermatogenèse est un processus continu chez l'homme. Un cycle complet dure environ :", opts:["7 jours","28 jours","74 jours","1 an"], ans:2, exp:"La spermatogenèse dure environ 74 jours (64 jours dans les tubules + 10 jours dans l'épididyme pour la maturation)." },
+{ sa:"SA4", topic:"Appareil reproducteur féminin", q:"Où se produit la maturation des ovocytes chez la femme ?", opts:["Dans l'utérus","Dans les trompes de Fallope","Dans les ovaires","Dans le vagin"], ans:2, exp:"Les ovocytes se développent dans les follicules ovariens. Chaque mois, un follicule dominant arrive à maturité et libère un ovocyte (ovulation)." },
+{ sa:"SA4", topic:"Ovogenèse", q:"Combien d'ovocytes fonctionnels produit une méiose ovarienne ?", opts:["4","2","1","3"], ans:2, exp:"L'ovogenèse produit 1 seul ovocyte fonctionnel (+ 2-3 globules polaires qui dégénèrent) grâce à des divisions inégales du cytoplasme." },
+{ sa:"SA4", topic:"Cycle menstruel", q:"Quelle est la durée habituelle du cycle menstruel ?", opts:["14 jours","21 jours","28 jours","35 jours"], ans:2, exp:"Le cycle menstruel dure en moyenne 28 jours (variable 21-35 j), du 1er jour des règles au 1er jour des règles suivantes." },
+{ sa:"SA4", topic:"Cycle menstruel", q:"L'ovulation se produit généralement :", opts:["Le 1er jour du cycle","Le 14e jour du cycle (pour un cycle de 28 jours)","Le 28e jour du cycle","N'importe quand dans le cycle"], ans:1, exp:"Pour un cycle de 28 jours, l'ovulation survient vers le 14e jour, déclenchée par le pic de LH (hormone lutéinisante)." },
+{ sa:"SA4", topic:"Cycle menstruel", q:"Les règles (menstruations) correspondent à :", opts:["La phase de prolifération de l'endomètre","L'élimination de la couche superficielle de l'endomètre en l'absence de grossesse","La phase d'ovulation","L'implantation de l'embryon"], ans:1, exp:"Les règles = desquamation de l'endomètre (muqueuse utérine) provoquée par la chute des taux d'œstrogènes et de progestérone en l'absence de grossesse." },
+{ sa:"SA4", topic:"Hormones reproductives", q:"Quelle hormone déclenche l'ovulation ?", opts:["FSH","Progestérone","LH (pic de LH)","Œstradiol bas"], ans:2, exp:"Le pic de LH (hormone lutéinisante) sécrétée par l'hypophyse déclenche l'ovulation (rupture du follicule de De Graaf et libération de l'ovocyte)." },
+{ sa:"SA4", topic:"Hormones reproductives", q:"Quelle hormone est sécrétée par le corps jaune après l'ovulation ?", opts:["FSH","Œstradiol uniquement","Progestérone (principalement)","LH"], ans:2, exp:"Après l'ovulation, le follicule se transforme en corps jaune qui sécrète de la progestérone (prépare l'endomètre à la nidation) et des œstrogènes." },
+{ sa:"SA4", topic:"Fécondation", q:"Où a lieu normalement la fécondation ?", opts:["Dans l'utérus","Dans le tiers externe de la trompe de Fallope","Dans l'ovaire","Dans le vagin"], ans:1, exp:"La fécondation (rencontre du spermatozoïde et de l'ovocyte) se produit dans le tiers externe (pavillon) de la trompe de Fallope." },
+{ sa:"SA4", topic:"Fécondation", q:"Combien de spermatozoïdes sont nécessaires pour féconder un ovocyte ?", opts:["Plusieurs dizaines","Des milliers","Un seul spermatozoïde pénètre l'ovocyte","Trois spermatozoïdes"], ans:2, exp:"Un seul spermatozoïde féconde l'ovocyte. La pénétration du premier déclenche des réactions qui bloquent l'entrée des autres (réaction acrosomique et de la zone pellucide)." },
+{ sa:"SA4", topic:"Nidation", q:"La nidation est l'implantation de l'embryon dans :", opts:["Les trompes","L'utérus (endomètre)","L'ovaire","Le col de l'utérus"], ans:1, exp:"La nidation = implantation du blastocyste (embryon au stade d'environ 100 cellules) dans l'endomètre utérin, environ 6-7 jours après la fécondation." },
+{ sa:"SA4", topic:"Grossesse", q:"La HCG (gonadotrophine chorionique humaine) est sécrétée par :", opts:["L'hypophyse","Le corps jaune","Le trophoblaste puis le placenta","Les ovaires"], ans:2, exp:"L'HCG est produite par le trophoblaste (puis le placenta) dès la nidation. Elle maintient le corps jaune actif et est le marqueur du test de grossesse." },
+{ sa:"SA4", topic:"Grossesse", q:"Combien de temps dure la grossesse humaine ?", opts:["6 mois","9 mois (environ 40 semaines d'aménorrhée)","12 mois","7 mois"], ans:1, exp:"La grossesse humaine dure environ 9 mois soit 40 semaines d'aménorrhée (SA) à partir du 1er jour des dernières règles." },
+{ sa:"SA4", topic:"Contraception", q:"La contraception hormonale combinée (pilule) agit principalement en :", opts:["Bloquant la fécondation dans les trompes","Inhibant l'ovulation via les œstro-progestatifs","Détruisant les spermatozoïdes","Empêchant la nidation uniquement"], ans:1, exp:"La pilule combinée (œstrogène + progestatif) bloque l'ovulation en inhibant le pic de LH et de FSH. Elle épaissit aussi le mucus cervical." },
+{ sa:"SA4", topic:"Contraception", q:"La méthode contraceptive avec le meilleur indice de Pearl (la plus efficace) est :", opts:["Le préservatif seul","Les méthodes naturelles","La pilule combinée ou le DIU","L'abstinence périodique"], ans:2, exp:"La pilule combinée et le DIU (stérilet) sont parmi les méthodes les plus efficaces (indice de Pearl < 1 avec utilisation correcte)." },
+{ sa:"SA4", topic:"Contraception", q:"Le préservatif masculin est la seule méthode contraceptive qui :", opts:["Empêche l'ovulation","Protège à la fois contre les IST et les grossesses non désirées","Est 100% efficace","N'a aucun effet secondaire et est parfaitement efficace"], ans:1, exp:"Le préservatif masculin est la seule méthode contraceptive qui protège à la fois contre les grossesses non désirées ET contre les IST/VIH." },
+{ sa:"SA4", topic:"Contraception naturelle", q:"La méthode des températures (Ogino) repose sur :", opts:["La prise de température orale","La détection de l'ovulation par l'élévation de la température basale","L'observation du mucus cervical uniquement","La mesure de la LH urinaire"], ans:1, exp:"La méthode des températures (Ogino-Knaus) identifie l'ovulation par une légère élévation (0,3-0,5°C) de la température basale au moment de l'ovulation." },
+{ sa:"SA4", topic:"IST", q:"Les infections sexuellement transmissibles (IST) peuvent être :", opts:["Uniquement virales","Uniquement bactériennes","Virales (VIH, Herpès), bactériennes (Syphilis, Gonorrhée) ou parasitaires","Uniquement cutanées"], ans:2, exp:"Les IST ont des causes variées : virales (VIH, herpès, HPV), bactériennes (syphilis, gonorrhée, chlamydia) ou parasitaires (trichomonase)." },
+{ sa:"SA4", topic:"IST", q:"La syphilis est causée par :", opts:["Un virus","La bactérie Treponema pallidum","Un champignon","Un parasite"], ans:1, exp:"La syphilis est une IST bactérienne causée par Treponema pallidum (spirochète). Elle évolue en 3 stades et se traite aux antibiotiques (pénicilline)." },
+{ sa:"SA4", topic:"IST – Prévention", q:"La meilleure prévention contre les IST est :", opts:["Prendre des antibiotiques avant les rapports","Utiliser systématiquement le préservatif et réduire les partenaires","Se faire vacciner contre toutes les IST","L'abstinence totale uniquement"], ans:1, exp:"L'utilisation systématique du préservatif et la réduction du nombre de partenaires sont les mesures préventives les plus efficaces contre les IST." },
+{ sa:"SA4", topic:"Testostérone", q:"La testostérone est responsable :", opts:["Du développement des caractères sexuels féminins","Du développement des caractères sexuels primaires et secondaires masculins","De la production des ovocytes","Du cycle menstruel"], ans:1, exp:"La testostérone contrôle le développement des organes génitaux masculins (caractères primaires) et des caractères secondaires (pilosité, masse musculaire, voix grave)." },
+{ sa:"SA4", topic:"Oestrogènes", q:"Les œstrogènes sont sécrétés principalement par :", opts:["Les testicules","Les ovaires (follicules ovariens)","Le pancréas","La thyroïde"], ans:1, exp:"Les œstrogènes (principalement l'œstradiol) sont sécrétés par les cellules de la granulosa des follicules ovariens en développement." },
+{ sa:"SA4", topic:"Régulation hormonale", q:"Quel axe hormonal contrôle la reproduction ?", opts:["Axe hypophyse-thyroïde","Axe hypothalamo-hypophyso-gonadique","Axe cortico-surrénalien","Axe pancréas-foie"], ans:1, exp:"L'axe hypothalamo-hypophyso-gonadique régule la reproduction : l'hypothalamus (GnRH) → hypophyse (FSH, LH) → gonades (hormones sexuelles)." },
+{ sa:"SA4", topic:"Ménopause", q:"La ménopause est définie par :", opts:["L'absence de règles pendant 3 mois","L'arrêt définitif des règles pendant au moins 12 mois, marquant la fin de la fertilité féminine","La première menstruation","Le début de la puberté"], ans:1, exp:"La ménopause est l'arrêt définitif des menstruations (12 mois consécutifs sans règles), due à l'épuisement des follicules ovariens vers 45-55 ans." },
+{ sa:"SA4", topic:"Puberté", q:"Quelle hormone déclenche la puberté chez les deux sexes ?", opts:["Insuline","GnRH hypothalamique (augmentation de la pulsatilité)","Cortisol","Thyroxine"], ans:1, exp:"La puberté est déclenchée par l'augmentation des sécrétions pulsatiles de GnRH (gonadolibérine) par l'hypothalamus, qui stimule l'axe hypophyso-gonadique." },
+
+// Questions supplémentaires avancées pour atteindre 150+ ─────────────────────────
+
+{ sa:"SA1", topic:"ADN", q:"La transcription de l'ADN produit :", opts:["Une protéine directement","Un ARN messager (ARNm)","Un nouveau brin d'ADN","Des nucléotides libres"], ans:1, exp:"La transcription copie l'information d'un gène d'ADN en ARN messager (ARNm) dans le noyau, avant la traduction en protéine." },
+{ sa:"SA1", topic:"Protéines", q:"La traduction (synthèse protéique) a lieu dans :", opts:["Le noyau","Les ribosomes","Les mitochondries","Le réticulum lisse"], ans:1, exp:"La traduction se déroule dans les ribosomes (cytoplasme ou RE rugueux) : l'ARNm est décodé pour assembler les acides aminés en protéine." },
+{ sa:"SA1", topic:"Codon", q:"Un codon est :", opts:["Un acide aminé","Une séquence de 3 nucléotides de l'ARNm codant pour un acide aminé","Un gène entier","Un chromosome"], ans:1, exp:"Un codon est un triplet de nucléotides de l'ARNm. Il existe 64 codons codant pour 20 acides aminés (code génétique dégénéré)." },
+{ sa:"SA1", topic:"Chromosomes", q:"Les chromosomes sont visibles au microscope optique uniquement pendant :", opts:["L'interphase","La division cellulaire (mitose/méiose)","La transcription","La traduction"], ans:1, exp:"Les chromosomes sont condensés et visibles uniquement lors des divisions cellulaires (prophase, métaphase). En interphase, la chromatine est décondensée." },
+{ sa:"SA1", topic:"Génétique mendélienne", q:"Le test-cross (croisement-test) consiste à croiser un individu au phénotype dominant avec :", opts:["Un individu du même génotype","Un individu homozygote dominant","Un individu homozygote récessif","Un individu hétérozygote"], ans:2, exp:"Le test-cross (back-cross) : on croise l'individu de phénotype dominant inconnu avec un individu homozygote récessif (aa) pour déterminer son génotype." },
+{ sa:"SA1", topic:"Épigénétique", q:"L'épigénétique étudie :", opts:["Les mutations de l'ADN","Les modifications de l'expression des gènes sans changement de la séquence d'ADN","La structure des ribosomes","La division cellulaire"], ans:1, exp:"L'épigénétique étudie les modifications héritables de l'expression génique (méthylation de l'ADN, modifications des histones) sans changer la séquence nucléotidique." },
+
+{ sa:"SA2", topic:"Compléments", q:"Quel système de protéines amplifie la réponse inflammatoire et détruit les pathogènes par lyse ?", opts:["Le système des interférons","Le système du complément","Le système HLA","Le système des cytokines"], ans:1, exp:"Le système du complément est un ensemble de protéines plasmatiques activées en cascade qui lysent les bactéries et amplifient la réponse immunitaire." },
+{ sa:"SA2", topic:"Interférons", q:"Les interférons sont produits en réponse à :", opts:["Des bactéries","Des infections virales","Des allergènes","Des cancers uniquement"], ans:1, exp:"Les interférons (IFN-α, IFN-β, IFN-γ) sont des cytokines antivirales produites par les cellules infectées par des virus pour alerter les cellules voisines." },
+{ sa:"SA2", topic:"NK cells", q:"Les cellules NK (Natural Killer) sont des lymphocytes qui :", opts:["Produisent des anticorps","Détruisent les cellules cancéreuses et infectées sans reconnaissance préalable spécifique","Présentent les antigènes","Produisent des cytokines uniquement"], ans:1, exp:"Les cellules NK (tueuses naturelles) sont des lymphocytes innés qui détruisent les cellules tumorales et infectées par cytotoxicité directe, sans CMH ni sensibilisation préalable." },
+{ sa:"SA2", topic:"IST–Immunologie", q:"Un individu séropositif au VIH est :", opts:["Malade du SIDA","Porteur d'anticorps anti-VIH sans nécessairement être malade","Immunisé contre le VIH","En bonne santé garantie"], ans:1, exp:"Séropositif signifie que des anticorps anti-VIH ont été détectés dans le sang (la personne a été exposée au VIH). Cela ne signifie pas forcément qu'elle a le SIDA." },
+
+{ sa:"SA3", topic:"Plasticité cérébrale", q:"La plasticité synaptique désigne :", opts:["La flexibilité physique du cerveau","La capacité des connexions neuronales à se modifier en fonction de l'expérience","La production de nouveaux neurones uniquement","La myélinisation des axones"], ans:1, exp:"La plasticité synaptique est la capacité des synapses à se renforcer (potentialisation long terme) ou s'affaiblir selon l'activité, base neurobiologique de l'apprentissage." },
+{ sa:"SA3", topic:"Myéline", q:"La gaine de myéline autour des axones permet de :", opts:["Conduire l'influx nerveux plus lentement","Accélérer la conduction de l'influx nerveux par conduction saltatoire","Nourrir le neurone","Produire des neurotransmetteurs"], ans:1, exp:"La myéline (produite par les cellules de Schwann) isole l'axone. L'influx saute de nœud en nœud de Ranvier (conduction saltatoire) = vitesse très élevée." },
+{ sa:"SA3", topic:"Douleur", q:"Les endorphines sont des molécules qui :", opts:["Augmentent la perception de la douleur","Inhibent la transmission de la douleur (analgésiques naturels)","Produisent la douleur","Régulent la glycémie"], ans:1, exp:"Les endorphines (endorphines naturelles du cerveau) se lient aux récepteurs opioïdes et inhibent la transmission des signaux douloureux, provoquant analgésie et euphorie." },
+{ sa:"SA3", topic:"Sens", q:"La proprioception est le sens qui permet de :", opts:["Détecter les sons","Percevoir la position et les mouvements de son propre corps","Voir dans l'obscurité","Goûter les aliments"], ans:1, exp:"La proprioception est le sens kinesthésique : elle informe le cerveau sur la position, le mouvement et la tension des muscles, tendons et articulations." },
+
+{ sa:"SA4", topic:"Accouchement", q:"Quelle hormone déclenche les contractions utérines lors de l'accouchement ?", opts:["Progestérone","Ocytocine","FSH","Testostérone"], ans:1, exp:"L'ocytocine (produite par l'hypothalamus et libérée par la neurohypophyse) déclenche et amplifie les contractions utérines lors de l'accouchement." },
+{ sa:"SA4", topic:"Allaitement", q:"Quelle hormone stimule la production de lait (lactation) ?", opts:["Œstrogènes","Progestérone","Prolactine","LH"], ans:2, exp:"La prolactine (hypophyse antérieure) stimule la production de lait maternel. L'ocytocine provoque l'éjection du lait lors de la tétée." },
+{ sa:"SA4", topic:"FIV", q:"La fécondation in vitro (FIV) consiste à :", opts:["Introduire des spermatozoïdes dans l'utérus","Féconder l'ovocyte en dehors du corps, puis réimplanter l'embryon","Prendre des hormones pour déclencher l'ovulation uniquement","Greffer un ovaire"], ans:1, exp:"La FIV (Fécondation In Vitro) : recueil d'ovocytes et de spermatozoïdes → fécondation en laboratoire → culture de l'embryon → transfert dans l'utérus." },
+{ sa:"SA4", topic:"IST", q:"Le papillomavirus humain (HPV) peut causer :", opts:["La tuberculose","Des cancers du col de l'utérus et des condylomes","La typhoïde","Le paludisme"], ans:1, exp:"Le HPV est la principale cause du cancer du col de l'utérus. Il cause aussi des condylomes (verrues génitales). Un vaccin existe (Gardasil, Cervarix)." },
+{ sa:"SA4", topic:"IST", q:"La gonorrhée (blennorragie) est causée par :", opts:["Treponema pallidum","Neisseria gonorrhoeae","Le VIH","Candida albicans"], ans:1, exp:"La gonorrhée est une IST bactérienne causée par Neisseria gonorrhoeae (gonocoque). Elle se traite aux antibiotiques mais des souches résistantes émergent." },
+{ sa:"SA4", topic:"Contraception d'urgence", q:"La contraception d'urgence ('pilule du lendemain') agit en :", opts:["Déclenchant une IVG","Retardant ou bloquant l'ovulation, et peut empêcher la nidation","Détruisant les spermatozoïdes","Contrôlant le cycle menstruel sur le long terme"], ans:1, exp:"La pilule du lendemain (lévonorgestrel) retarde ou inhibe l'ovulation et peut modifier l'endomètre. Elle doit être prise dans les 72h (3 jours) après le rapport." },
+];
+
+// ══════════════════════════════════════════════
+//   STATE
+// ══════════════════════════════════════════════
+let currentQ = 0;
+let score = 0;
+let wrong = 0;
+
+const SA_RANGES = {};
+let prevSA = null;
+QUESTIONS.forEach((q, i) => {
+  if (!SA_RANGES[q.sa]) SA_RANGES[q.sa] = { start: i };
+  SA_RANGES[q.sa].end = i;
+});
+
+function getThemeForSA(sa) {
+  const sa_info = SA_LABELS.find(s => s.id === sa);
+  return sa_info ? sa_info.theme : 0;
+}
+
+function startTest() {
+  document.getElementById('splash').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  renderQuestion();
+}
+
+function updateProgress() {
+  const pct = Math.round((currentQ / QUESTIONS.length) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = `Question ${currentQ + 1} / ${QUESTIONS.length}`;
+  document.getElementById('score-live').textContent = score;
+}
+
+function renderQuestion() {
+  if (currentQ >= QUESTIONS.length) {
+    showResults();
+    return;
+  }
+
+  const q = QUESTIONS[currentQ];
+  const sa = q.sa;
+  const themeIdx = getThemeForSA(sa);
+  document.body.className = `theme-${themeIdx}`;
+  updateProgress();
+
+  let html = '';
+
+  // SA header + notions when SA changes
+  if (sa !== prevSA) {
+    const saInfo = SA_LABELS.find(s => s.id === sa);
+    html += `<div class="sa-header"><h2>${saInfo.title}</h2><p>${saInfo.subtitle}</p></div>`;
+    
+    // Notions card
+    const notions = NOTIONS[sa];
+    if (notions) {
+      html += `<div class="notion-card">
+        <h3>📌 Notions Importantes à Retenir – ${sa}</h3>
+        <ul>${notions.map(n => `<li>${n}</li>`).join('')}</ul>
+      </div>`;
+    }
+    prevSA = sa;
+  }
+
+  // Question card
+  const letters = ['A', 'B', 'C', 'D'];
+  html += `<div class="question-card" id="qcard-${currentQ}">
+    <div class="q-meta">
+      <span class="q-num">Q${currentQ + 1}</span>
+      <span class="q-topic">📖 ${q.topic}</span>
+    </div>
+    <div class="q-text">${q.q}</div>
+    <div class="options">
+      ${q.opts.map((opt, i) => `
+        <button class="opt-btn" id="opt-${currentQ}-${i}" onclick="chooseAnswer(${currentQ}, ${i})">
+          <span class="opt-letter">${letters[i]}</span>
+          <span>${opt}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div class="feedback" id="feed-${currentQ}"></div>
+  </div>`;
+
+  document.getElementById('quiz-body').innerHTML = html;
+  
+  // Smooth scroll to top of new question
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function chooseAnswer(qIdx, chosen) {
+  const q = QUESTIONS[qIdx];
+  const isCorrect = chosen === q.ans;
+  const letters = ['A', 'B', 'C', 'D'];
+
+  // Disable all buttons
+  q.opts.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${qIdx}-${i}`);
+    if (btn) btn.disabled = true;
+  });
+
+  // Color correct/wrong
+  const correctBtn = document.getElementById(`opt-${qIdx}-${q.ans}`);
+  if (correctBtn) correctBtn.classList.add('correct');
+
+  if (!isCorrect) {
+    const wrongBtn = document.getElementById(`opt-${qIdx}-${chosen}`);
+    if (wrongBtn) wrongBtn.classList.add('wrong');
+    wrong++;
+  } else {
+    score++;
+    document.getElementById('score-live').textContent = score;
+  }
+
+  // Card border
+  const card = document.getElementById(`qcard-${qIdx}`);
+  if (card) card.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+
+  // Feedback
+  const feed = document.getElementById(`feed-${qIdx}`);
+  if (feed) {
+    feed.className = `feedback show ${isCorrect ? 'correct' : 'wrong'}`;
+    feed.innerHTML = isCorrect
+      ? `✅ <strong>Bravo ! Bonne réponse !</strong> ${q.exp}`
+      : `❌ <strong>La bonne réponse est : ${letters[q.ans]}) ${q.opts[q.ans]}</strong><br>💡 ${q.exp}`;
+  }
+
+  // Auto-advance after 2.5s
+  currentQ++;
+  setTimeout(() => {
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 2600);
+}
+
+function showResults() {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  const total = QUESTIONS.length;
+  const pct = Math.round((score / total) * 100);
+
+  let emoji = '😔', msg = 'Continue de réviser, tu peux y arriver ! 💪';
+  if (pct >= 90) { emoji = '🏆'; msg = 'EXCELLENT ! Tu es prêt(e) pour le Baccalauréat ! Félicitations ! 🎉'; }
+  else if (pct >= 75) { emoji = '🌟'; msg = 'Très bien ! Encore quelques révisions et tu seras imbattable ! 📚'; }
+  else if (pct >= 60) { emoji = '😊'; msg = 'Bien ! Revois les chapitres où tu as hésité et tu seras au top ! 📖'; }
+  else if (pct >= 50) { emoji = '😐'; msg = 'Moyen… Concentre-toi sur les notions clés et recommence ! 🔁'; }
+
+  document.getElementById('res-emoji').textContent = emoji;
+  document.getElementById('res-score').textContent = `Score : ${score} / ${total} (${pct}%)`;
+  document.getElementById('res-msg').textContent = msg;
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-wrong').textContent = wrong;
+  document.getElementById('r-pct').textContent = pct + '%';
+}
+
+function restartTest() {
+  currentQ = 0; score = 0; wrong = 0; prevSA = null;
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.body.className = 'theme-0';
+  renderQuestion();
+}
+</script>
+</body>
+</html>
