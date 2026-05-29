@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎓 Test BAC Français – Terminales A, B, C & D</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFF9C4;
+    --primary: #6A0DAD;
+    --accent: #FFD700;
+    --card: #ffffff;
+    --text: #2d1b4e;
+    --correct: #2ecc71;
+    --wrong: #e74c3c;
+    --btn-hover: #5a0b9d;
+    --radius: 20px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.8s ease, color 0.8s ease;
+  }
+
+  /* ── THEMES ── */
+  body.theme-0 { --bg: #FFF9C4; --primary: #6A0DAD; --text: #2d1b4e; --card: #fffde7; }
+  body.theme-1 { --bg: #E3F2FD; --primary: #0D3B8C; --text: #0a1f4e; --card: #e8f4fd; }
+  body.theme-2 { --bg: #E8F5E9; --primary: #1B5E20; --text: #0d2b10; --card: #f1fdf2; }
+  body.theme-3 { --bg: #FCE4EC; --primary: #880E4F; --text: #3b0025; --card: #fff0f5; }
+
+  /* ── HERO ── */
+  #hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(106,13,173,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -100px; left: -100px;
+    animation: float 6s ease-in-out infinite;
+  }
+  #hero::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,215,0,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+    bottom: -80px; right: -80px;
+    animation: float 8s ease-in-out infinite reverse;
+  }
+
+  @keyframes float {
+    0%,100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  .hero-emoji {
+    font-size: 90px;
+    animation: bounce 1.5s ease-in-out infinite;
+    position: relative; z-index: 1;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .hero-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1.15;
+    margin: 20px 0 10px;
+    position: relative; z-index: 1;
+  }
+
+  .hero-sub {
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    font-weight: 700;
+    color: var(--primary);
+    opacity: 0.75;
+    margin-bottom: 14px;
+    position: relative; z-index: 1;
+  }
+
+  .hero-desc {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    max-width: 600px;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 30px;
+    position: relative; z-index: 1;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 36px;
+    position: relative; z-index: 1;
+  }
+
+  .stat-chip {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50px;
+    padding: 10px 22px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-start {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.6rem;
+    font-weight: 800;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 60px;
+    padding: 20px 60px;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(106,13,173,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative; z-index: 1;
+    letter-spacing: 0.5px;
+  }
+  .btn-start:hover {
+    transform: translateY(-4px) scale(1.04);
+    box-shadow: 0 14px 40px rgba(106,13,173,0.45);
+  }
+  .btn-start:active { transform: scale(0.97); }
+
+  /* ── QUIZ SCREEN ── */
+  #quiz {
+    display: none;
+    padding: 30px 20px 60px;
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  .progress-bar-wrap {
+    background: rgba(0,0,0,0.1);
+    border-radius: 20px;
+    height: 14px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 20px;
+    transition: width 0.5s ease;
+  }
+
+  .progress-label {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-align: right;
+    margin-bottom: 24px;
+  }
+
+  .section-badge {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 40px;
+    padding: 8px 22px;
+    font-size: 1rem;
+    font-weight: 800;
+    margin-bottom: 18px;
+    letter-spacing: 0.5px;
+  }
+
+  .question-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 32px 30px 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.1);
+    animation: slideIn 0.4s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--primary);
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+
+  .q-text {
+    font-size: clamp(1.25rem, 3vw, 1.6rem);
+    font-weight: 800;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 28px;
+  }
+
+  .options-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .option-btn {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(1.05rem, 2.5vw, 1.3rem);
+    font-weight: 700;
+    background: #f4f4f4;
+    color: var(--text);
+    border: 3px solid transparent;
+    border-radius: 14px;
+    padding: 16px 22px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    line-height: 1.4;
+  }
+  .option-btn:hover:not(:disabled) {
+    background: var(--primary);
+    color: #fff;
+    transform: translateX(6px);
+    border-color: var(--primary);
+  }
+  .option-btn:disabled { cursor: not-allowed; }
+  .option-btn.correct {
+    background: var(--correct) !important;
+    color: #fff !important;
+    border-color: var(--correct) !important;
+    animation: pulse-green 0.5s ease;
+  }
+  .option-btn.wrong {
+    background: var(--wrong) !important;
+    color: #fff !important;
+    border-color: var(--wrong) !important;
+    animation: shake 0.4s ease;
+  }
+  @keyframes pulse-green {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    60% { transform: translateX(8px); }
+  }
+
+  .option-letter {
+    font-size: 1.1rem;
+    font-weight: 900;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 8px;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s;
+  }
+  .option-btn:hover:not(:disabled) .option-letter,
+  .option-btn.correct .option-letter,
+  .option-btn.wrong .option-letter {
+    background: rgba(255,255,255,0.3);
+  }
+
+  .feedback-box {
+    margin-top: 18px;
+    padding: 16px 20px;
+    border-radius: 14px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: none;
+    animation: fadeIn 0.3s ease;
+    line-height: 1.6;
+  }
+  .feedback-box.show { display: block; }
+  .feedback-box.correct-fb { background: #d5f5e3; color: #1a7a45; border: 2px solid var(--correct); }
+  .feedback-box.wrong-fb  { background: #fde8e8; color: #922; border: 2px solid var(--wrong); }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .btn-next {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.4rem;
+    font-weight: 800;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 50px;
+    cursor: pointer;
+    margin-top: 20px;
+    display: none;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-next:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.25); }
+  .btn-next.show { display: inline-block; }
+
+  /* ── RESULTS ── */
+  #results {
+    display: none;
+    padding: 50px 20px;
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+    animation: slideIn 0.5s ease;
+  }
+
+  .result-trophy { font-size: 100px; animation: bounce 1.8s ease-in-out infinite; }
+
+  .result-title {
+    font-family: 'Baloo 2', cursive;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    color: var(--primary);
+    margin: 20px 0 10px;
+  }
+
+  .result-score {
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 900;
+    color: var(--primary);
+    font-family: 'Baloo 2', cursive;
+  }
+
+  .result-msg {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    font-weight: 700;
+    max-width: 500px;
+    margin: 16px auto 28px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .score-bar-wrap {
+    background: rgba(0,0,0,0.1);
+    border-radius: 20px;
+    height: 22px;
+    margin: 24px auto;
+    max-width: 500px;
+    overflow: hidden;
+  }
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 20px;
+    background: var(--primary);
+    transition: width 1.5s ease;
+    width: 0%;
+  }
+
+  .breakdown {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin: 30px 0;
+    text-align: left;
+  }
+  .bd-item {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .bd-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--primary);
+    opacity: 0.7;
+    margin-bottom: 6px;
+  }
+  .bd-val {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--text);
+  }
+
+  .btn-retry {
+    font-family: 'Baloo 2', cursive;
+    font-size: 1.4rem;
+    font-weight: 800;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 18px 55px;
+    cursor: pointer;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+  }
+  .btn-retry:hover { transform: translateY(-4px); }
+
+  /* Stars */
+  .stars { font-size: 2.5rem; letter-spacing: 4px; margin: 10px 0; }
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed;
+    width: 12px; height: 12px;
+    top: -20px;
+    border-radius: 2px;
+    animation: fall linear forwards;
+    pointer-events: none;
+  }
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body class="theme-0">
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section id="hero">
+  <div class="hero-emoji">📚</div>
+  <h1 class="hero-title">TEST DE RÉVISION<br>FRANÇAIS BAC</h1>
+  <p class="hero-sub">Terminales A · B · C · D — 2025/2026</p>
+  <p class="hero-desc">
+    Teste tes connaissances sur <strong>l'épreuve écrite de français</strong> : dissertation, résumé, commentaire composé, littérature négro-africaine et française. 🎯
+  </p>
+  <div class="stats-row">
+    <span class="stat-chip">🧩 30 Questions</span>
+    <span class="stat-chip">📖 6 Rubriques</span>
+    <span class="stat-chip">⚡ Réponses instantanées</span>
+  </div>
+  <button class="btn-start" onclick="startQuiz()">🚀 Commencer le Test !</button>
+</section>
+
+<!-- ═══════════════ QUIZ ═══════════════ -->
+<section id="quiz">
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-label" id="progressLabel">Question 1 / 30</div>
+
+  <span class="section-badge" id="sectionBadge">📝 Rubrique</span>
+
+  <div class="question-card" id="questionCard">
+    <div class="q-number" id="qNumber">Question 1</div>
+    <div class="q-text" id="qText">Chargement…</div>
+    <div class="options-grid" id="optionsGrid"></div>
+    <div class="feedback-box" id="feedbackBox"></div>
+  </div>
+
+  <button class="btn-next" id="btnNext" onclick="nextQuestion()">
+    Question suivante ➡️
+  </button>
+</section>
+
+<!-- ═══════════════ RESULTS ═══════════════ -->
+<section id="results">
+  <div class="result-trophy" id="resultTrophy">🏆</div>
+  <div class="stars" id="resultStars">⭐⭐⭐⭐⭐</div>
+  <h2 class="result-title" id="resultTitle">Félicitations !</h2>
+  <div class="result-score" id="resultScore">0 / 30</div>
+  <div class="score-bar-wrap"><div class="score-bar-fill" id="scoreBarFill"></div></div>
+  <p class="result-msg" id="resultMsg">Excellent travail !</p>
+  <div class="breakdown" id="breakdown"></div>
+  <button class="btn-retry" onclick="retryQuiz()">🔄 Recommencer</button>
+</section>
+
+<script>
+const themes = ['theme-0','theme-1','theme-2','theme-3'];
+
+const QUESTIONS = [
+  // ────── RUBRIQUE 1 : LE RÉSUMÉ DE TEXTE ──────
+  {
+    section: "✍️ Le Résumé de Texte",
+    q: "Quel est le principe fondamental du résumé de texte ?",
+    opts: [
+      "Copier les phrases les plus importantes du texte",
+      "Reformuler fidèlement les idées essentielles dans ses propres mots",
+      "Donner son avis personnel sur le texte",
+      "Ajouter des exemples nouveaux au texte"
+    ],
+    correct: 1,
+    exp: "✅ Le résumé consiste à reformuler les idées essentielles du texte dans ses propres mots, en respectant l'ordre et la pensée de l'auteur, sans ajouter d'idées personnelles."
+  },
+  {
+    section: "✍️ Le Résumé de Texte",
+    q: "Dans un résumé de texte au BAC, tu dois réduire le texte au :",
+    opts: ["Quart de sa longueur", "Tiers de sa longueur", "Cinquième de sa longueur", "Moitié de sa longueur"],
+    correct: 0,
+    exp: "✅ La consigne officielle demande généralement de réduire le texte au quart (1/4) de sa longueur initiale."
+  },
+  {
+    section: "✍️ Le Résumé de Texte",
+    q: "Que doit-on ÉVITER absolument dans un résumé de texte ?",
+    opts: [
+      "Utiliser des connecteurs logiques",
+      "Respecter l'ordre des idées",
+      "Copier des phrases entières du texte original",
+      "Reformuler avec ses propres mots"
+    ],
+    correct: 2,
+    exp: "✅ Copier des phrases entières est interdit dans le résumé. Cela s'appelle le 'collage' et est sévèrement pénalisé au BAC."
+  },
+  {
+    section: "✍️ Le Résumé de Texte",
+    q: "Quelle est la première étape pour réussir un résumé de texte ?",
+    opts: [
+      "Écrire directement sans lire le texte",
+      "Lire attentivement le texte pour en dégager l'idée générale",
+      "Compter les mots du texte",
+      "Chercher des synonymes dans le dictionnaire"
+    ],
+    correct: 1,
+    exp: "✅ Avant tout, il faut lire attentivement pour comprendre le message global du texte. C'est la base d'un bon résumé."
+  },
+
+  // ────── RUBRIQUE 2 : LA DISSERTATION ──────
+  {
+    section: "📝 La Dissertation",
+    q: "Quelle est la structure classique d'une dissertation ?",
+    opts: [
+      "Introduction – Corps du devoir – Bibliographie",
+      "Introduction – Développement (thèse, antithèse, synthèse) – Conclusion",
+      "Résumé – Commentaire – Opinion",
+      "Paragraphe 1 – Paragraphe 2 – Paragraphe 3"
+    ],
+    correct: 1,
+    exp: "✅ La dissertation suit le plan dialectique : Introduction – Développement en 3 parties (thèse / antithèse / synthèse) – Conclusion."
+  },
+  {
+    section: "📝 La Dissertation",
+    q: "Qu'est-ce qu'une 'thèse' dans une dissertation ?",
+    opts: [
+      "Un résumé du sujet",
+      "Une position ou un point de vue que l'on défend et argumente",
+      "La conclusion du devoir",
+      "Une citation d'auteur"
+    ],
+    correct: 1,
+    exp: "✅ La thèse est la position principale que l'on soutient et que l'on argumente avec des preuves et des exemples."
+  },
+  {
+    section: "📝 La Dissertation",
+    q: "Quel est le rôle de l'introduction dans une dissertation ?",
+    opts: [
+      "Donner toutes les réponses au sujet",
+      "Amener le sujet, poser la problématique et annoncer le plan",
+      "Résumer le développement",
+      "Citer tous les auteurs étudiés"
+    ],
+    correct: 1,
+    exp: "✅ L'introduction doit : amener le sujet (généralisation), poser la problématique (question centrale) et annoncer le plan du devoir."
+  },
+  {
+    section: "📝 La Dissertation",
+    q: "Qu'est-ce qu'une transition dans une dissertation ?",
+    opts: [
+      "Un mot de liaison entre deux phrases",
+      "Un passage qui relie deux parties en faisant le bilan de l'une et en annonçant l'autre",
+      "La phrase finale de la conclusion",
+      "Un titre de paragraphe"
+    ],
+    correct: 1,
+    exp: "✅ La transition clôt une partie (mini-bilan) et ouvre la suivante. Elle assure la cohérence du raisonnement."
+  },
+  {
+    section: "📝 La Dissertation",
+    q: "Dans quelle partie de la dissertation présente-t-on les LIMITES de la thèse défendue ?",
+    opts: ["La thèse", "L'introduction", "L'antithèse", "La conclusion"],
+    correct: 2,
+    exp: "✅ L'antithèse nuance ou contredit la thèse. Elle montre que le sujet est complexe et mérite une réflexion plus profonde."
+  },
+
+  // ────── RUBRIQUE 3 : L'ARGUMENTATION ──────
+  {
+    section: "💡 L'Argumentation",
+    q: "Parmi les types d'argument suivants, lequel est un 'argument d'autorité' ?",
+    opts: [
+      "Selon une étude scientifique, 70% des élèves réussissent mieux avec la méthode active.",
+      "Je pense personnellement que c'est vrai.",
+      "Tout le monde sait que c'est ainsi.",
+      "Cela n'a aucun sens de croire autrement."
+    ],
+    correct: 0,
+    exp: "✅ L'argument d'autorité s'appuie sur une source crédible (scientifique, auteur reconnu, expert). Il renforce la thèse par la légitimité de la source."
+  },
+  {
+    section: "💡 L'Argumentation",
+    q: "Quel connecteur logique introduit UNE OPPOSITION ?",
+    opts: ["Donc", "En effet", "Cependant", "Ainsi"],
+    correct: 2,
+    exp: "✅ 'Cependant' (ainsi que 'mais', 'toutefois', 'néanmoins') est un connecteur d'opposition. 'Donc' et 'Ainsi' marquent la conséquence."
+  },
+  {
+    section: "💡 L'Argumentation",
+    q: "Qu'est-ce qu'une 'stratégie argumentative' ?",
+    opts: [
+      "La façon dont on présente, ordonne et renforce ses arguments pour convaincre le lecteur",
+      "Le nombre d'arguments utilisés dans un texte",
+      "La longueur du paragraphe argumentatif",
+      "Le fait d'utiliser des exemples personnels uniquement"
+    ],
+    correct: 0,
+    exp: "✅ La stratégie argumentative concerne l'organisation et la présentation des arguments pour persuader efficacement (ordre de force, types d'arguments, exemples)."
+  },
+
+  // ────── RUBRIQUE 4 : LE COMMENTAIRE COMPOSÉ ──────
+  {
+    section: "🔍 Le Commentaire Composé",
+    q: "Qu'est-ce qu'un 'centre d'intérêt' dans un commentaire composé ?",
+    opts: [
+      "Un sujet qui intéresse personnellement le lecteur",
+      "Un axe thématique ou stylistique autour duquel on organise l'analyse du texte",
+      "La biographie de l'auteur",
+      "Le résumé du texte étudié"
+    ],
+    correct: 1,
+    exp: "✅ Un centre d'intérêt est un angle d'analyse du texte. Exemple : 'la dénonciation de l'injustice sociale' ou 'l'usage des figures de style pour émouvoir'."
+  },
+  {
+    section: "🔍 Le Commentaire Composé",
+    q: "Qu'appelle-t-on la 'connotation' dans l'analyse d'un texte ?",
+    opts: [
+      "Le sens premier et littéral d'un mot",
+      "Les sens figurés, émotionnels ou symboliques associés à un mot",
+      "L'étymologie d'un mot",
+      "La définition du dictionnaire"
+    ],
+    correct: 1,
+    exp: "✅ La connotation désigne les sens implicites d'un mot (valeurs positives ou négatives, émotions évoquées). Elle s'oppose à la dénotation (sens propre)."
+  },
+  {
+    section: "🔍 Le Commentaire Composé",
+    q: "Laquelle de ces figures de style est une COMPARAISON ?",
+    opts: [
+      "Il est un lion au combat.",
+      "Comme un lion, il se jeta sur l'ennemi.",
+      "La nuit avale la lumière.",
+      "Ses yeux étaient deux étoiles."
+    ],
+    correct: 1,
+    exp: "✅ La comparaison utilise un outil comparatif ('comme', 'tel que', 'semblable à'). La métaphore, elle, établit un rapport sans outil comparatif."
+  },
+  {
+    section: "🔍 Le Commentaire Composé",
+    q: "Qu'est-ce qu'une métaphore ?",
+    opts: [
+      "Une figure qui compare deux éléments avec 'comme'",
+      "Une figure qui attribue des caractéristiques humaines à un objet",
+      "Une figure qui identifie deux éléments sans outil de comparaison",
+      "Une figure qui exagère une réalité"
+    ],
+    correct: 2,
+    exp: "✅ La métaphore établit une comparaison implicite sans 'comme' ni 'tel'. Ex : 'La vie est un long fleuve tranquille.' L'hyperbole = exagération ; la personnification = traits humains donnés à un objet."
+  },
+  {
+    section: "🔍 Le Commentaire Composé",
+    q: "Dans un commentaire composé, que doit contenir l'introduction ?",
+    opts: [
+      "Uniquement la biographie de l'auteur",
+      "La présentation du texte, l'intérêt du passage et l'annonce des axes d'analyse",
+      "Le résumé complet du texte",
+      "Les conclusions de l'analyse"
+    ],
+    correct: 1,
+    exp: "✅ L'introduction du commentaire composé présente : l'auteur et l'œuvre, le genre et le mouvement, le contexte du passage, son intérêt, puis annonce les centres d'intérêt."
+  },
+
+  // ────── RUBRIQUE 5 : LITTÉRATURE NÉGRO-AFRICAINE ──────
+  {
+    section: "🌍 Littérature Négro-Africaine",
+    q: "Qu'est-ce que la 'Négritude' dans la littérature négro-africaine ?",
+    opts: [
+      "Un mouvement littéraire qui rejette les valeurs africaines",
+      "Un mouvement de revalorisation de la culture, de l'identité et des valeurs africaines et noires",
+      "Un style d'écriture basé sur l'imitation des auteurs français",
+      "Un courant poétique sans contenu politique"
+    ],
+    correct: 1,
+    exp: "✅ La Négritude, fondée par Aimé Césaire, Léopold Sédar Senghor et Léon-Gontran Damas, est un mouvement qui revendique et valorise l'identité, la culture et l'héritage africains et noirs."
+  },
+  {
+    section: "🌍 Littérature Négro-Africaine",
+    q: "Quel thème est caractéristique du roman négro-africain d'expression française ?",
+    opts: [
+      "La description de paysages fantastiques",
+      "La révolte contre la colonisation et la quête identitaire",
+      "L'histoire de chevaliers médiévaux",
+      "Les aventures spatiales futuristes"
+    ],
+    correct: 1,
+    exp: "✅ Le roman négro-africain traite surtout de : la colonisation et ses effets, la décolonisation, le choc des cultures, la quête identitaire, le désenchantement post-indépendance."
+  },
+  {
+    section: "🌍 Littérature Négro-Africaine",
+    q: "Qu'est-ce que le 'mimétisme' ou 'assimilation' dans le roman africain ?",
+    opts: [
+      "Le rejet total de la culture occidentale",
+      "L'imitation ou l'adoption des valeurs, modes de vie et normes du colonisateur par les Africains",
+      "La valorisation des traditions ancestrales",
+      "Une technique narrative africaine traditionnelle"
+    ],
+    correct: 1,
+    exp: "✅ Le mimétisme (ou assimilation) décrit le phénomène par lequel certains Africains adoptent la culture du colonisateur au détriment de leurs propres valeurs. Beaucoup de romans africains critiquent ce phénomène."
+  },
+  {
+    section: "🌍 Littérature Négro-Africaine",
+    q: "Qu'est-ce que le 'courant du désenchantement' dans la littérature africaine ?",
+    opts: [
+      "Un courant qui célèbre les victoires de l'indépendance",
+      "Un courant qui exprime la déception face aux échecs des États africains après les indépendances",
+      "Un courant romantique axé sur l'amour",
+      "Un courant qui prône le retour à la colonisation"
+    ],
+    correct: 1,
+    exp: "✅ Après les indépendances (années 1960-70), de nombreux écrivains africains ont dénoncé la corruption, les dictatures et les inégalités. Ce mouvement de déception est appelé le 'courant du désenchantement'."
+  },
+  {
+    section: "🌍 Littérature Négro-Africaine",
+    q: "Qu'est-ce que 'les perspectives nouvelles' dans le roman africain contemporain ?",
+    opts: [
+      "Un retour aux thèmes de la Négritude",
+      "Une littérature tournée vers l'avenir, abordant des thèmes modernes comme la mondialisation, les femmes, la jeunesse",
+      "Des romans exclusivement écrits en langues africaines",
+      "Un courant qui rejette toute influence étrangère"
+    ],
+    correct: 1,
+    exp: "✅ Les 'perspectives nouvelles' désignent la littérature africaine moderne qui s'ouvre à des thèmes contemporains : l'émigration, les droits des femmes, les questions identitaires mondiales, la jeunesse africaine."
+  },
+
+  // ────── RUBRIQUE 6 : LITTÉRATURE FRANÇAISE ──────
+  {
+    section: "🇫🇷 Littérature Française",
+    q: "Quel est le mouvement littéraire dominant du XIXe siècle qui met l'accent sur les émotions, la nature et l'individualisme ?",
+    opts: ["Le Réalisme", "Le Naturalisme", "Le Romantisme", "Le Classicisme"],
+    correct: 2,
+    exp: "✅ Le Romantisme (XIXe siècle) valorise le sentiment, la liberté individuelle, la nature et l'exotisme. Auteurs clés : Victor Hugo, Lamartine, Musset, Vigny."
+  },
+  {
+    section: "🇫🇷 Littérature Française",
+    q: "Victor Hugo appartient à quel mouvement littéraire ?",
+    opts: ["Le Naturalisme", "Le Surréalisme", "Le Romantisme", "Le Classicisme"],
+    correct: 2,
+    exp: "✅ Victor Hugo est le chef de file du Romantisme français. Ses œuvres majeures incluent 'Les Misérables', 'Notre-Dame de Paris' et 'Les Rayons et les Ombres'."
+  },
+  {
+    section: "🇫🇷 Littérature Française",
+    q: "Quels sont les grands courants littéraires du XXe siècle ?",
+    opts: [
+      "Le Classicisme et le Baroque",
+      "Le Surréalisme, l'Existentialisme, le Nouveau Roman",
+      "Le Romantisme et le Réalisme uniquement",
+      "La Pléiade et le Parnasse"
+    ],
+    correct: 1,
+    exp: "✅ Le XXe siècle littéraire est marqué par le Surréalisme (Breton), l'Existentialisme (Sartre, Camus), le Nouveau Roman (Robbe-Grillet), et la Négritude."
+  },
+  {
+    section: "🇫🇷 Littérature Française",
+    q: "Qu'est-ce que le genre poétique ?",
+    opts: [
+      "Un texte en prose qui raconte une histoire",
+      "Une œuvre généralement en vers ou à forte musicalité, exprimant des émotions et des images",
+      "Un dialogue entre plusieurs personnages",
+      "Un texte argumentatif"
+    ],
+    correct: 1,
+    exp: "✅ La poésie est caractérisée par l'usage des vers, des rythmes, des rimes, des figures de style et vise à exprimer une vision du monde, des émotions, des images fortes."
+  },
+  {
+    section: "🇫🇷 Littérature Française",
+    q: "Qu'est-ce qu'un 'roman réaliste' ?",
+    opts: [
+      "Un roman qui décrit un monde imaginaire et fantastique",
+      "Un roman qui représente la réalité sociale et humaine avec objectivité et précision",
+      "Un roman exclusivement autobiographique",
+      "Un roman centré sur les aventures héroïques"
+    ],
+    correct: 1,
+    exp: "✅ Le Réalisme (XIXe siècle) cherche à décrire fidèlement la société : Balzac, Flaubert, Stendhal. Le Naturalisme (Zola) en est une extension plus scientifique."
+  },
+  {
+    section: "🇫🇷 Littérature Française",
+    q: "Quelle figure de style consiste à répéter un mot ou un groupe de mots en début de vers ou de phrase ?",
+    opts: ["La métaphore", "L'anaphore", "L'hyperbole", "L'euphémisme"],
+    correct: 1,
+    exp: "✅ L'anaphore est la répétition d'un mot ou groupe en début de phrase/vers. Ex : 'Je vous salue… Je vous salue…' Elle crée un effet de rythme et d'insistance."
+  },
+  {
+    section: "🇫🇷 Littérature Française",
+    q: "Quel terme désigne l'ensemble des caractéristiques formelles d'un genre littéraire (roman, poésie, théâtre) ?",
+    opts: ["Le style", "Le registre", "Les codes génériques", "La tonalité"],
+    correct: 2,
+    exp: "✅ Les 'codes génériques' ou 'codes du genre' désignent les règles et caractéristiques propres à chaque genre : personnages, intrigues, structure, pour le roman ; vers, rimes pour la poésie ; répliques, didascalies pour le théâtre."
+  },
+  {
+    section: "🎯 Bilan & Méthode",
+    q: "Lors de l'épreuve orale du BAC de français, que doit faire le candidat ?",
+    opts: [
+      "Lire le texte à voix haute uniquement",
+      "Rendre compte oralement d'une lecture, s'exprimer et tenir un rôle dans un échange verbal",
+      "Résumer tous les textes du programme",
+      "Réciter des poèmes appris par cœur"
+    ],
+    correct: 1,
+    exp: "✅ L'épreuve orale évalue la capacité à rendre compte d'une lecture, à s'exprimer avec clarté, à écouter et à participer à un échange verbal structuré."
+  },
+  {
+    section: "🎯 Bilan & Méthode",
+    q: "Qu'appelle-t-on la 'lecture méthodique' ou 'analytique' d'un texte ?",
+    opts: [
+      "Lire le texte plusieurs fois très rapidement",
+      "Une lecture qui identifie et analyse les procédés littéraires pour en dégager le sens et les effets",
+      "Une lecture faite à voix haute en classe",
+      "La traduction mot à mot du texte"
+    ],
+    correct: 1,
+    exp: "✅ La lecture méthodique ou analytique consiste à identifier les procédés (figures de style, registre, structure…) et à interpréter leurs effets sur le lecteur et sur le sens global du texte."
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let answered = false;
+let sectionScores = {};
+
+function startQuiz() {
+  document.getElementById('hero').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  currentQ = 0; score = 0; sectionScores = {};
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const q = QUESTIONS[currentQ];
+  const theme = Math.floor(currentQ / 8);
+  document.body.className = themes[Math.min(theme, themes.length - 1)];
+
+  const pct = (currentQ / QUESTIONS.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Question ${currentQ + 1} / ${QUESTIONS.length}`;
+  document.getElementById('sectionBadge').textContent = q.section;
+  document.getElementById('qNumber').textContent = `Question ${currentQ + 1}`;
+  document.getElementById('qText').textContent = q.q;
+
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letters[i]}</span>${opt}`;
+    btn.onclick = () => selectAnswer(i);
+    grid.appendChild(btn);
+  });
+
+  document.getElementById('feedbackBox').className = 'feedback-box';
+  document.getElementById('feedbackBox').textContent = '';
+  document.getElementById('btnNext').classList.remove('show');
+  answered = false;
+
+  document.getElementById('questionCard').style.animation = 'none';
+  requestAnimationFrame(() => {
+    document.getElementById('questionCard').style.animation = 'slideIn 0.4s ease';
+  });
+}
+
+function selectAnswer(chosen) {
+  if (answered) return;
+  answered = true;
+
+  const q = QUESTIONS[currentQ];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('feedbackBox');
+
+  if (chosen === q.correct) {
+    btns[chosen].classList.add('correct');
+    fb.className = 'feedback-box correct-fb show';
+    fb.textContent = q.exp;
+    score++;
+    if (!sectionScores[q.section]) sectionScores[q.section] = { right: 0, total: 0 };
+    sectionScores[q.section].right++;
+  } else {
+    btns[chosen].classList.add('wrong');
+    btns[q.correct].classList.add('correct');
+    fb.className = 'feedback-box wrong-fb show';
+    fb.textContent = "❌ Mauvaise réponse. " + q.exp;
+  }
+  if (!sectionScores[q.section]) sectionScores[q.section] = { right: 0, total: 0 };
+  sectionScores[q.section].total++;
+
+  document.getElementById('btnNext').classList.add('show');
+  document.getElementById('btnNext').textContent =
+    currentQ < QUESTIONS.length - 1 ? 'Question suivante ➡️' : '🏁 Voir mes Résultats';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ < QUESTIONS.length) {
+    loadQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz').style.display = 'none';
+  const res = document.getElementById('results');
+  res.style.display = 'block';
+  document.body.className = 'theme-3';
+
+  const pct = (score / QUESTIONS.length) * 100;
+  document.getElementById('resultScore').textContent = `${score} / ${QUESTIONS.length}`;
+
+  let trophy, title, msg, stars;
+  if (pct >= 87) {
+    trophy = '🏆'; title = 'EXCELLENT ! Mention Très Bien !'; stars = '⭐⭐⭐⭐⭐';
+    msg = `Bravo ! Tu maîtrises parfaitement le programme de français. Le BAC ne te fait pas peur ! Continue comme ça et la réussite est assurée !`;
+  } else if (pct >= 70) {
+    trophy = '🥇'; title = 'TRÈS BIEN ! Tu es sur la bonne voie !'; stars = '⭐⭐⭐⭐';
+    msg = `Très beau score ! Quelques révisions supplémentaires te permettront d'atteindre l'excellence. Persévère !`;
+  } else if (pct >= 50) {
+    trophy = '🥈'; title = 'BIEN ! Encore un effort !'; stars = '⭐⭐⭐';
+    msg = `Bon début ! Tu as des bases solides. Revois les rubriques où tu as eu des difficultés et tu progresseras vite !`;
+  } else if (pct >= 30) {
+    trophy = '📘'; title = 'À RÉVISER !'; stars = '⭐⭐';
+    msg = `Il te faut davantage de révisions. Reprends tes cours, relis le programme et refais ce test. Tu peux y arriver !`;
+  } else {
+    trophy = '💪'; title = 'COURAGE ! Les révisions commencent maintenant !'; stars = '⭐';
+    msg = `Ne te décourage pas ! Chaque révision te rapproche du succès. Reprends depuis le début, méthode et persévérance !`;
+  }
+
+  document.getElementById('resultTrophy').textContent = trophy;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultStars').textContent = stars;
+  document.getElementById('resultMsg').textContent = msg;
+
+  setTimeout(() => {
+    document.getElementById('scoreBarFill').style.width = pct + '%';
+  }, 200);
+
+  // Breakdown
+  const bd = document.getElementById('breakdown');
+  bd.innerHTML = '';
+  Object.entries(sectionScores).forEach(([sec, data]) => {
+    const div = document.createElement('div');
+    div.className = 'bd-item';
+    const pct2 = data.total > 0 ? Math.round((data.right / data.total) * 100) : 0;
+    div.innerHTML = `<div class="bd-label">${sec}</div><div class="bd-val">${data.right}/${data.total} — ${pct2}%</div>`;
+    bd.appendChild(div);
+  });
+
+  if (pct >= 70) launchConfetti();
+}
+
+function retryQuiz() {
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('hero').style.display = 'flex';
+  document.body.className = 'theme-0';
+  document.getElementById('scoreBarFill').style.width = '0%';
+}
+
+function launchConfetti() {
+  const colors = ['#FFD700','#6A0DAD','#2ecc71','#e74c3c','#3498db','#FF69B4','#00CED1'];
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    el.style.animationDuration = (2 + Math.random() * 2) + 's';
+    el.style.animationDelay = Math.random() * 1.5 + 's';
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
+}
+</script>
+</body>
+</html>
