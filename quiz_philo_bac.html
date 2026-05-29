@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Philo BAC – Terminales A-B-C-D</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #f5e642;
+    --dark: #3b0a6e;
+    --bg: #fff9e0;
+    --card: #ffffff;
+    --accent: #f5e642;
+    --text: #1a0033;
+    --radius: 22px;
+    --shadow: 0 8px 32px rgba(60,0,100,0.13);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.7s, color 0.7s;
+  }
+
+  /* ===== COLOUR THEMES ===== */
+  body.theme-0 { --bg:#fff9d6; --dark:#3b0a6e; --primary:#f5e642; --accent:#f5e642; --text:#1a0033; --card:#fffbe7; }
+  body.theme-1 { --bg:#eaf3ff; --dark:#0a2a5e; --primary:#4a90d9; --accent:#1565c0; --text:#0a1a3c; --card:#f0f7ff; }
+  body.theme-2 { --bg:#e8f8f0; --dark:#1b4d35; --primary:#43c97e; --accent:#2e7d52; --text:#0d2b1e; --card:#f2fcf6; }
+  body.theme-3 { --bg:#fff0f5; --dark:#8b1a4a; --primary:#f48fb1; --accent:#c2185b; --text:#3b0020; --card:#fff5f8; }
+
+  #app { max-width: 780px; margin: 0 auto; padding: 18px 10px 50px; }
+
+  /* ===== HEADER ===== */
+  #header {
+    text-align: center;
+    padding: 32px 20px 24px;
+    background: var(--dark);
+    border-radius: var(--radius);
+    margin-bottom: 28px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  #header::before {
+    content: "🧠";
+    font-size: 80px;
+    position: absolute; top: -20px; right: -10px;
+    opacity: 0.13;
+  }
+  #header h1 {
+    font-family: 'Fredoka One', cursive;
+    color: var(--primary);
+    font-size: clamp(28px, 6vw, 48px);
+    letter-spacing: 1px;
+    line-height: 1.1;
+  }
+  #header p {
+    color: #ddd;
+    font-size: clamp(15px, 3vw, 20px);
+    margin-top: 8px;
+    font-weight: 700;
+  }
+
+  /* ===== PROGRESS ===== */
+  #progress-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    margin-bottom: 22px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  #progress-label {
+    font-size: clamp(14px, 3vw, 18px);
+    font-weight: 800;
+    color: var(--dark);
+    display: flex;
+    justify-content: space-between;
+  }
+  #progress-bar-bg {
+    width: 100%; height: 16px;
+    background: #e0e0e0; border-radius: 99px; overflow: hidden;
+  }
+  #progress-bar {
+    height: 100%; background: var(--dark);
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(.4,2,.6,1);
+    width: 0%;
+  }
+  #score-display {
+    font-size: clamp(13px, 2.5vw, 17px);
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  /* ===== QUESTION CARD ===== */
+  #question-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 28px 22px 22px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    border-top: 7px solid var(--dark);
+    animation: slideIn 0.4s ease;
+  }
+  @keyframes slideIn {
+    from { opacity:0; transform: translateY(24px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+  #question-meta {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;
+  }
+  .badge {
+    font-size: clamp(12px, 2.5vw, 15px);
+    font-weight: 800;
+    padding: 5px 14px;
+    border-radius: 99px;
+    background: var(--dark);
+    color: var(--primary);
+    display: inline-block;
+  }
+  .badge-type {
+    background: var(--primary);
+    color: var(--dark);
+  }
+  #question-number {
+    font-size: clamp(13px, 2.5vw, 16px);
+    font-weight: 700;
+    color: #aaa;
+    margin-bottom: 8px;
+  }
+  #question-text {
+    font-size: clamp(19px, 4vw, 27px);
+    font-weight: 900;
+    color: var(--dark);
+    line-height: 1.35;
+    margin-bottom: 22px;
+  }
+
+  /* ===== OPTIONS ===== */
+  #options { display: flex; flex-direction: column; gap: 13px; }
+  .option-btn {
+    width: 100%;
+    background: var(--bg);
+    border: 3px solid var(--dark);
+    border-radius: 14px;
+    padding: 16px 20px;
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(16px, 3.5vw, 22px);
+    font-weight: 800;
+    color: var(--dark);
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s, transform 0.15s, border-color 0.2s;
+    display: flex; align-items: center; gap: 12px;
+    line-height: 1.3;
+  }
+  .option-btn:hover:not(:disabled) {
+    background: var(--primary);
+    transform: translateX(5px) scale(1.01);
+  }
+  .option-btn .opt-letter {
+    min-width: 38px; height: 38px;
+    background: var(--dark); color: var(--primary);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(14px, 3vw, 19px);
+    font-weight: 900;
+    flex-shrink: 0;
+    transition: background 0.2s, color 0.2s;
+  }
+  .option-btn.correct {
+    background: #c8f7d0 !important;
+    border-color: #1b8a3c !important;
+    color: #0a3d1f !important;
+  }
+  .option-btn.correct .opt-letter { background: #1b8a3c; color: #fff; }
+  .option-btn.wrong {
+    background: #ffd6d6 !important;
+    border-color: #c0392b !important;
+    color: #5a0000 !important;
+  }
+  .option-btn.wrong .opt-letter { background: #c0392b; color: #fff; }
+  .option-btn:disabled { cursor: default; }
+
+  /* ===== EXPLANATION ===== */
+  #explanation {
+    display: none;
+    background: var(--dark);
+    color: #fff;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-top: 14px;
+    font-size: clamp(15px, 3vw, 20px);
+    font-weight: 700;
+    line-height: 1.5;
+    animation: slideIn 0.3s ease;
+  }
+  #explanation .expl-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(16px, 3.5vw, 22px);
+    color: var(--primary);
+    margin-bottom: 6px;
+  }
+
+  /* ===== NEXT BTN ===== */
+  #next-btn {
+    display: none;
+    width: 100%;
+    margin-top: 14px;
+    padding: 18px;
+    background: var(--dark);
+    color: var(--primary);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(18px, 4vw, 26px);
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.2s;
+    letter-spacing: 1px;
+  }
+  #next-btn:hover { transform: scale(1.02); opacity: 0.92; }
+
+  /* ===== RESULT ===== */
+  #result-card {
+    display: none;
+    text-align: center;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 40px 24px;
+    box-shadow: var(--shadow);
+    animation: slideIn 0.5s ease;
+  }
+  #result-card .trophy { font-size: 70px; margin-bottom: 10px; }
+  #result-card h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(26px, 6vw, 44px);
+    color: var(--dark);
+    margin-bottom: 10px;
+  }
+  #result-card .score-big {
+    font-size: clamp(36px, 8vw, 60px);
+    font-weight: 900;
+    color: var(--accent);
+    margin: 8px 0;
+  }
+  #result-card p {
+    font-size: clamp(16px, 3.5vw, 22px);
+    font-weight: 700;
+    color: var(--dark);
+    margin-top: 12px;
+    line-height: 1.4;
+  }
+  #restart-btn {
+    margin-top: 24px;
+    padding: 16px 40px;
+    background: var(--dark);
+    color: var(--primary);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(18px, 4vw, 26px);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  #restart-btn:hover { transform: scale(1.05); }
+
+  /* ===== CONFETTI ===== */
+  .confetti-piece {
+    position: fixed; top: -20px;
+    width: 12px; height: 12px;
+    border-radius: 3px;
+    animation: confettiFall linear forwards;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity:1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity:0; }
+  }
+</style>
+</head>
+<body class="theme-0">
+<div id="app">
+  <div id="header">
+    <h1>🎓 Quiz Philo BAC</h1>
+    <p>Terminales A · B · C · D — Révise en t'amusant !</p>
+  </div>
+
+  <div id="progress-wrap">
+    <div id="progress-label">
+      <span id="q-counter">Question 1 / 30</span>
+      <span id="score-display">Score : 0 / 0</span>
+    </div>
+    <div id="progress-bar-bg"><div id="progress-bar"></div></div>
+  </div>
+
+  <div id="question-card">
+    <div id="question-meta">
+      <span class="badge badge-type" id="badge-type">Définition</span>
+      <span class="badge" id="badge-theme">🧩 Thème</span>
+    </div>
+    <div id="question-number">Question 1</div>
+    <div id="question-text">Chargement…</div>
+    <div id="options"></div>
+    <div id="explanation"></div>
+    <button id="next-btn" onclick="nextQuestion()">Question suivante ➜</button>
+  </div>
+
+  <div id="result-card">
+    <div class="trophy" id="trophy-emoji">🏆</div>
+    <h2 id="result-title">Bravo !</h2>
+    <div class="score-big" id="result-score">0 / 30</div>
+    <p id="result-msg"></p>
+    <button id="restart-btn" onclick="restartQuiz()">🔄 Recommencer le quiz</button>
+  </div>
+</div>
+
+<script>
+const THEMES = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3];
+
+const QUESTIONS = [
+  // ===== THÈME 1 : CONSCIENCE & INCONSCIENT =====
+  {
+    theme: "🧠 Conscience & Inconscient",
+    type: "Définition",
+    q: "Qu'est-ce que la CONSCIENCE selon la philosophie ?",
+    opts: [
+      "La capacité à dormir profondément",
+      "Le fait de se connaître soi-même et d'être présent à ses propres pensées",
+      "Un médicament pour le cerveau",
+      "La mémoire des événements passés seulement"
+    ],
+    correct: 1,
+    expl: "✅ La conscience, c'est la capacité qu'a l'être humain de se connaître lui-même, de penser et d'être présent à ses actes. Descartes disait : « Je pense, donc je suis. » C'est ce qui nous distingue des animaux !"
+  },
+  {
+    theme: "🧠 Conscience & Inconscient",
+    type: "Auteur clé",
+    q: "Quel philosophe a dit la célèbre phrase : « Je pense, donc je suis » ?",
+    opts: ["Platon", "Jean-Paul Sartre", "René Descartes", "Sigmund Freud"],
+    correct: 2,
+    expl: "✅ René Descartes (dans le Discours de la méthode) a découvert cette vérité fondamentale : même si je doute de tout, je ne peux pas douter que JE suis en train de penser. C'est la preuve de mon existence !"
+  },
+  {
+    theme: "🧠 Conscience & Inconscient",
+    type: "Concept",
+    q: "Selon Freud, l'INCONSCIENT, c'est quoi ?",
+    opts: [
+      "Ce dont on est pleinement conscient",
+      "Une partie du cerveau qui dort la nuit",
+      "L'ensemble des désirs, pensées refoulés que l'on ne connaît pas directement",
+      "Une maladie mentale grave"
+    ],
+    correct: 2,
+    expl: "✅ Pour Freud, l'inconscient est comme un iceberg caché : ce sont tous nos désirs, peurs, et souvenirs refoulés que nous ne connaissons pas directement. Ils influencent pourtant nos comportements sans qu'on s'en rende compte !"
+  },
+  // ===== THÈME 2 : LIBERTÉ & RESPONSABILITÉ =====
+  {
+    theme: "🕊️ Liberté & Responsabilité",
+    type: "Définition",
+    q: "Qu'est-ce que la LIBERTÉ en philosophie ?",
+    opts: [
+      "Faire absolument tout ce qu'on veut sans limite",
+      "La capacité de choisir et d'agir selon sa propre volonté tout en respectant les autres",
+      "Ne pas aller à l'école",
+      "Être riche et ne manquer de rien"
+    ],
+    correct: 1,
+    expl: "✅ La vraie liberté, ce n'est pas l'absence de toute règle ! C'est la capacité de choisir et d'agir selon sa propre raison. Sartre disait même : « L'homme est condamné à être libre » — c'est-à-dire qu'on ne peut pas échapper à la responsabilité de nos choix."
+  },
+  {
+    theme: "🕊️ Liberté & Responsabilité",
+    type: "Lien logique",
+    q: "Pourquoi la liberté implique-t-elle la responsabilité ?",
+    opts: [
+      "Parce que les lois l'obligent",
+      "Parce qu'agir librement signifie répondre de ses actes devant soi et devant les autres",
+      "Parce que les parents punissent leurs enfants",
+      "Ça n'a aucun rapport"
+    ],
+    correct: 1,
+    expl: "✅ Si je suis libre de choisir, alors JE suis l'auteur de mes actes. Je dois donc en répondre (responsabilité). Pas de liberté sans responsabilité : c'est un principe fondamental du droit et de la morale !"
+  },
+  {
+    theme: "🕊️ Liberté & Responsabilité",
+    type: "Auteur clé",
+    q: "Quel philosophe a soutenu que « l'existence précède l'essence » — que l'homme se définit lui-même par ses choix ?",
+    opts: ["Platon", "Descartes", "Jean-Paul Sartre", "Aristote"],
+    correct: 2,
+    expl: "✅ Jean-Paul Sartre (dans L'existentialisme est un humanisme) affirme que l'homme n'a pas de nature fixe à la naissance. C'est par ses CHOIX et ses actes qu'il se construit. Pas d'excuse : tu es ce que tu fais !"
+  },
+  // ===== THÈME 3 : MÉMOIRE & IMAGINATION =====
+  {
+    theme: "💭 Mémoire & Imagination",
+    type: "Définition",
+    q: "Quelle est la principale FONCTION de la mémoire ?",
+    opts: [
+      "Imaginer le futur",
+      "Conserver et rappeler les expériences passées pour construire notre identité",
+      "Oublier les mauvais souvenirs uniquement",
+      "Calculer des nombres"
+    ],
+    correct: 1,
+    expl: "✅ La mémoire conserve le passé et nous permet de nous construire une identité continue. « Je me souviens » prouve que je suis bien la même personne qu'hier. L'oubli est aussi naturel : il protège le cerveau de la surcharge !"
+  },
+  {
+    theme: "💭 Mémoire & Imagination",
+    type: "Distinction",
+    q: "Quelle est la différence entre IMAGINATION et ILLUSION ?",
+    opts: [
+      "Ce sont exactement la même chose",
+      "L'imagination crée librement des images mentales ; l'illusion est une fausse croyance prise pour la réalité",
+      "L'illusion est belle, l'imagination est laide",
+      "L'imagination ne sert à rien"
+    ],
+    correct: 1,
+    expl: "✅ L'imagination est une faculté créatrice (inventer, rêver, projeter). L'illusion, elle, est une erreur : on croit percevoir quelque chose de réel qui n'existe pas. Exemple classique : voir de l'eau dans le désert (mirage)."
+  },
+  // ===== THÈME 4 : RAISON & INTELLIGENCE =====
+  {
+    theme: "🔬 Raison & Intelligence",
+    type: "Définition",
+    q: "Qu'est-ce que la RAISON en philosophie ?",
+    opts: [
+      "Une excuse pour ne pas agir",
+      "La capacité de penser de façon logique, d'organiser ses idées et de distinguer le vrai du faux",
+      "Une émotion forte comme la colère",
+      "La richesse intellectuelle"
+    ],
+    correct: 1,
+    expl: "✅ La raison est la faculté propre à l'être humain de réfléchir de manière logique et ordonnée. C'est elle qui nous permet de distinguer le vrai du faux, le bien du mal. Kant disait : « Aie le courage de te servir de ton propre entendement ! »"
+  },
+  {
+    theme: "🔬 Raison & Intelligence",
+    type: "Réflexion",
+    q: "Quelles sont les LIMITES de la raison ?",
+    opts: [
+      "La raison n'a aucune limite",
+      "Elle ne peut pas tout expliquer : certaines réalités (Dieu, la mort, les émotions profondes) la dépassent",
+      "Elle est limitée uniquement par les mathématiques",
+      "Elle s'arrête à l'âge de 18 ans"
+    ],
+    correct: 1,
+    expl: "✅ La raison est puissante mais elle a des limites ! Elle ne peut pas tout prouver. Des réalités comme Dieu, l'amour, la mort, ou l'art échappent parfois à la seule logique. D'où l'importance aussi de la foi et des émotions."
+  },
+  // ===== THÈME 5 : LANGAGE & COMMUNICATION =====
+  {
+    theme: "🗣️ Langage & Communication",
+    type: "Définition",
+    q: "Quelle est la différence entre LANGAGE et PAROLE ?",
+    opts: [
+      "Ce sont des synonymes parfaits",
+      "Le langage est le système de signes commun à tous ; la parole est l'usage individuel et concret de ce système",
+      "La parole est réservée aux adultes",
+      "Le langage ne comprend que l'écrit"
+    ],
+    correct: 1,
+    expl: "✅ Le langage, c'est le système (la langue française par exemple) partagé par tous. La parole, c'est TOI qui l'utilises concrètement en ce moment. Ferdinand de Saussure a établi cette distinction fondamentale."
+  },
+  {
+    theme: "🗣️ Langage & Communication",
+    type: "Auteur clé",
+    q: "Dans quel dialogue de Platon est-il question de l'origine des noms et du rapport entre les mots et les choses ?",
+    opts: ["La République", "Le Banquet", "Cratyle", "Phèdre"],
+    correct: 2,
+    expl: "✅ Dans le Cratyle, Platon pose une question fascinante : les mots ont-ils un lien naturel avec les choses qu'ils désignent, ou est-ce purement arbitraire ? Ce débat reste au cœur de la philosophie du langage !"
+  },
+  {
+    theme: "🗣️ Langage & Communication",
+    type: "Application",
+    q: "La PROPAGANDE utilise le langage de quelle manière ?",
+    opts: [
+      "Pour éduquer honnêtement les gens",
+      "Pour manipuler les esprits en utilisant des techniques rhétoriques et émotionnelles plutôt que des arguments rationnels",
+      "Pour traduire des textes étrangers",
+      "Pour enseigner la grammaire"
+    ],
+    correct: 1,
+    expl: "✅ La propagande détourne le langage de sa fonction première (communiquer le vrai) pour influencer et contrôler les gens émotionnellement. Elle use de répétition, de slogans, de peur. C'est pourquoi l'esprit critique est vital !"
+  },
+  // ===== THÈME 6 : TRAVAIL & MONDIALISATION =====
+  {
+    theme: "⚒️ Travail & Mondialisation",
+    type: "Définition",
+    q: "En philosophie, le TRAVAIL est d'abord vu comme :",
+    opts: [
+      "Une punition divine uniquement",
+      "Une activité qui transforme la nature ET qui transforme l'homme lui-même",
+      "Un moyen de gagner de l'argent seulement",
+      "Un jeu agréable sans effort"
+    ],
+    correct: 1,
+    expl: "✅ Le travail a une double dimension : il transforme la nature (l'agriculteur transforme la terre) ET il transforme l'homme (il se réalise, développe ses talents). Hegel y voyait la voie de la liberté humaine !"
+  },
+  {
+    theme: "⚒️ Travail & Mondialisation",
+    type: "Réflexion",
+    q: "La MONDIALISATION, c'est :",
+    opts: [
+      "La fabrication de cartes géographiques",
+      "Un processus d'interconnexion mondiale des économies, cultures et sociétés",
+      "Un parti politique international",
+      "L'étude des planètes"
+    ],
+    correct: 1,
+    expl: "✅ La mondialisation est l'intensification des échanges économiques, culturels et politiques entre tous les pays du monde. Elle produit à la fois des opportunités (développement) et des risques (inégalités, perte d'identité culturelle)."
+  },
+  // ===== THÈME 7 : ESSENCE, EXISTENCE, MORT =====
+  {
+    theme: "⚰️ Essence, Existence & Mort",
+    type: "Distinction",
+    q: "Quelle est la différence entre ESSENCE et EXISTENCE ?",
+    opts: [
+      "Ce sont des synonymes",
+      "L'essence, c'est ce qu'une chose est (sa nature) ; l'existence, c'est le fait qu'elle soit réellement là",
+      "L'essence est physique et l'existence est spirituelle",
+      "L'existence précède toujours l'essence selon Platon"
+    ],
+    correct: 1,
+    expl: "✅ L'essence répond à « Qu'est-ce que c'est ? » (définition, nature). L'existence répond à « Est-ce que ça existe vraiment ? » Pour Platon, l'essence précède l'existence. Pour Sartre, c'est l'inverse : l'homme existe d'abord, puis se définit."
+  },
+  {
+    theme: "⚰️ Essence, Existence & Mort",
+    type: "Auteur clé",
+    q: "Quel philosophe a dit qu'il faut « s'exercer à mourir » pour vivre sagacement ?",
+    opts: ["Heidegger", "Épicure", "Platon (dans le Phédon)", "Sartre"],
+    correct: 2,
+    expl: "✅ Platon, dans le Phédon, enseigne que la philosophie est une « méditation sur la mort ». En pensant à notre finitude, nous apprenons à détacher notre âme des désirs matériels pour viser le vrai et le bien."
+  },
+  {
+    theme: "⚰️ Essence, Existence & Mort",
+    type: "Auteur clé",
+    q: "Pour ÉPICURE, comment faut-il considérer la mort ?",
+    opts: [
+      "Comme une punition terrible à craindre",
+      "Comme quelque chose qui ne nous concerne pas : « Quand elle est là, je n'y suis plus »",
+      "Comme une récompense divine",
+      "Comme le début d'une nouvelle vie sur Terre"
+    ],
+    correct: 1,
+    expl: "✅ Épicure (Lettre à Ménécée) dit : ne crains pas la mort ! Quand tu vis, la mort n'est pas là ; quand la mort est là, tu n'existes plus. Elle n'est donc jamais ton problème direct. Cette sagesse invite à profiter pleinement du présent !"
+  },
+  // ===== THÈME 8 : DIEU & RELIGION =====
+  {
+    theme: "✝️ Dieu & Religion",
+    type: "Définition",
+    q: "Qu'est-ce que le DÉISME ?",
+    opts: [
+      "La croyance en plusieurs dieux",
+      "La croyance en un Dieu créateur qui n'intervient plus dans le monde après la création",
+      "Le rejet total de toute forme de Dieu",
+      "La croyance que Dieu est partout dans la nature"
+    ],
+    correct: 1,
+    expl: "✅ Le déiste croit en un Dieu créateur (l'Horloger du monde) mais pense qu'après la création, ce Dieu ne s'implique plus dans les affaires humaines. À distinguer du théisme (Dieu intervient) et de l'athéisme (pas de Dieu)."
+  },
+  {
+    theme: "✝️ Dieu & Religion",
+    type: "Distinction",
+    q: "Quelle est la différence entre ATHÉISME et PANTHÉISME ?",
+    opts: [
+      "Ce sont exactement la même chose",
+      "L'athéisme nie l'existence de Dieu ; le panthéisme identifie Dieu à la Nature entière",
+      "L'athéisme est positif et le panthéisme est négatif",
+      "Le panthéisme croit en plusieurs dieux, l'athéisme en un seul"
+    ],
+    correct: 1,
+    expl: "✅ L'athéisme : pas de Dieu du tout. Le panthéisme (comme chez Spinoza) : Dieu EST la Nature, tout est divin. Le déisme : Dieu existe mais ne s'implique plus. Ce sont trois positions bien distinctes !"
+  },
+  {
+    theme: "✝️ Dieu & Religion",
+    type: "Réflexion",
+    q: "Quel est le rôle de la RELIGION dans la paix sociale selon la philosophie ?",
+    opts: [
+      "La religion est toujours source de guerres",
+      "Elle peut être un facteur de cohésion sociale, de valeurs communes et de paix — mais aussi de conflits si mal utilisée",
+      "Elle n'a aucun rôle social",
+      "Elle remplace les lois de l'État"
+    ],
+    correct: 1,
+    expl: "✅ La religion peut unir une communauté autour de valeurs morales et spirituelles communes, favorisant la paix. Mais l'histoire montre aussi que des guerres ont été menées en son nom. Le dialogue interreligieux est donc essentiel !"
+  },
+  // ===== THÈME 9 : DÉMOCRATIE & DROITS DE L'HOMME =====
+  {
+    theme: "⚖️ Démocratie & Droits de l'Homme",
+    type: "Définition",
+    q: "Qu'est-ce qu'un ÉTAT DE DROIT ?",
+    opts: [
+      "Un État géré par des avocats uniquement",
+      "Un État où TOUS, y compris les gouvernants, sont soumis à la loi",
+      "Un État sans police ni armée",
+      "Un État où les riches font les lois"
+    ],
+    correct: 1,
+    expl: "✅ Dans un État de droit, personne n'est au-dessus de la loi — ni le président, ni les riches ! La loi protège les citoyens contre l'arbitraire. C'est le fondement de la démocratie et de la justice."
+  },
+  {
+    theme: "⚖️ Démocratie & Droits de l'Homme",
+    type: "Auteur clé",
+    q: "Dans quel ouvrage Jean-Jacques Rousseau développe-t-il l'idée du CONTRAT SOCIAL ?",
+    opts: ["L'Esprit des lois", "Du contrat social", "La République", "Le Prince"],
+    correct: 1,
+    expl: "✅ Dans Du contrat social, Rousseau explique que la société légitime repose sur un accord entre les citoyens qui acceptent de vivre ensemble sous des règles communes pour le bien général. La souveraineté appartient au PEUPLE !"
+  },
+  {
+    theme: "⚖️ Démocratie & Droits de l'Homme",
+    type: "Date importante",
+    q: "Quand a été signée la Déclaration Universelle des Droits de l'Homme (ONU) ?",
+    opts: ["1776", "1789", "1948", "1990"],
+    correct: 2,
+    expl: "✅ La Déclaration Universelle des Droits de l'Homme a été adoptée le 10 décembre 1948 par l'ONU, après les horreurs de la Seconde Guerre mondiale. Elle proclame les droits fondamentaux de tout être humain, sans distinction."
+  },
+  // ===== THÈME 10 : SCIENCES LOGICO-FORMELLES =====
+  {
+    theme: "🔢 Sciences & Connaissance",
+    type: "Définition",
+    q: "Qu'est-ce que la LOGIQUE FORMELLE ?",
+    opts: [
+      "L'étude des formes artistiques",
+      "La science des formes correctes du raisonnement, indépendamment du contenu",
+      "L'étude de la mode vestimentaire",
+      "Un type de mathématiques avancées uniquement"
+    ],
+    correct: 1,
+    expl: "✅ La logique formelle étudie les règles du raisonnement valide. Exemple : Si tous les hommes sont mortels (1), et Socrate est un homme (2), alors Socrate est mortel (conclusion). La forme est valide, peu importe le sujet !"
+  },
+  {
+    theme: "🔢 Sciences & Connaissance",
+    type: "Distinction",
+    q: "Quelle est la différence entre VÉRITÉ FORMELLE et VÉRITÉ MATÉRIELLE ?",
+    opts: [
+      "Ce sont la même chose exprimée différemment",
+      "La vérité formelle porte sur la cohérence logique ; la vérité matérielle porte sur la conformité avec la réalité",
+      "La vérité matérielle est plus importante",
+      "La vérité formelle n'existe que dans les sciences"
+    ],
+    correct: 1,
+    expl: "✅ Un raisonnement peut être FORMELLEMENT valide (logique correcte) sans être matériellement vrai. Ex : « Tous les chats sont verts, Minou est un chat, donc Minou est vert » — logique correcte, mais prémisse fausse !"
+  },
+  // ===== THÈME 11 : SCIENCES HUMAINES =====
+  {
+    theme: "🌍 Sciences Humaines & Sociales",
+    type: "Définition",
+    q: "Qu'est-ce qui distingue les SCIENCES HUMAINES des sciences exactes comme la physique ?",
+    opts: [
+      "Elles sont moins importantes",
+      "Elles étudient l'être humain dans ses dimensions sociales, culturelles et historiques, ce qui rend la neutralité plus difficile",
+      "Elles utilisent des microscopes",
+      "Elles ne produisent pas de connaissances réelles"
+    ],
+    correct: 1,
+    expl: "✅ Les sciences humaines (psychologie, sociologie, histoire…) étudient l'homme. Le chercheur fait LUI-MÊME partie de son objet d'étude, ce qui complique la neutralité parfaite. Karl Popper a travaillé sur la scientificité de ces disciplines."
+  },
+  {
+    theme: "🌍 Sciences Humaines & Sociales",
+    type: "Méthode",
+    q: "Qu'est-ce que la DÉMARCHE EXPÉRIMENTALE en sciences ?",
+    opts: [
+      "Lire des livres et mémoriser des résultats",
+      "Observer, formuler une hypothèse, expérimenter, analyser les résultats et conclure",
+      "Faire confiance aux intuitions sans vérification",
+      "Copier les découvertes d'autres scientifiques"
+    ],
+    correct: 1,
+    expl: "✅ La démarche expérimentale (Claude Bernard, Introduction à l'étude de la médecine expérimentale) suit 5 étapes : observation → hypothèse → expérience → analyse → conclusion. C'est le fondement de la méthode scientifique moderne !"
+  },
+  // ===== THÈME 12 : MÉTHODOLOGIE PHILO =====
+  {
+    theme: "📝 Méthodo : Dissertation",
+    type: "Méthode",
+    q: "Pour bien commencer une DISSERTATION philosophique, que faut-il faire en introduction ?",
+    opts: [
+      "Donner directement sa réponse personnelle",
+      "Accrocher le lecteur, définir les termes clés, dégager le problème et annoncer le plan",
+      "Raconter une histoire personnelle",
+      "Copier la définition du dictionnaire"
+    ],
+    correct: 1,
+    expl: "✅ Une bonne introduction : 1) Accroche (citation, situation, fait d'actualité) 2) Définition des termes 3) Problématique (le problème philosophique) 4) Annonce du plan. Sans problématique, ce n'est pas une dissertation !"
+  },
+  {
+    theme: "📝 Méthodo : Explication de texte",
+    type: "Méthode",
+    q: "Dans une EXPLICATION DE TEXTE philosophique, quelle est la première règle essentielle ?",
+    opts: [
+      "Parler de la vie de l'auteur pendant 2 pages",
+      "Dégager la thèse centrale de l'auteur et montrer comment il la construit et la défend",
+      "Donner son opinion personnelle dès le début",
+      "Résumer le texte sans analyser"
+    ],
+    correct: 1,
+    expl: "✅ L'explication de texte demande : 1) Identifier la THÈSE de l'auteur 2) Analyser les arguments et la progression du texte 3) Expliquer les concepts clés 4) Éventuellement critiquer. On suit PAS À PAS l'auteur, sans s'y perdre !"
+  },
+  {
+    theme: "🏆 Question Bonus",
+    type: "Synthèse",
+    q: "Laquelle de ces affirmations résume le mieux l'esprit de la PHILOSOPHIE ?",
+    opts: [
+      "Apprendre par cœur les réponses des grands penseurs",
+      "S'étonner du monde, se poser des questions fondamentales et chercher la vérité par la raison",
+      "Étudier les sciences naturelles",
+      "Mémoriser des dates historiques importantes"
+    ],
+    correct: 1,
+    expl: "✅ Aristote disait : « La philosophie commence par l'étonnement. » Philosopher, c'est refuser de prendre les choses pour acquises, questionner le sens de l'existence, de la liberté, du bien et de la vérité. Bonne chance au BAC ! 🎓"
+  }
+];
+
+let current = 0, score = 0, answered = 0;
+
+function applyTheme(idx) {
+  document.body.className = 'theme-' + THEMES[idx];
+}
+
+function loadQuestion(idx) {
+  if (idx >= QUESTIONS.length) { showResult(); return; }
+  applyTheme(idx);
+  const q = QUESTIONS[idx];
+  document.getElementById('badge-type').textContent = q.type;
+  document.getElementById('badge-theme').textContent = q.theme;
+  document.getElementById('question-number').textContent = `Question ${idx + 1} sur ${QUESTIONS.length}`;
+  document.getElementById('question-text').textContent = q.q;
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i, q.correct, q.expl);
+    opts.appendChild(btn);
+  });
+
+  document.getElementById('explanation').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+  updateProgress();
+}
+
+function selectAnswer(chosen, correct, expl) {
+  answered++;
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === correct) btn.classList.add('correct');
+    if (i === chosen && chosen !== correct) btn.classList.add('wrong');
+  });
+  if (chosen === correct) { score++; launchConfetti(); }
+  const expDiv = document.getElementById('explanation');
+  expDiv.innerHTML = `<div class="expl-title">${chosen === correct ? '🎉 Bonne réponse !' : '❌ Pas tout à fait…'}</div>${expl}`;
+  expDiv.style.display = 'block';
+  document.getElementById('next-btn').style.display = 'block';
+  updateProgress();
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= QUESTIONS.length) { showResult(); return; }
+  document.getElementById('question-card').style.animation = 'none';
+  requestAnimationFrame(() => {
+    document.getElementById('question-card').style.animation = 'slideIn 0.4s ease';
+    loadQuestion(current);
+  });
+}
+
+function updateProgress() {
+  const pct = (current / QUESTIONS.length) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('q-counter').textContent = `Question ${current + 1} / ${QUESTIONS.length}`;
+  document.getElementById('score-display').textContent = `Score : ${score} / ${answered}`;
+}
+
+function showResult() {
+  document.getElementById('question-card').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+  const rc = document.getElementById('result-card');
+  rc.style.display = 'block';
+  const pct = Math.round((score / QUESTIONS.length) * 100);
+  document.getElementById('result-score').textContent = `${score} / ${QUESTIONS.length}`;
+  let trophy = '🏆', title = '', msg = '';
+  if (pct >= 90) {
+    trophy = '🏆🌟'; title = 'Excellent ! Mention TRÈS BIEN !';
+    msg = "Tu maîtrises brillamment le programme de philosophie Terminales. Tu es prêt(e) pour le BAC !";
+  } else if (pct >= 70) {
+    trophy = '🥇'; title = 'Très bien !';
+    msg = "Tu connais bien les notions essentielles. Revois quelques points et tu seras imbattable !";
+  } else if (pct >= 50) {
+    trophy = '💪'; title = 'Bien, mais continue !';
+    msg = "Tu as de bonnes bases ! Relis tes cours sur les thèmes où tu as hésité et recommence le quiz.";
+  } else {
+    trophy = '📚'; title = 'Il faut réviser davantage !';
+    msg = "Ne te décourage pas ! La philosophie, ça se travaille. Reprends tes notes et réessaie !";
+  }
+  document.getElementById('trophy-emoji').textContent = trophy;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-msg').textContent = msg;
+  launchConfetti(30);
+}
+
+function restartQuiz() {
+  current = 0; score = 0; answered = 0;
+  document.getElementById('result-card').style.display = 'none';
+  document.getElementById('question-card').style.display = 'block';
+  document.getElementById('progress-wrap').style.display = 'flex';
+  loadQuestion(0);
+}
+
+function launchConfetti(count = 18) {
+  const colors = ['#f5e642','#3b0a6e','#43c97e','#f48fb1','#4a90d9','#ff6b6b','#ffd700'];
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+      el.style.animationDelay = Math.random() * 0.5 + 's';
+      el.style.transform = `rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 4000);
+    }, i * 60);
+  }
+}
+
+loadQuestion(0);
+</script>
+</body>
+</html>
