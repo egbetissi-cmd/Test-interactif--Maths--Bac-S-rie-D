@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎓 Tests BAC Interactifs — Toutes Séries</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --gold: #f9a825; --dark: #1a0533; --purple: #6a0dad;
+  --green: #2e7d32; --white: #ffffff; --radius: 20px;
+  --wa: #25d366;
+}
+body { font-family: 'Nunito', sans-serif; background: var(--dark); color: var(--white); overflow-x: hidden; }
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, #1a0533 0%, #4a0080 50%, #1a0533 100%);
+  padding: 50px 20px 44px; text-align: center; position: relative; overflow: hidden;
+}
+.hero::before {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(circle at 25% 50%, rgba(249,168,37,.18) 0%, transparent 55%),
+              radial-gradient(circle at 75% 30%, rgba(156,39,176,.22) 0%, transparent 50%);
+}
+.hero-badge {
+  display:inline-block; background:var(--gold); color:var(--dark);
+  font-family:'Fredoka One',cursive; font-size:1rem; padding:6px 22px;
+  border-radius:30px; margin-bottom:20px; position:relative;
+  animation: bounceIn .8s ease;
+}
+.hero h1 {
+  font-family:'Fredoka One',cursive; font-size:clamp(2.2rem,7vw,4.2rem);
+  line-height:1.2; margin-bottom:16px; position:relative;
+  animation: fadeUp .8s ease .2s both;
+}
+.hero h1 span { color:var(--gold); }
+.hero p {
+  font-size:clamp(1.1rem,3vw,1.4rem); font-weight:700; color:#e1bee7;
+  margin-bottom:32px; position:relative; animation: fadeUp .8s ease .4s both;
+}
+.hero-stats {
+  display:flex; justify-content:center; gap:16px; flex-wrap:wrap;
+  position:relative; animation: fadeUp .8s ease .6s both;
+}
+.stat-pill {
+  background:rgba(255,255,255,.1); border:2px solid rgba(249,168,37,.4);
+  border-radius:50px; padding:10px 22px; font-size:1rem; font-weight:800;
+}
+.stat-pill span { color:var(--gold); font-size:1.3rem; }
+
+/* FREE BANNER */
+.free-banner {
+  background:linear-gradient(90deg,#2e7d32,#43a047); padding:18px 24px;
+  text-align:center; font-family:'Fredoka One',cursive;
+  font-size:clamp(1rem,3vw,1.4rem); animation: pulseGreen 2s ease infinite;
+}
+.free-banner a {
+  color:#fff; text-decoration:none; background:rgba(0,0,0,.25);
+  padding:5px 18px; border-radius:20px; margin-left:8px; transition:.2s;
+}
+.free-banner a:hover { background:rgba(0,0,0,.5); }
+
+/* SECTION TITLE */
+.section-title { text-align:center; padding:44px 20px 12px; }
+.section-title h2 {
+  font-family:'Fredoka One',cursive; font-size:clamp(1.8rem,5vw,2.8rem);
+  color:var(--gold); margin-bottom:8px;
+}
+.section-title p { font-size:1.1rem; color:#ce93d8; font-weight:700; }
+
+/* CARDS */
+.cards-grid {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+  gap:20px; padding:20px 20px 50px; max-width:1100px; margin:0 auto;
+}
+.test-card {
+  background:linear-gradient(145deg,#2d0a52,#3d1060); border-radius:var(--radius);
+  padding:28px 24px; border:2px solid rgba(249,168,37,.2);
+  transition:transform .3s, box-shadow .3s, border-color .3s;
+  position:relative; overflow:hidden; animation: fadeUp .6s ease both;
+}
+.test-card::before {
+  content:''; position:absolute; top:-40%; right:-40%; width:100%; height:100%;
+  background:radial-gradient(circle,rgba(249,168,37,.07) 0%,transparent 65%);
+  pointer-events:none;
+}
+.test-card:hover { transform:translateY(-6px); box-shadow:0 16px 40px rgba(106,13,173,.5); border-color:var(--gold); }
+.test-card.free-card {
+  border-color:#43a047; background:linear-gradient(145deg,#0a2e0d,#1b5e20);
+}
+.test-card.free-card::before { background:radial-gradient(circle,rgba(67,160,71,.15) 0%,transparent 65%); }
+
+.card-emoji { font-size:3rem; margin-bottom:14px; display:block; }
+.card-badge {
+  display:inline-block; font-size:.85rem; font-weight:900;
+  padding:4px 14px; border-radius:20px; margin-bottom:12px;
+  text-transform:uppercase; letter-spacing:1px;
+}
+.badge-free { background:#43a047; color:#fff; }
+.badge-paid { background:var(--gold); color:var(--dark); }
+
+.card-title { font-family:'Fredoka One',cursive; font-size:clamp(1.35rem,3.5vw,1.75rem); margin-bottom:8px; line-height:1.3; }
+.card-desc { font-size:1rem; color:#ce93d8; font-weight:600; margin-bottom:18px; line-height:1.6; }
+.free-card .card-desc { color:#a5d6a7; }
+
+.card-meta { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+.meta-tag { background:rgba(255,255,255,.1); border-radius:20px; padding:4px 12px; font-size:.9rem; font-weight:700; }
+
+.btn-access {
+  display:block; width:100%; padding:16px; border-radius:14px; border:none;
+  font-family:'Fredoka One',cursive; font-size:1.2rem; cursor:pointer;
+  text-align:center; text-decoration:none; transition:transform .2s, box-shadow .2s;
+}
+.btn-free { background:linear-gradient(135deg,#43a047,#2e7d32); color:#fff; box-shadow:0 4px 20px rgba(67,160,71,.4); }
+.btn-paid { background:linear-gradient(135deg,var(--gold),#f57f17); color:var(--dark); box-shadow:0 4px 20px rgba(249,168,37,.4); }
+.btn-locked { background:rgba(255,255,255,.08); color:#ce93d8; cursor:default; border:2px dashed rgba(249,168,37,.4); }
+.btn-access:hover:not(.btn-locked) { transform:scale(1.03); box-shadow:0 8px 30px rgba(0,0,0,.35); }
+
+/* PRICING */
+.pricing-section { background:linear-gradient(135deg,#0d001a,#2d0a52); padding:55px 20px; text-align:center; }
+.pricing-section h2 { font-family:'Fredoka One',cursive; font-size:clamp(1.8rem,5vw,2.8rem); color:var(--gold); margin-bottom:10px; }
+.pricing-section > p { color:#ce93d8; font-size:1.1rem; font-weight:700; margin-bottom:40px; }
+
+.pricing-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; max-width:980px; margin:0 auto 40px; }
+.price-card {
+  background:rgba(255,255,255,.05); border-radius:var(--radius); padding:32px 24px;
+  border:2px solid rgba(255,255,255,.1); transition:transform .3s, border-color .3s; position:relative;
+}
+.price-card:hover { transform:translateY(-5px); }
+.price-card.featured { border-color:var(--gold); background:linear-gradient(145deg,#2d0a52,#4a0080); }
+.popular-tag {
+  position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+  background:var(--gold); color:var(--dark); font-family:'Fredoka One',cursive;
+  font-size:.9rem; padding:4px 18px; border-radius:20px; white-space:nowrap;
+}
+.price-name { font-family:'Fredoka One',cursive; font-size:1.5rem; margin-bottom:8px; }
+.price-amount { font-family:'Fredoka One',cursive; font-size:3.2rem; color:var(--gold); line-height:1; margin-bottom:4px; }
+.price-currency { font-size:1rem; color:#ce93d8; font-weight:700; margin-bottom:22px; }
+.price-features { list-style:none; margin-bottom:24px; text-align:left; }
+.price-features li { padding:7px 0; font-size:1rem; font-weight:700; color:#e1bee7; border-bottom:1px solid rgba(255,255,255,.06); }
+.price-features li::before { content:"✅ "; }
+
+.btn-whatsapp {
+  display:block; width:100%; padding:15px; background:var(--wa); color:#fff;
+  border-radius:12px; font-family:'Fredoka One',cursive; font-size:1.1rem;
+  text-decoration:none; transition:transform .2s, box-shadow .2s;
+  box-shadow:0 4px 20px rgba(37,211,102,.3);
+}
+.btn-whatsapp:hover { transform:scale(1.04); box-shadow:0 8px 30px rgba(37,211,102,.55); }
+
+/* HOW IT WORKS */
+.how-section { padding:55px 20px; max-width:860px; margin:0 auto; text-align:center; }
+.how-section h2 { font-family:'Fredoka One',cursive; font-size:clamp(1.8rem,5vw,2.5rem); color:var(--gold); margin-bottom:10px; }
+.how-section > p { color:#ce93d8; font-weight:700; font-size:1.1rem; margin-bottom:36px; }
+.steps { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:16px; }
+.step { background:rgba(255,255,255,.05); border-radius:16px; padding:26px 16px; border:1px solid rgba(249,168,37,.2); }
+.step-num { font-family:'Fredoka One',cursive; font-size:2.5rem; color:var(--gold); margin-bottom:10px; }
+.step p { font-size:1rem; font-weight:700; color:#e1bee7; line-height:1.55; }
+
+/* TESTIMONIALS */
+.testi-section { background:linear-gradient(135deg,#0d001a,#1a0533); padding:55px 20px; text-align:center; }
+.testi-section h2 { font-family:'Fredoka One',cursive; font-size:clamp(1.8rem,5vw,2.5rem); color:var(--gold); margin-bottom:30px; }
+.testi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; max-width:980px; margin:0 auto; }
+.testi-card { background:rgba(255,255,255,.05); border-radius:16px; padding:24px 20px; border:1px solid rgba(249,168,37,.15); text-align:left; }
+.testi-stars { color:var(--gold); font-size:1.2rem; margin-bottom:10px; }
+.testi-text { font-size:1rem; font-weight:600; color:#e1bee7; line-height:1.6; margin-bottom:14px; font-style:italic; }
+.testi-author { font-weight:900; color:var(--gold); font-size:.95rem; }
+
+/* FOOTER */
+footer { background:#0d001a; padding:32px 20px; text-align:center; border-top:2px solid rgba(249,168,37,.2); }
+footer p { color:#9c27b0; font-weight:700; font-size:1rem; margin-bottom:8px; }
+footer .footer-contact { font-family:'Fredoka One',cursive; font-size:1.4rem; color:var(--gold); }
+
+/* FLOATING WA */
+.float-wa {
+  position:fixed; bottom:24px; right:24px; background:var(--wa); color:#fff;
+  width:62px; height:62px; border-radius:50%; display:flex; align-items:center;
+  justify-content:center; font-size:2rem; box-shadow:0 6px 25px rgba(37,211,102,.55);
+  z-index:999; text-decoration:none; animation:pulseGreen 2s ease infinite; transition:transform .2s;
+}
+.float-wa:hover { transform:scale(1.15); }
+
+/* MODAL */
+.modal-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,.88);
+  z-index:9999; align-items:center; justify-content:center; padding:20px;
+}
+.modal-overlay.active { display:flex; }
+.modal-box {
+  background:linear-gradient(145deg,#2d0a52,#4a0080); border-radius:var(--radius);
+  padding:36px 28px; max-width:460px; width:100%; border:2px solid var(--gold);
+  text-align:center; animation:bounceIn .5s ease;
+}
+.modal-box h3 { font-family:'Fredoka One',cursive; font-size:2rem; color:var(--gold); margin-bottom:12px; }
+.modal-box p { color:#e1bee7; font-size:1.1rem; font-weight:700; margin-bottom:22px; line-height:1.6; }
+.modal-steps { background:rgba(0,0,0,.3); border-radius:14px; padding:20px; margin-bottom:24px; text-align:left; }
+.modal-steps p { margin-bottom:8px; font-size:1.05rem; color:#ce93d8; }
+.modal-steps strong { color:var(--gold); }
+.modal-close { background:rgba(255,255,255,.1); border:none; color:#ce93d8; padding:10px 26px; border-radius:10px; font-family:'Nunito',sans-serif; font-size:1rem; font-weight:700; cursor:pointer; margin-top:10px; }
+
+/* ANIMATIONS */
+@keyframes bounceIn { 0%{transform:scale(.7);opacity:0} 60%{transform:scale(1.06);opacity:1} 100%{transform:scale(1)} }
+@keyframes fadeUp { from{transform:translateY(24px);opacity:0} to{transform:translateY(0);opacity:1} }
+@keyframes pulseGreen {
+  0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.3)}
+  50%{box-shadow:0 4px 35px rgba(37,211,102,.75)}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🎓 BAC Toutes Séries — Révision Complète 2025</div>
+  <h1>Réussis ton BAC<br>avec les <span>Meilleurs Tests</span><br>Interactifs d'Afrique !</h1>
+  <p>150 questions par matière • Réponses instantanées • Explications détaillées</p>
+  <div class="hero-stats">
+    <div class="stat-pill">📚 <span>8</span> Matières</div>
+    <div class="stat-pill">❓ <span>1200+</span> Questions</div>
+    <div class="stat-pill">🌍 <span>Séries</span> A·B·C·D</div>
+    <div class="stat-pill">✅ Test Maths <span>Gratuit</span></div>
+  </div>
+</section>
+
+<!-- FREE BANNER -->
+<div class="free-banner">
+  🎁 TEST GRATUIT — Mathématiques disponible maintenant !
+  <a href="bac_terminale_D_maths.html">👉 Commencer ici</a>
+</div>
+
+<!-- TESTS -->
+<div class="section-title">
+  <h2>📋 Les 8 Tests Disponibles</h2>
+  <p>1 test gratuit · 7 tests dans les packs payants</p>
+</div>
+
+<div class="cards-grid">
+
+  <!-- MATHS GRATUIT -->
+  <div class="test-card free-card" style="animation-delay:.05s">
+    <span class="card-emoji">📐</span>
+    <span class="card-badge badge-free">✅ 100% Gratuit</span>
+    <div class="card-title">Mathématiques Terminale D</div>
+    <div class="card-desc">Vecteurs, complexes, intégrales, probabilités, suites, équations différentielles et plus !</div>
+    <div class="card-meta">
+      <span class="meta-tag">150 questions</span>
+      <span class="meta-tag">Série D</span>
+      <span class="meta-tag">⭐ Recommandé</span>
+    </div>
+    <a href="bac_terminale_D_maths.html" class="btn-access btn-free">🚀 Commencer Maintenant !</a>
+  </div>
+
+  <!-- SVT -->
+  <div class="test-card" style="animation-delay:.1s">
+    <span class="card-emoji">🌿</span>
+    <span class="card-badge badge-paid">🔒 Accès Payant</span>
+    <div class="card-title">SVT Terminale D</div>
+    <div class="card-desc">Génétique, physiologie, écologie, biologie cellulaire — tout le programme SVT Série D.</div>
+    <div class="card-meta">
+      <span class="meta-tag">150 questions</span>
+      <span class="meta-tag">Série D</span>
+    </div>
+    <button class="btn-access btn-locked" onclick="showModal('SVT Terminale D','bac_svt_terminale_d.html')">
+      🔐 Débloquer ce Test
+    </button>
+  </div>
+
+  <!-- PCT -->
+  <div class="test-card" style="animation-delay:.15s">
+    <span class="card-emoji">⚗️</span>
+    <span class="card-badge badge-paid">🔒 Accès Payant</span>
+    <div class="card-title">Physique-Chimie Terminale</div>
+    <div class="card-desc">Mécanique, électricité, thermodynamique, chimie organique — programme complet PCT.</div>
+    <div class="card-meta">
+      <span class="meta-tag">150 questions</span>
+      <span class="meta-tag">Séries C·D</span>
+    </div>
+    <button class="btn-access btn-locked" onclick="showModal('Physique-Chimie Terminale','test_pct_bac_terminale.html')">
+      🔐 Débloquer ce Test
+    </button>
+  </div>
+
+  <!-- FRANÇAIS -->
+  <div class="test-card" style="animation-delay:.2s">
+    <span class="card-emoji">📝</span>
+    <span class="card-badge badge-paid">🔒 Accès Payant</span>
+    <div class="card-title">Français Terminale</div>
+    <div class="card-desc">Littérature, grammaire, expression écrite, commentaire composé et dissertation.</div>
+    <div class="card-meta">
+      <span class="meta-tag">150 questions</span>
+      <span class="meta-tag">Séries A·B·C·D</span>
+    </div>
+    <button class="btn-access btn-locked" onclick="showModal('Français Terminale','bac-francais-test.html')">
+      🔐 Débloquer ce Test
+    </button>
+  </div>
+
+  <!-- PHILOSOPHIE -->
+  <div class="test-card" style="animation-delay:.25s">
+    <span class="card-emoji">🧠</span>
+    <span class="card-badge badge-paid">🔒 Accès Payant</span>
+    <div class="card-title">Philosophie Terminale</div>
+    <div class="card-desc">Les grands thèmes : liberté, conscience, langage, vérité, justice, bonheur, religion.</div>
+    <div class="card-meta">
+      <span class="meta-tag">150 questions</span>
+      <span class="meta-tag">Séries A·B·C·D</span>
+    </div>
+    <button class="btn-access btn-locked" onclick="showModal('Philosophie Terminale','quiz_philo_bac.html')">
+      🔐 Débloquer ce Test
+    </button>
+  </div>
+
+  <!-- ANGLAIS -->
+  <div class="test-card" style="animation-delay:.3s">
+    <span class="card-emoji">🇬🇧</span>
+    <span class="card-badge badge-paid">🔒 Accès Payant</span>
+    <div class="card-title">Anglais Terminale</div>
+    <div class="card-desc">Compréhension, grammaire, vocabulaire, expression écrite et orale pour le BAC.</div>
+    <div class="card-meta">
+      <span class="meta-tag">150 questions</span>
+      <span class="meta-tag">Toutes séries</span>
+    </div>
+    <button class="btn-access btn-locked" onclick="showModal('Anglais Terminale','test-anglais-2.html')">
+      🔐 Débloquer ce Test
+    </button>
+  </div>
+
+  <!-- ESPAGNOL -->
+  <div class="test-card" style="animation-delay:.35s">
+    <span class="card-emoji">🇪🇸</span>
+    <span class="card-badge badge-paid">🔒 Accès Payant</span>
+    <div class="card-title">Espagnol Terminale</div>
+    <div class="card-desc">Vocabulaire, grammaire, conjugaison, compréhension et expression en espagnol.</div>
+    <div class="card-meta">
+      <span class="meta-tag">150 questions</span>
+      <span class="meta-tag">LV2 — Toutes séries</span>
+    </div>
+    <button class="btn-access btn-locked" onclick="showModal('Espagnol Terminale','bac_espagnol_test.html')">
+      🔐 Débloquer ce Test
+    </button>
+  </div>
+
+  <!-- HISTOIRE-GÉO -->
+  <div class="test-card" style="animation-delay:.4s">
+    <span class="card-emoji">🌍</span>
+    <span class="card-badge badge-paid">🔒 Accès Payant</span>
+    <div class="card-title">Histoire-Géographie Terminale A</div>
+    <div class="card-desc">Histoire contemporaine, géographie du monde, cartographie et culture générale.</div>
+    <div class="card-meta">
+      <span class="meta-tag">150 questions</span>
+      <span class="meta-tag">Série A</span>
+    </div>
+    <button class="btn-access btn-locked" onclick="showModal('Histoire-Géographie Terminale A','bac_hg_terminale_A-7.html')">
+      🔐 Débloquer ce Test
+    </button>
+  </div>
+
+</div>
+
+<!-- PRICING -->
+<section class="pricing-section">
+  <h2>💰 Nos Offres</h2>
+  <p>Paiement par MTN MoMo · Moov Money · Wave · Accès immédiat</p>
+
+  <div class="pricing-grid">
+
+    <div class="price-card">
+      <div class="price-name">🥉 Pack Essentiel</div>
+      <div class="price-amount">1 500</div>
+      <div class="price-currency">FCFA — Accès immédiat</div>
+      <ul class="price-features">
+        <li>Maths Terminale D</li>
+        <li>SVT Terminale D</li>
+        <li>PCT Terminale</li>
+        <li>Français Terminale</li>
+      </ul>
+      <a href="https://wa.me/2290143568554?text=Bonjour%2C%20je%20voudrais%20commander%20le%20Pack%20Essentiel%20BAC%20%C3%A0%201500%20FCFA.%20Merci%20!"
+         class="btn-whatsapp" target="_blank">📲 Commander sur WhatsApp</a>
+    </div>
+
+    <div class="price-card featured">
+      <div class="popular-tag">⭐ Le Plus Populaire</div>
+      <div class="price-name">🥈 Pack Complet</div>
+      <div class="price-amount">2 500</div>
+      <div class="price-currency">FCFA — Accès immédiat</div>
+      <ul class="price-features">
+        <li>Toutes les 8 matières</li>
+        <li>1200+ questions au total</li>
+        <li>Explications détaillées</li>
+        <li>Notions importantes</li>
+        <li>Séries A · B · C · D</li>
+        <li>Accès illimité</li>
+      </ul>
+      <a href="https://wa.me/2290143568554?text=Bonjour%2C%20je%20voudrais%20commander%20le%20Pack%20Complet%20BAC%20%C3%A0%202500%20FCFA.%20Merci%20!"
+         class="btn-whatsapp" target="_blank">📲 Commander sur WhatsApp</a>
+    </div>
+
+    <div class="price-card">
+      <div class="price-name">🥇 Pack Premium</div>
+      <div class="price-amount">4 000</div>
+      <div class="price-currency">FCFA — Accès immédiat</div>
+      <ul class="price-features">
+        <li>Toutes les 8 matières</li>
+        <li>Résumés PDF imprimables</li>
+        <li>Nouveaux tests à venir</li>
+        <li>Mises à jour gratuites</li>
+        <li>Support WhatsApp prioritaire</li>
+        <li>Fiches de révision</li>
+        <li>Philosophie + Français inclus</li>
+      </ul>
+      <a href="https://wa.me/2290143568554?text=Bonjour%2C%20je%20voudrais%20commander%20le%20Pack%20Premium%20BAC%20%C3%A0%204000%20FCFA.%20Merci%20!"
+         class="btn-whatsapp" target="_blank">📲 Commander sur WhatsApp</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <h2>⚡ Comment ça marche ?</h2>
+  <p>Simple, rapide — sans inscription, sans application</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1️⃣</div>
+      <p>Choisis ton pack et envoie un message WhatsApp</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2️⃣</div>
+      <p>Paie par MTN MoMo, Moov Money ou Wave</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3️⃣</div>
+      <p>Reçois tes liens d'accès en moins de 5 minutes</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4️⃣</div>
+      <p>Révise partout depuis ton téléphone !</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <h2>💬 Ce que disent les candidats</h2>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+      <div class="testi-text">"Le test de Maths m'a permis de voir exactement où j'avais des lacunes. Les explications sont super claires !"</div>
+      <div class="testi-author">— Aminata K., Cotonou</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+      <div class="testi-text">"J'ai pris le Pack Complet une semaine avant le BAC. Les 150 questions par matière couvrent vraiment tout le programme !"</div>
+      <div class="testi-author">— Kofi M., Porto-Novo</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+      <div class="testi-text">"Mon fils révisait la Philo et le Français en même temps. Il a eu de très bonnes notes. Je recommande vivement !"</div>
+      <div class="testi-author">— Parent d'élève, Parakou</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+      <div class="testi-text">"Le Pack Premium vaut vraiment son prix. Les fiches de révision + les tests, c'est tout ce qu'il faut pour réussir."</div>
+      <div class="testi-author">— Séraphine A., Abomey-Calavi</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>🎓 Tests BAC Interactifs — Toutes Séries A · B · C · D | Bénin & Afrique Francophone</p>
+  <p>Développé avec ❤️ pour aider chaque candidat à réussir son BAC</p>
+  <div class="footer-contact">📲 +229 01 43 56 85 54</div>
+</footer>
+
+<!-- FLOATING WA -->
+<a href="https://wa.me/2290143568554?text=Bonjour%2C%20je%20veux%20acc%C3%A9der%20aux%20tests%20BAC%20interactifs.%20Pouvez-vous%20m%27aider%20%3F"
+   class="float-wa" target="_blank" title="Commander sur WhatsApp">💬</a>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <h3>🔐 Contenu Payant</h3>
+    <p>Le test <strong id="modal-subject" style="color:var(--gold)"></strong> est disponible dans nos packs.</p>
+    <div class="modal-steps">
+      <p>📲 <strong>Étape 1 :</strong> Envoie un message sur WhatsApp</p>
+      <p>💸 <strong>Étape 2 :</strong> Paie par MTN MoMo ou Moov Money</p>
+      <p>🔗 <strong>Étape 3 :</strong> Reçois ton lien d'accès en 5 min</p>
+      <p>📞 <strong>Contact :</strong> +229 01 43 56 85 54</p>
+    </div>
+    <a id="modal-wa-btn" href="#" class="btn-whatsapp" target="_blank" style="display:block;margin-bottom:14px">
+      📲 Commander maintenant
+    </a>
+    <button class="modal-close" onclick="closeModal()">✖ Fermer</button>
+  </div>
+</div>
+
+<script>
+function showModal(subject, file) {
+  document.getElementById('modal-subject').textContent = subject;
+  const msg = encodeURIComponent('Bonjour, je voudrais accéder au test : ' + subject + '. Comment procéder ?');
+  document.getElementById('modal-wa-btn').href = 'https://wa.me/2290143568554?text=' + msg;
+  document.getElementById('modal').classList.add('active');
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
