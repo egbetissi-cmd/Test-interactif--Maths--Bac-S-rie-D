@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Mental Champion — Mentalité de Gagnant</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --gold-dark: #8B6914;
+    --deep: #0A0A0F;
+    --dark: #111118;
+    --card: #16161F;
+    --card2: #1C1C28;
+    --border: rgba(201,168,76,0.18);
+    --text: #EAE6DC;
+    --muted: #8A8680;
+    --accent: #4A90D9;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--deep);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Background orbs */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -10%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(74,144,217,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    text-align: center;
+    padding: 60px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+
+  .logo-cross {
+    font-size: 28px;
+    color: var(--gold);
+    letter-spacing: 12px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+  }
+
+  .header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 6vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .header h1 span {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .header p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid var(--border);
+    color: var(--gold);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+
+  /* ===== PROGRESS ===== */
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    height: 3px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+    border-radius: 4px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-bottom: 36px;
+  }
+
+  /* ===== SECTION INTRO ===== */
+  .section-intro {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .section-tag {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid var(--border);
+    color: var(--gold);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ===== QUESTION CARD ===== */
+  .question-block {
+    margin-bottom: 32px;
+    animation: fadeUp 0.4s ease forwards;
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-number {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  .question-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.45;
+    margin-bottom: 16px;
+  }
+
+  .verse-hint {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--gold);
+    opacity: 0.65;
+    margin-bottom: 18px;
+    padding-left: 14px;
+    border-left: 2px solid var(--border);
+    line-height: 1.5;
+  }
+
+  /* ===== OPTIONS ===== */
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  @media (max-width: 560px) {
+    .options { grid-template-columns: 1fr; }
+  }
+
+  .option-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 400;
+    padding: 14px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    line-height: 1.4;
+    transition: all 0.22s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.22s ease;
+  }
+
+  .option-btn:hover {
+    border-color: rgba(201,168,76,0.45);
+    color: var(--gold-light);
+    transform: translateY(-1px);
+  }
+  .option-btn:hover::before { opacity: 1; }
+
+  .option-btn.selected {
+    background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+  .option-btn.selected::before { opacity: 1; }
+
+  .option-score {
+    display: none;
+    float: right;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--gold);
+    margin-left: 8px;
+  }
+
+  /* ===== NAVIGATION ===== */
+  .nav-btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 44px;
+    gap: 12px;
+  }
+
+  .btn-prev {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-prev:hover {
+    border-color: rgba(201,168,76,0.35);
+    color: var(--text);
+  }
+  .btn-prev:disabled { opacity: 0.3; cursor: default; }
+
+  .btn-next {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border: none;
+    color: #0A0A0F;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 13px 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.02em;
+  }
+  .btn-next:hover {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(201,168,76,0.25);
+  }
+  .btn-next:disabled { opacity: 0.4; cursor: default; transform: none; box-shadow: none; }
+
+  .page-counter {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  /* ===== SCREEN MANAGEMENT ===== */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ===== INTRO SCREEN ===== */
+  .intro-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px 40px;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .intro-icon {
+    font-size: 56px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .intro-card h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+
+  .intro-card p {
+    color: var(--muted);
+    line-height: 1.75;
+    font-size: 0.92rem;
+    max-width: 520px;
+    margin: 0 auto 28px;
+  }
+
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 28px 0;
+    text-align: left;
+  }
+
+  @media (max-width: 560px) {
+    .pillars { grid-template-columns: 1fr; }
+    .intro-card { padding: 32px 20px; }
+  }
+
+  .pillar {
+    background: rgba(201,168,76,0.05);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .pillar-icon { font-size: 20px; margin-bottom: 6px; }
+  .pillar-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .pillar-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 28px;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .info-row span { display: flex; align-items: center; gap: 5px; }
+
+  .btn-start {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+    border: none;
+    color: #0A0A0F;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 16px 48px;
+    border-radius: 10px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: all 0.25s ease;
+  }
+  .btn-start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(201,168,76,0.3);
+  }
+
+  /* ===== RESULTS ===== */
+  .result-hero {
+    text-align: center;
+    padding: 60px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+
+  .score-ring {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+
+  .score-ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  .score-ring-track {
+    fill: none;
+    stroke: rgba(255,255,255,0.06);
+    stroke-width: 8;
+  }
+
+  .score-ring-fill {
+    fill: none;
+    stroke: url(#goldGrad);
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .score-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .score-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .score-max {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .result-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 5vw, 2.6rem);
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+
+  .result-subtitle {
+    color: var(--gold);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .result-desc {
+    color: var(--muted);
+    font-size: 0.92rem;
+    line-height: 1.75;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  /* ===== DIMENSION BARS ===== */
+  .dimensions {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .dim-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+  }
+
+  .dim-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .dim-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .dim-icon { font-size: 1.1rem; }
+
+  .dim-pct {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .dim-bar-track {
+    background: rgba(255,255,255,0.06);
+    border-radius: 4px;
+    height: 5px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .dim-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .dim-insight {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ===== VERSE RESULT ===== */
+  .verse-result {
+    background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .verse-result-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+
+  .verse-result-ref {
+    font-size: 0.78rem;
+    color: var(--gold);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ===== ACTIONS ===== */
+  .result-actions {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 28px;
+  }
+
+  .result-actions h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+
+  .action-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  .action-list li {
+    display: flex;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.5;
+    align-items: flex-start;
+  }
+
+  .action-list li::before {
+    content: '›';
+    color: var(--gold);
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    line-height: 1.3;
+  }
+
+  .btn-retry {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    padding: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    margin-top: 16px;
+  }
+
+  .btn-retry:hover {
+    border-color: rgba(201,168,76,0.35);
+    color: var(--text);
+  }
+
+  .subscribe-cta {
+    background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(74,144,217,0.08));
+    border: 1px solid var(--gold);
+    border-radius: 14px;
+    padding: 32px;
+    text-align: center;
+    margin-top: 28px;
+  }
+
+  .subscribe-cta h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .subscribe-cta p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .btn-subscribe {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border: none;
+    color: #0A0A0F;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    padding: 14px 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: all 0.25s ease;
+  }
+
+  .btn-subscribe:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(201,168,76,0.28);
+  }
+
+  /* ===== UTILS ===== */
+  .gold { color: var(--gold); }
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 40px 0;
+  }
+
+  .loading-bar {
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    transition: width 0.4s ease;
+  }
+</style>
+</head>
+<body>
+<div class="loading-bar" id="loadingBar"></div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-cross">✦ ✦ ✦</div>
+    <div class="badge">✦ Développement & Foi</div>
+    <h1>Test de Mentalité<br><span>du Gagnant</span></h1>
+    <p>Un diagnostic complet de votre force intérieure, ancré dans les principes du développement personnel et les vérités de la foi biblique.</p>
+  </div>
+
+  <!-- INTRO SCREEN -->
+  <div class="screen active" id="screen-intro">
+    <div class="intro-card">
+      <span class="intro-icon">🏆</span>
+      <h2>Êtes-vous prêt pour la vérité ?</h2>
+      <p>Ce test évalue votre mentalité selon 7 dimensions fondamentales. Il combine les meilleures pratiques de psychologie positive et de coaching avec les principes immuables de la Parole de Dieu.</p>
+
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-icon">🧠</div>
+          <div class="pillar-title">Mental</div>
+          <div class="pillar-desc">Résilience, vision et discipline intérieure</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">✝️</div>
+          <div class="pillar-title">Foi</div>
+          <div class="pillar-desc">Confiance active et relation avec Dieu</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">💰</div>
+          <div class="pillar-title">Prospérité</div>
+          <div class="pillar-desc">Gestion, abondance et vision financière</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🕊️</div>
+          <div class="pillar-title">Espérance</div>
+          <div class="pillar-desc">Regard tourné vers l'avenir et la promesse</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">❤️</div>
+          <div class="pillar-title">Amour</div>
+          <div class="pillar-desc">Relations, service et bienveillance active</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">⚡</div>
+          <div class="pillar-title">Discipline</div>
+          <div class="pillar-desc">Constance, habitudes et maîtrise de soi</div>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <span>⏱️ 8–12 minutes</span>
+        <span>📝 35 questions</span>
+        <span>🔒 Confidentiel</span>
+      </div>
+
+      <button class="btn-start" onclick="startTest()">Commencer le Test →</button>
+    </div>
+  </div>
+
+  <!-- TEST SCREEN -->
+  <div class="screen" id="screen-test">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-label">
+      <span id="progressText">Question 1 sur 35</span>
+      <span id="progressPct">0%</span>
+    </div>
+
+    <div id="questionsContainer"></div>
+
+    <div class="nav-btns">
+      <button class="btn-prev" id="btnPrev" onclick="prevPage()" disabled>← Précédent</button>
+      <span class="page-counter" id="pageCounter">Page 1 / 7</span>
+      <button class="btn-next" id="btnNext" onclick="nextPage()">Suivant →</button>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div class="screen" id="screen-result">
+    <div class="result-hero">
+      <div class="score-ring" id="scoreRing">
+        <svg viewBox="0 0 160 160">
+          <defs>
+            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#8B6914"/>
+              <stop offset="50%" style="stop-color:#C9A84C"/>
+              <stop offset="100%" style="stop-color:#E8C96A"/>
+            </linearGradient>
+          </defs>
+          <circle class="score-ring-track" cx="80" cy="80" r="68"/>
+          <circle class="score-ring-fill" id="ringFill" cx="80" cy="80" r="68"
+            stroke-dasharray="427" stroke-dashoffset="427"/>
+        </svg>
+        <div class="score-center">
+          <div class="score-number" id="scoreDisplay">0</div>
+          <div class="score-max">/100</div>
+        </div>
+      </div>
+
+      <div class="result-subtitle" id="resultLevel"></div>
+      <h2 class="result-title" id="resultTitle"></h2>
+      <p class="result-desc" id="resultDesc"></p>
+    </div>
+
+    <div class="dimensions" id="dimensionsContainer"></div>
+
+    <div class="verse-result" id="verseResult"></div>
+
+    <div class="result-actions" id="actionsContainer"></div>
+
+    <div class="subscribe-cta">
+      <h3>Allez plus loin avec le Programme Complet</h3>
+      <p>Débloquez votre plan personnalisé sur 90 jours : coaching, méditations bibliques quotidiennes, exercices de reprogrammation mentale et suivi de progression.</p>
+      <button class="btn-subscribe">🔓 Accéder au Programme Premium</button>
+    </div>
+
+    <button class="btn-retry" onclick="resetTest()">↺ Refaire le test</button>
+  </div>
+
+</div>
+
+<script>
+// ===== DATA =====
+const QUESTIONS = [
+  // SECTION 1 : VISION & MINDSET DE GAGNANT
+  {
+    section: "🧠 Vision & Mindset de Gagnant",
+    dimension: "mental",
+    q: "Face à un obstacle inattendu, votre première réaction est :",
+    verse: "« Car je sais, moi, les projets que j'ai formés pour vous » — Jérémie 29:11",
+    opts: [
+      { text: "Je cherche immédiatement comment le contourner ou le transformer en opportunité", score: 5 },
+      { text: "Je prends du recul, je prie et j'analyse avant d'agir", score: 4 },
+      { text: "Je me sens découragé un moment, puis je me ressaisis", score: 3 },
+      { text: "Je me sens paralysé et j'ai du mal à avancer", score: 1 }
+    ]
+  },
+  {
+    section: "🧠 Vision & Mindset de Gagnant",
+    dimension: "mental",
+    q: "Votre vision de vie dans 5 ans est :",
+    verse: "« Sans vision, le peuple périt » — Proverbes 29:18",
+    opts: [
+      { text: "Précise, écrite, avec des étapes concrètes et une prière régulière à ce sujet", score: 5 },
+      { text: "Claire dans ma tête, je la contemple souvent", score: 4 },
+      { text: "Vague mais j'y pense parfois", score: 2 },
+      { text: "Je vis au jour le jour sans vraiment projeter", score: 1 }
+    ]
+  },
+  {
+    section: "🧠 Vision & Mindset de Gagnant",
+    dimension: "mental",
+    q: "Quand vous échouez, vous pensez :",
+    verse: "« Le juste tombe sept fois, et se relève » — Proverbes 24:16",
+    opts: [
+      { text: "C'est une leçon précieuse qui me rapproche du succès", score: 5 },
+      { text: "C'est douloureux, mais Dieu a un plan là-dedans", score: 4 },
+      { text: "Je me remets en question longuement", score: 2 },
+      { text: "Je me dis que ce n'est pas fait pour moi", score: 1 }
+    ]
+  },
+  {
+    section: "🧠 Vision & Mindset de Gagnant",
+    dimension: "mental",
+    q: "Comment gérez-vous les critiques ou les jugements négatifs ?",
+    verse: "« Ne vous conformez pas au siècle présent » — Romains 12:2",
+    opts: [
+      { text: "Je les filtre : j'en prends le bon et rejette ce qui n'est pas constructif", score: 5 },
+      { text: "Ils m'affectent un peu, mais je continue ma route avec Dieu", score: 4 },
+      { text: "Je les prends trop à coeur et ils me ralentissent", score: 2 },
+      { text: "Ils me paralysent souvent", score: 1 }
+    ]
+  },
+  {
+    section: "🧠 Vision & Mindset de Gagnant",
+    dimension: "mental",
+    q: "Pensez-vous mériter la réussite et l'abondance ?",
+    verse: "« Je puis tout par Christ qui me fortifie » — Philippiens 4:13",
+    opts: [
+      { text: "Absolument — et je travaille chaque jour pour me préparer à la recevoir", score: 5 },
+      { text: "Je le crois dans la foi, même quand je ne le ressens pas", score: 4 },
+      { text: "Parfois j'en doute, j'ai du travail sur l'estime de moi", score: 2 },
+      { text: "Honnêtement, je me sens souvent indigne ou pas à la hauteur", score: 1 }
+    ]
+  },
+
+  // SECTION 2 : FOI ACTIVE
+  {
+    section: "✝️ Foi Active & Confiance en Dieu",
+    dimension: "foi",
+    q: "Votre vie de prière est :",
+    verse: "« Priez sans cesse » — 1 Thessaloniciens 5:17",
+    opts: [
+      { text: "Régulière, profonde, avec des temps définis chaque jour", score: 5 },
+      { text: "Présente mais irrégulière — j'y travaille", score: 3 },
+      { text: "Surtout dans les moments difficiles", score: 2 },
+      { text: "Quasi absente de ma routine", score: 1 }
+    ]
+  },
+  {
+    section: "✝️ Foi Active & Confiance en Dieu",
+    dimension: "foi",
+    q: "Quand une situation vous dépasse, vous :",
+    verse: "« Confie-toi en l'Éternel de tout ton coeur » — Proverbes 3:5",
+    opts: [
+      { text: "Remettez sincèrement entre les mains de Dieu après avoir fait votre part", score: 5 },
+      { text: "Priez mais continuez d'y penser avec anxiété", score: 3 },
+      { text: "Gérez seul et pensez à prier après coup", score: 2 },
+      { text: "Portez tout seul le poids sans le déposer", score: 1 }
+    ]
+  },
+  {
+    section: "✝️ Foi Active & Confiance en Dieu",
+    dimension: "foi",
+    q: "Votre foi est-elle active (suivie d'actions concrètes) ?",
+    verse: "« La foi sans les oeuvres est morte » — Jacques 2:17",
+    opts: [
+      { text: "Toujours : je crois ET j'agis en conséquence, comme Abraham", score: 5 },
+      { text: "Souvent : ma foi m'inspire des actions, mais pas toujours", score: 4 },
+      { text: "Je crois beaucoup mais j'ai du mal à passer à l'action", score: 2 },
+      { text: "Ma foi est surtout théorique pour l'instant", score: 1 }
+    ]
+  },
+  {
+    section: "✝️ Foi Active & Confiance en Dieu",
+    dimension: "foi",
+    q: "Lisez-vous et méditez-vous la Parole de Dieu ?",
+    verse: "« Ta Parole est une lampe à mes pieds » — Psaumes 119:105",
+    opts: [
+      { text: "Quotidiennement, avec application concrète dans ma journée", score: 5 },
+      { text: "Plusieurs fois par semaine", score: 4 },
+      { text: "Occasionnellement ou à l'église seulement", score: 2 },
+      { text: "Très rarement", score: 1 }
+    ]
+  },
+  {
+    section: "✝️ Foi Active & Confiance en Dieu",
+    dimension: "foi",
+    q: "Déclarez-vous la Parole sur votre vie (confessions positives) ?",
+    verse: "« Mort et vie sont au pouvoir de la langue » — Proverbes 18:21",
+    opts: [
+      { text: "Oui, j'ai des déclarations de foi régulières et précises", score: 5 },
+      { text: "Parfois, surtout quand je sens une attaque spirituelle", score: 3 },
+      { text: "J'y pense mais je ne le pratique pas vraiment", score: 2 },
+      { text: "Non, cette pratique m'est étrangère", score: 1 }
+    ]
+  },
+
+  // SECTION 3 : ESPÉRANCE
+  {
+    section: "🕊️ Espérance & Vision Prophétique",
+    dimension: "esperance",
+    q: "Comment percevez-vous votre futur ?",
+    verse: "« L'espérance ne trompe point » — Romains 5:5",
+    opts: [
+      { text: "Lumineux et prometteur — je l'attends avec foi et préparation active", score: 5 },
+      { text: "Positif, même si l'incertitude me questionne parfois", score: 4 },
+      { text: "Incertain — j'ai du mal à voir clairement devant moi", score: 2 },
+      { text: "Inquiétant, j'ai plus d'angoisse que d'espoir", score: 1 }
+    ]
+  },
+  {
+    section: "🕊️ Espérance & Vision Prophétique",
+    dimension: "esperance",
+    q: "Avez-vous un tableau de vision (vision board) ou un journal de rêves ?",
+    verse: "« Écris la vision, grave-la sur des tablettes » — Habacuc 2:2",
+    opts: [
+      { text: "Oui, et je le consulte et le nourris régulièrement", score: 5 },
+      { text: "J'ai quelque chose d'informel mais de réel", score: 3 },
+      { text: "Non, mais l'idée me parle", score: 2 },
+      { text: "Non, je ne crois pas vraiment à ça", score: 1 }
+    ]
+  },
+  {
+    section: "🕊️ Espérance & Vision Prophétique",
+    dimension: "esperance",
+    q: "Quand rien ne semble avancer, comment maintenez-vous l'espoir ?",
+    verse: "« Heureux celui dont l'espérance est en l'Éternel » — Psaumes 146:5",
+    opts: [
+      { text: "Par la Parole, la prière, les témoignages passés de Dieu dans ma vie", score: 5 },
+      { text: "En me rappelant mes réussites passées et mes forces", score: 4 },
+      { text: "Difficilement — le doute prend souvent le dessus", score: 2 },
+      { text: "Je n'arrive pas vraiment à maintenir l'espoir dans ces moments", score: 1 }
+    ]
+  },
+  {
+    section: "🕊️ Espérance & Vision Prophétique",
+    dimension: "esperance",
+    q: "Visualisez-vous régulièrement votre vie idéale accomplie ?",
+    verse: "« Toutes les choses sont possibles à celui qui croit » — Marc 9:23",
+    opts: [
+      { text: "Oui, c'est une pratique quotidienne ancrée dans la foi", score: 5 },
+      { text: "Parfois, avec plaisir mais sans régularité", score: 3 },
+      { text: "Rarement — j'ai peur d'être déçu", score: 2 },
+      { text: "Non, cela me semble vain ou irréaliste", score: 1 }
+    ]
+  },
+  {
+    section: "🕊️ Espérance & Vision Prophétique",
+    dimension: "esperance",
+    q: "Avez-vous des buts écrits avec des délais précis ?",
+    verse: "« Les projets bien dirigés réussissent » — Proverbes 15:22",
+    opts: [
+      { text: "Oui : objectifs SMART, prière et plan d'action sur chacun", score: 5 },
+      { text: "J'ai des buts clairs même s'ils ne sont pas tous écrits", score: 4 },
+      { text: "Quelques idées générales mais rien de précis", score: 2 },
+      { text: "Non, je n'ai pas vraiment de buts définis", score: 1 }
+    ]
+  },
+
+  // SECTION 4 : AMOUR & RELATIONS
+  {
+    section: "❤️ Amour, Relations & Service",
+    dimension: "amour",
+    q: "Comment êtes-vous envers les autres au quotidien ?",
+    verse: "« Aimez-vous les uns les autres comme je vous ai aimés » — Jean 13:34",
+    opts: [
+      { text: "Bienveillant, généreux, je cherche à créer de la valeur autour de moi", score: 5 },
+      { text: "Attentionné, mais j'ai parfois du mal à donner sans attendre en retour", score: 3 },
+      { text: "Plutôt replié, mes propres défis m'accaparent", score: 2 },
+      { text: "Méfiant ou distant dans mes relations", score: 1 }
+    ]
+  },
+  {
+    section: "❤️ Amour, Relations & Service",
+    dimension: "amour",
+    q: "Pardonner ceux qui vous ont blessé est pour vous :",
+    verse: "« Pardonnez-vous mutuellement, comme Dieu vous a pardonné » — Éphésiens 4:32",
+    opts: [
+      { text: "Une discipline active — je pardonne rapidement pour ma propre libération", score: 5 },
+      { text: "Important mais difficile — je suis en chemin", score: 4 },
+      { text: "Très difficile — je garde souvent des blessures", score: 2 },
+      { text: "Impossible pour certaines personnes de ma vie", score: 1 }
+    ]
+  },
+  {
+    section: "❤️ Amour, Relations & Service",
+    dimension: "amour",
+    q: "Votre entourage proche (cercle d'influence) est :",
+    verse: "« Celui qui marche avec les sages deviendra sage » — Proverbes 13:20",
+    opts: [
+      { text: "Composé de personnes qui m'élèvent, me challengent et partagent mes valeurs", score: 5 },
+      { text: "Majoritairement positif, quelques relations toxiques que j'identifie", score: 4 },
+      { text: "Mixte — je dois faire des choix sur mes fréquentations", score: 2 },
+      { text: "Souvent négatif ou limitant pour ma croissance", score: 1 }
+    ]
+  },
+  {
+    section: "❤️ Amour, Relations & Service",
+    dimension: "amour",
+    q: "Aidez-vous, servez-vous des autres sans attendre de retour ?",
+    verse: "« Que chacun cherche non son propre intérêt, mais celui des autres » — Phil. 2:4",
+    opts: [
+      { text: "Oui, c'est un pilier de ma vie — donner est ma joie", score: 5 },
+      { text: "Souvent, avec quelques résistances parfois", score: 3 },
+      { text: "Peu — j'attends généralement quelque chose en retour", score: 2 },
+      { text: "Rarement, je manque moi-même de ressources (temps, argent, énergie)", score: 1 }
+    ]
+  },
+  {
+    section: "❤️ Amour, Relations & Service",
+    dimension: "amour",
+    q: "Comment gérez-vous les conflits dans vos relations importantes ?",
+    verse: "« Si possible, soyez en paix avec tous les hommes » — Romains 12:18",
+    opts: [
+      { text: "Avec douceur et vérité, en cherchant à comprendre avant de me faire comprendre", score: 5 },
+      { text: "J'essaie d'être pacifique mais je me mets parfois sur la défensive", score: 3 },
+      { text: "J'évite les conflits même au détriment de la vérité", score: 2 },
+      { text: "Les conflits me submergent souvent", score: 1 }
+    ]
+  },
+
+  // SECTION 5 : PROSPÉRITÉ
+  {
+    section: "💰 Prospérité & Gestion Abondante",
+    dimension: "prosperite",
+    q: "Quel est votre rapport à l'argent et à la richesse ?",
+    verse: "« C'est l'Éternel ton Dieu qui te donne la force de prospérer » — Deutéronome 8:18",
+    opts: [
+      { text: "L'argent est un outil de Dieu pour bénir et impacter — je le gère avec sagesse", score: 5 },
+      { text: "Je crois en la prospérité mais j'ai encore des blocages mentaux", score: 3 },
+      { text: "Ambivalent — l'argent me fait peur ou me met mal à l'aise", score: 2 },
+      { text: "Je pense que la richesse et la foi ne vont pas ensemble", score: 1 }
+    ]
+  },
+  {
+    section: "💰 Prospérité & Gestion Abondante",
+    dimension: "prosperite",
+    q: "Donnez-vous la dîme et des offrandes de façon régulière ?",
+    verse: "« Apportez à la maison du trésor toutes les dîmes » — Malachie 3:10",
+    opts: [
+      { text: "Oui, avec joie et conviction — c'est un investissement spirituel", score: 5 },
+      { text: "Souvent, mais pas toujours avec régularité", score: 3 },
+      { text: "Rarement, j'ai du mal financièrement", score: 2 },
+      { text: "Non, je ne pratique pas cela", score: 1 }
+    ]
+  },
+  {
+    section: "💰 Prospérité & Gestion Abondante",
+    dimension: "prosperite",
+    q: "Avez-vous un budget, une épargne ou un plan financier ?",
+    verse: "« L'homme avisé prévoit le danger et se cache » — Proverbes 22:3",
+    opts: [
+      { text: "Oui : budget mensuel, épargne automatique, investissements en cours", score: 5 },
+      { text: "J'épargne irrégulièrement, mais j'y pense", score: 3 },
+      { text: "Je gère au fur et à mesure sans vraie planification", score: 2 },
+      { text: "Je suis souvent dans la survie financière", score: 1 }
+    ]
+  },
+  {
+    section: "💰 Prospérité & Gestion Abondante",
+    dimension: "prosperite",
+    q: "Investissez-vous dans votre développement personnel et professionnel ?",
+    verse: "« Acquiers la sagesse, acquiers l'intelligence » — Proverbes 4:5",
+    opts: [
+      { text: "Régulièrement : formations, livres, mentors, coaching", score: 5 },
+      { text: "Parfois, quand je le peux financièrement", score: 3 },
+      { text: "Très rarement", score: 2 },
+      { text: "Non, je n'ai pas cette habitude", score: 1 }
+    ]
+  },
+  {
+    section: "💰 Prospérité & Gestion Abondante",
+    dimension: "prosperite",
+    q: "Avez-vous une ou plusieurs sources de revenus autres que votre emploi principal ?",
+    verse: "« Donne une part à sept et même à huit » — Ecclésiaste 11:2",
+    opts: [
+      { text: "Oui, plusieurs sources de revenus actives ou passives", score: 5 },
+      { text: "J'en ai une autre, ou je suis en train d'en construire une", score: 4 },
+      { text: "Non, mais c'est un objectif que j'ai", score: 2 },
+      { text: "Non et cela ne fait pas partie de mes plans", score: 1 }
+    ]
+  },
+
+  // SECTION 6 : DISCIPLINE
+  {
+    section: "⚡ Discipline & Maîtrise de Soi",
+    dimension: "discipline",
+    q: "Votre routine matinale est :",
+    verse: "« Dès le matin je t'invoque, je te cherche » — Psaumes 63:2",
+    opts: [
+      { text: "Structurée : prière, Parole, sport, visualisation — chaque matin", score: 5 },
+      { text: "Partiellement structurée avec quelques bonnes habitudes", score: 3 },
+      { text: "Chaotique — je réagis dès le réveil aux sollicitations", score: 2 },
+      { text: "Je n'ai pas vraiment de routine le matin", score: 1 }
+    ]
+  },
+  {
+    section: "⚡ Discipline & Maîtrise de Soi",
+    dimension: "discipline",
+    q: "Face à une tentation ou une distraction, vous :",
+    verse: "« Maîtrisez-vous, veillez » — 1 Pierre 5:8",
+    opts: [
+      { text: "Résistez la plupart du temps grâce à vos règles personnelles", score: 5 },
+      { text: "Résistez parfois, vous cédez dans des moments de faiblesse", score: 3 },
+      { text: "Cédez souvent, vous manquez de garde-fous", score: 2 },
+      { text: "Cédez facilement — la discipline est votre plus grand défi", score: 1 }
+    ]
+  },
+  {
+    section: "⚡ Discipline & Maîtrise de Soi",
+    dimension: "discipline",
+    q: "Terminez-vous ce que vous commencez ?",
+    verse: "« Celui qui persévère jusqu'à la fin sera sauvé » — Matthieu 24:13",
+    opts: [
+      { text: "Très souvent — je suis connu pour aller au bout de mes projets", score: 5 },
+      { text: "Souvent, sauf quand l'enthousiasme initial retombe", score: 3 },
+      { text: "J'ai tendance à abandonner quand c'est difficile", score: 2 },
+      { text: "Beaucoup de projets inachevés — c'est un vrai problème", score: 1 }
+    ]
+  },
+  {
+    section: "⚡ Discipline & Maîtrise de Soi",
+    dimension: "discipline",
+    q: "Prenez-vous soin de votre corps (sommeil, alimentation, sport) ?",
+    verse: "« Votre corps est le temple du Saint-Esprit » — 1 Corinthiens 6:19",
+    opts: [
+      { text: "Oui, j'ai une routine santé sérieuse et constante", score: 5 },
+      { text: "Assez bien, avec quelques déséquilibres occasionnels", score: 3 },
+      { text: "Peu — j'y pense mais j'ai du mal à être régulier", score: 2 },
+      { text: "Je néglige souvent ma santé physique", score: 1 }
+    ]
+  },
+  {
+    section: "⚡ Discipline & Maîtrise de Soi",
+    dimension: "discipline",
+    q: "Gérez-vous efficacement votre temps et vos priorités ?",
+    verse: "« Rachetez le temps car les jours sont mauvais » — Éphésiens 5:16",
+    opts: [
+      { text: "Oui : agenda clair, tâches prioritaires, peu de gaspillage de temps", score: 5 },
+      { text: "Assez bien, même si les réseaux sociaux grignotent du temps", score: 3 },
+      { text: "Je suis souvent réactif plutôt que proactif", score: 2 },
+      { text: "Je me sens submergé et désorganisé", score: 1 }
+    ]
+  },
+
+  // SECTION 7 : RÉSILIENCE & GRATITUDE
+  {
+    section: "🌟 Résilience & Gratitude",
+    dimension: "resilience",
+    q: "Tenez-vous un journal de gratitude ou exprimez-vous de la gratitude régulièrement ?",
+    verse: "« En toutes choses rendez grâces » — 1 Thessaloniciens 5:18",
+    opts: [
+      { text: "Oui, c'est une pratique quotidienne qui transforme mon regard", score: 5 },
+      { text: "Souvent, surtout lors de mes temps de prière", score: 4 },
+      { text: "Rarement — j'ai tendance à voir ce qui manque", score: 2 },
+      { text: "Non, je n'y pense pas naturellement", score: 1 }
+    ]
+  },
+  {
+    section: "🌟 Résilience & Gratitude",
+    dimension: "resilience",
+    q: "Comment rebondissez-vous après une grande épreuve ou une perte ?",
+    verse: "« Nous sommes pressés de tous côtés, mais non écrasés » — 2 Corinthiens 4:8",
+    opts: [
+      { text: "Je me relève avec foi — chaque épreuve m'a rendu plus fort", score: 5 },
+      { text: "Avec du temps et le soutien de Dieu et de proches", score: 4 },
+      { text: "Je mets beaucoup de temps à m'en remettre", score: 2 },
+      { text: "Certaines épreuves m'ont brisé et je ne m'en suis pas complètement remis", score: 1 }
+    ]
+  },
+  {
+    section: "🌟 Résilience & Gratitude",
+    dimension: "resilience",
+    q: "Acceptez-vous de demander de l'aide quand vous êtes dépassé ?",
+    verse: "« Portez les fardeaux les uns des autres » — Galates 6:2",
+    opts: [
+      { text: "Oui sans hésiter — je sais que je ne dois pas tout porter seul", score: 5 },
+      { text: "Parfois, mais ma fierté me retient souvent", score: 3 },
+      { text: "Rarement — j'ai du mal à montrer ma vulnérabilité", score: 2 },
+      { text: "Jamais — je gère tout seul, coûte que coûte", score: 1 }
+    ]
+  },
+  {
+    section: "🌟 Résilience & Gratitude",
+    dimension: "resilience",
+    q: "Avez-vous un mentor, un coach ou une figure spirituelle qui vous guide ?",
+    verse: "« Dans la multitude des conseillers est la sagesse » — Proverbes 11:14",
+    opts: [
+      { text: "Oui, j'ai des mentors dans plusieurs domaines de ma vie", score: 5 },
+      { text: "J'ai quelqu'un dans un domaine, je cherche à élargir", score: 4 },
+      { text: "Non, mais je lis beaucoup pour me former", score: 2 },
+      { text: "Non, je fonctionne seul sans vraiment chercher de guidance", score: 1 }
+    ]
+  },
+  {
+    section: "🌟 Résilience & Gratitude",
+    dimension: "resilience",
+    q: "Comment vivez-vous le changement ou l'incertitude ?",
+    verse: "« Je suis avec toi : ne crains point » — Ésaïe 41:10",
+    opts: [
+      { text: "Comme une opportunité de croissance — l'incertitude m'excite", score: 5 },
+      { text: "Avec foi, même si le changement me déstabilise au départ", score: 4 },
+      { text: "Avec beaucoup d'anxiété et de résistance", score: 2 },
+      { text: "Le changement me terrifie et me fige souvent", score: 1 }
+    ]
+  },
+];
+
+const DIMENSIONS = {
+  mental: { label: "Mindset de Gagnant", icon: "🧠" },
+  foi: { label: "Foi Active", icon: "✝️" },
+  esperance: { label: "Espérance & Vision", icon: "🕊️" },
+  amour: { label: "Amour & Relations", icon: "❤️" },
+  prosperite: { label: "Prospérité", icon: "💰" },
+  discipline: { label: "Discipline", icon: "⚡" },
+  resilience: { label: "Résilience", icon: "🌟" },
+};
+
+const RESULTS = [
+  {
+    min: 0, max: 39,
+    level: "🌱 Phase d'Éveil",
+    title: "Le Voyageur qui s'Éveille",
+    desc: "Vous êtes au début d'un voyage transformateur. Les graines de grandeur sont en vous, mais elles ont besoin d'eau, de lumière et de soin. Le chemin vers la mentalité de gagnant commence par une seule décision : celle de changer. Et vous l'avez déjà prise.",
+    verse: "« Commence par chercher le royaume de Dieu et sa justice, et tout le reste te sera donné par-dessus. » — Matthieu 6:33",
+    actions: [
+      "Commencez une routine matinale simple : 5 min de prière + lecture d'un verset par jour",
+      "Définissez 3 buts concrets à atteindre dans les 90 prochains jours",
+      "Rejoignez un groupe de foi ou d'accountability pour ne pas rester seul",
+      "Lisez 'L'Homme le plus riche de Babylone' et le livre de Proverbes en parallèle",
+      "Commencez un journal de gratitude avec 3 entrées chaque soir"
+    ]
+  },
+  {
+    min: 40, max: 59,
+    level: "🔥 Phase de Construction",
+    title: "Le Bâtisseur en Croissance",
+    desc: "Vous avez de solides fondations et une conscience de qui vous pouvez devenir. Certaines dimensions sont fortes, d'autres nécessitent un travail ciblé. Vous êtes à mi-chemin entre le potentiel et la pleine manifestation. Continuez de bâtir.",
+    verse: "« Si l'Éternel ne bâtit la maison, ceux qui la bâtissent travaillent en vain. » — Psaumes 127:1",
+    actions: [
+      "Identifiez votre dimension la plus faible et concentrez-vous 21 jours dessus",
+      "Créez un tableau de vision détaillé avec vos objectifs spirituels et financiers",
+      "Trouvez un mentor ou rejoignez un programme de coaching structuré",
+      "Mettez en place un budget mensuel et un plan d'épargne automatique",
+      "Étudiez les principes de prospérité biblique (Deutéronome 8, 3 Jean 2)"
+    ]
+  },
+  {
+    min: 60, max: 79,
+    level: "⚡ Phase de Momentum",
+    title: "Le Champion en Ascension",
+    desc: "Vous avez une mentalité solide et une vie spirituelle active. Vos habitudes vous portent vers le haut. Vous êtes dans la phase où les efforts commencent à porter des fruits visibles. L'heure est à la persévérance et à l'excellence dans les détails.",
+    verse: "« Tout ce que ta main trouve à faire, fais-le de toute ta force. » — Ecclésiaste 9:10",
+    actions: [
+      "Passez à un niveau supérieur : mentorat d'autres personnes, leadership actif",
+      "Diversifiez vos sources de revenus avec une perspective de bénédiction pour les autres",
+      "Approfondissez votre vie de prière avec le jeûne et des retraites spirituelles",
+      "Formalisez votre vision sur 10 ans avec un plan d'action trimestriel",
+      "Entourez-vous de personnes qui vous challengent au-delà de votre niveau actuel"
+    ]
+  },
+  {
+    min: 80, max: 100,
+    level: "👑 Phase d'Excellence",
+    title: "Le Gagnant Accompli",
+    desc: "Vous incarnez la mentalité d'un vrai champion — un être intègre, ancré dans la foi, discipliné dans sa vie et généreux dans ses relations. Vous êtes une référence et un modèle. Votre mission maintenant : impact, héritage et transmission.",
+    verse: "« Tu seras la tête et non la queue, tu seras en haut et non en bas. » — Deutéronome 28:13",
+    actions: [
+      "Votre appel : devenir mentor et investir dans la prochaine génération",
+      "Créez des systèmes (entreprise, fondation, contenu) pour multiplier votre impact",
+      "Entrez dans des cercles d'influence plus larges : politique, culture, économie",
+      "Développez votre vision philanthropique : donnez à grande échelle",
+      "Documentez votre parcours pour inspirer et guider des milliers d'autres"
+    ]
+  }
+];
+
+// ===== STATE =====
+let currentPage = 0;
+let answers = {};
+const QUESTIONS_PER_PAGE = 5;
+const totalPages = Math.ceil(QUESTIONS.length / QUESTIONS_PER_PAGE);
+
+function getPageQuestions() {
+  const start = currentPage * QUESTIONS_PER_PAGE;
+  return QUESTIONS.slice(start, start + QUESTIONS_PER_PAGE);
+}
+
+function startTest() {
+  document.getElementById('screen-intro').classList.remove('active');
+  document.getElementById('screen-test').classList.add('active');
+  renderPage();
+}
+
+function renderPage() {
+  const container = document.getElementById('questionsContainer');
+  const questions = getPageQuestions();
+  const startIdx = currentPage * QUESTIONS_PER_PAGE;
+
+  // Group by section
+  let html = '';
+  let lastSection = '';
+
+  questions.forEach((q, localIdx) => {
+    const globalIdx = startIdx + localIdx;
+    const selected = answers[globalIdx];
+
+    if (q.section !== lastSection) {
+      html += `<div class="section-intro">
+        <div class="section-tag">${q.section}</div>
+        <div class="section-line"></div>
+      </div>`;
+      lastSection = q.section;
+    }
+
+    html += `<div class="question-block" style="animation-delay:${localIdx * 0.06}s">
+      <div class="question-number">Question ${globalIdx + 1}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="verse-hint">${q.verse}</div>
+      <div class="options">
+        ${q.opts.map((opt, oi) => `
+          <button class="option-btn ${selected === oi ? 'selected' : ''}"
+            onclick="selectAnswer(${globalIdx}, ${oi})">
+            ${opt.text}
+          </button>
+        `).join('')}
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML = html;
+  updateProgress();
+  updateNav();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function selectAnswer(questionIdx, optionIdx) {
+  answers[questionIdx] = optionIdx;
+  const q = QUESTIONS[questionIdx];
+  const localIdx = questionIdx - currentPage * QUESTIONS_PER_PAGE;
+  const blocks = document.querySelectorAll('.question-block');
+  const block = blocks[localIdx];
+  const btns = block.querySelectorAll('.option-btn');
+  btns.forEach((b, i) => {
+    b.classList.toggle('selected', i === optionIdx);
+  });
+  updateNav();
+}
+
+function updateProgress() {
+  const answered = Object.keys(answers).length;
+  const pct = Math.round((answered / QUESTIONS.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `Question ${Math.min(answered + 1, QUESTIONS.length)} sur ${QUESTIONS.length}`;
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('pageCounter').textContent = `Page ${currentPage + 1} / ${totalPages}`;
+  document.getElementById('loadingBar').style.width = pct + '%';
+}
+
+function updateNav() {
+  document.getElementById('btnPrev').disabled = currentPage === 0;
+  const pageQs = getPageQuestions();
+  const startIdx = currentPage * QUESTIONS_PER_PAGE;
+  const allAnswered = pageQs.every((_, i) => answers[startIdx + i] !== undefined);
+
+  const isLast = currentPage === totalPages - 1;
+  const nextBtn = document.getElementById('btnNext');
+  nextBtn.disabled = !allAnswered;
+  nextBtn.textContent = isLast ? 'Voir mes Résultats →' : 'Suivant →';
+}
+
+function nextPage() {
+  if (currentPage < totalPages - 1) {
+    currentPage++;
+    renderPage();
+  } else {
+    showResults();
+  }
+}
+
+function prevPage() {
+  if (currentPage > 0) {
+    currentPage--;
+    renderPage();
+  }
+}
+
+function computeScore() {
+  let total = 0;
+  let dimScores = {};
+  let dimMax = {};
+
+  QUESTIONS.forEach((q, i) => {
+    const dim = q.dimension;
+    if (!dimScores[dim]) { dimScores[dim] = 0; dimMax[dim] = 0; }
+    const optIdx = answers[i];
+    if (optIdx !== undefined) {
+      total += q.opts[optIdx].score;
+    }
+    dimMax[dim] += 5;
+    if (optIdx !== undefined) {
+      dimScores[dim] += q.opts[optIdx].score;
+    }
+  });
+
+  const maxTotal = QUESTIONS.length * 5;
+  const normalized = Math.round((total / maxTotal) * 100);
+
+  const dimPct = {};
+  for (const dim in dimScores) {
+    dimPct[dim] = Math.round((dimScores[dim] / dimMax[dim]) * 100);
+  }
+
+  return { score: normalized, dimPct };
+}
+
+function showResults() {
+  document.getElementById('screen-test').classList.remove('active');
+  document.getElementById('screen-result').classList.add('active');
+  document.getElementById('loadingBar').style.width = '100%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const { score, dimPct } = computeScore();
+  const result = RESULTS.find(r => score >= r.min && score <= r.max);
+
+  // Score ring animation
+  setTimeout(() => {
+    const circumference = 2 * Math.PI * 68;
+    const offset = circumference - (score / 100) * circumference;
+    document.getElementById('ringFill').style.strokeDashoffset = offset;
+
+    let count = 0;
+    const interval = setInterval(() => {
+      count = Math.min(count + 2, score);
+      document.getElementById('scoreDisplay').textContent = count;
+      if (count >= score) clearInterval(interval);
+    }, 20);
+  }, 100);
+
+  document.getElementById('resultLevel').textContent = result.level;
+  document.getElementById('resultTitle').textContent = result.title;
+  document.getElementById('resultDesc').textContent = result.desc;
+
+  // Dimensions
+  const dimContainer = document.getElementById('dimensionsContainer');
+  dimContainer.innerHTML = Object.entries(dimPct).map(([dim, pct]) => {
+    const d = DIMENSIONS[dim];
+    const insight = getDimInsight(dim, pct);
+    return `<div class="dim-card">
+      <div class="dim-header">
+        <div class="dim-name"><span class="dim-icon">${d.icon}</span> ${d.label}</div>
+        <div class="dim-pct">${pct}%</div>
+      </div>
+      <div class="dim-bar-track">
+        <div class="dim-bar-fill" style="width:0%" data-target="${pct}"></div>
+      </div>
+      <div class="dim-insight">${insight}</div>
+    </div>`;
+  }).join('');
+
+  setTimeout(() => {
+    document.querySelectorAll('.dim-bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.target + '%';
+    });
+  }, 300);
+
+  // Verse
+  document.getElementById('verseResult').innerHTML = `
+    <div class="verse-result-text">${result.verse.split('—')[0].trim()}</div>
+    <div class="verse-result-ref">— ${result.verse.split('—')[1].trim()}</div>
+  `;
+
+  // Actions
+  document.getElementById('actionsContainer').innerHTML = `
+    <h3>Vos 5 Prochains Pas Stratégiques</h3>
+    <ul class="action-list">
+      ${result.actions.map(a => `<li>${a}</li>`).join('')}
+    </ul>
+  `;
+}
+
+function getDimInsight(dim, pct) {
+  const insights = {
+    mental: {
+      low: "Travaillez votre état d'esprit : lectures, affirmations, remise en question des croyances limitantes.",
+      mid: "Bonne base. Challengez-vous avec des objectifs qui vous font légèrement peur.",
+      high: "Mindset solide. Canalisez cette force vers l'impact sur les autres."
+    },
+    foi: {
+      low: "Revenez aux fondamentaux : prière quotidienne, lecture de la Parole, communion avec d'autres croyants.",
+      mid: "Votre foi grandit. Faites-la travailler : agissez sur ce que vous croyez.",
+      high: "Foi puissante. Continuez à l'alimenter — elle est votre plus grand levier."
+    },
+    esperance: {
+      low: "Créez une vision claire. Sans direction, toute énergie est gaspillée.",
+      mid: "Formalisez votre vision. Un plan écrit change tout.",
+      high: "Vision forte. Partagez-la — elle peut inspirer et entraîner d'autres."
+    },
+    amour: {
+      low: "Investissez dans vos relations clés. Le succès solitaire est vide.",
+      mid: "Bon équilibre relationnel. Soyez intentionnel dans votre générosité.",
+      high: "Coeur de serviteur. Votre force relationnelle est un multiplicateur de bénédiction."
+    },
+    prosperite: {
+      low: "Travaillez vos croyances sur l'argent. La prospérité est biblique — apprenez à la gérer.",
+      mid: "Bonne conscience financière. Mettez en place des systèmes automatiques de croissance.",
+      high: "Excellente gestion. Pensez maintenant à l'impact et au legs que vous voulez laisser."
+    },
+    discipline: {
+      low: "La discipline est la mère du succès. Commencez par une seule habitude non négociable.",
+      mid: "De bonnes habitudes, mais des failles. Identifiez les « gatekeepers » de votre temps.",
+      high: "Discipline exemplaire. Elle vous distingue de 95% des personnes autour de vous."
+    },
+    resilience: {
+      low: "La résilience se construit avec de petits défis quotidiens. Cherchez du soutien — c'est de la force, pas de la faiblesse.",
+      mid: "Bonne capacité de rebond. Nourrissez-la avec la gratitude et la mémoire de vos victoires passées.",
+      high: "Résilience exceptionnelle. Témoignez de votre parcours — il donnera de l'espoir à d'autres."
+    }
+  };
+  const level = pct < 45 ? 'low' : pct < 75 ? 'mid' : 'high';
+  return insights[dim][level];
+}
+
+function resetTest() {
+  answers = {};
+  currentPage = 0;
+  document.getElementById('screen-result').classList.remove('active');
+  document.getElementById('screen-intro').classList.add('active');
+  document.getElementById('loadingBar').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
